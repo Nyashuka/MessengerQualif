@@ -1,9 +1,11 @@
-﻿namespace MessengerDatabaseService.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace MessengerDatabaseService.DTOs
 {
     public class AccountDTO
     {
+        [Required, EmailAddress]
         public string Email { get; set; } = string.Empty;
-        public byte[] PasswordHash { get; set; } = new byte[32];
-        public byte[] PasswordSalt { get; set; } = new byte[32];
+        public string Password { get; set; } = string.Empty;
     }
 }
