@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MessengerDatabaseService.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240321173154_AddUsersAndAccountsTable")]
-    partial class AddUsersAndAccountsTable
+    [Migration("20240327143533_AddAccountAndUserTables")]
+    partial class AddAccountAndUserTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,7 +70,20 @@ namespace MessengerDatabaseService.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AccountId");
+
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("MessengerDatabaseService.Models.User", b =>
+                {
+                    b.HasOne("MessengerDatabaseService.Models.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
                 });
 #pragma warning restore 612, 618
         }

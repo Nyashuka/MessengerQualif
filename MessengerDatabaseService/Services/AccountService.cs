@@ -43,10 +43,12 @@ namespace MessengerDatabaseService.Services
 
             CreatePasswordHash(accountDTO.Password, out byte[] hash, out byte[] salt);
 
-            Account account = new Account();
-            account.Email = accountDTO.Email;
-            account.PasswordHash = hash;
-            account.PasswordSalt = salt;
+            Account account = new Account()
+            {
+                Email = accountDTO.Email,
+                PasswordHash = hash,
+                PasswordSalt = salt
+            };
 
             _databaseContext.Accounts.Add(account);
             await _databaseContext.SaveChangesAsync();
