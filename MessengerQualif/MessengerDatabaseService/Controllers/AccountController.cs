@@ -38,5 +38,27 @@ namespace MessengerDatabaseService.Controllers
 
             return Ok(response);
         }
+
+        [HttpGet("get-account")]
+        public async Task<ActionResult<ServiceResponse<AccountDTO>>> GetAccout(string email)
+        {
+            var account = await _accountService.GetAccount(email);
+
+            if(account.Success == false)
+                return BadRequest(account);
+
+            return Ok(account);
+        }
+
+        [HttpPost("save-token")]
+        public async Task<ActionResult<ServiceResponse<AccountDTO>>> SaveToken(AccessToken accessToken)
+        {
+            var savingResponse = await _accountService.SaveAccessToken(accessToken);
+
+            if (savingResponse.Success == false)
+                return BadRequest(savingResponse);
+
+            return Ok(savingResponse);
+        }
     }
 }

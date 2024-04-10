@@ -1,6 +1,8 @@
 
 using AuthorizationService.Services;
 using AuthorizationService.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace AuthorizationService
 {
@@ -13,7 +15,24 @@ namespace AuthorizationService
             // Add services to the container.
 
             builder.Services.AddScoped(sp => new HttpClient {});
-            builder.Services.AddScoped<IMessengerAuthService, MessengerAuthService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
+
+
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            System.Text.Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                    };
+                });
+            builder.Services.AddHttpContextAccessor();
+
+
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -28,8 +47,8 @@ namespace AuthorizationService
                 app.UseSwaggerUI();
             }
 
+            app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 

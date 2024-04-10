@@ -19,5 +19,6 @@ namespace MessengerDatabaseService.DataContexts
         public DbSet<ChatPermission> ChatPermissions { get; set; }
         public DbSet<RolePermissionRelation> RolePermissionRelations { get; set; }
         public DbSet<UserRoleRelation> UserRoleRelations { get; set; }
+        public DbSet<AccessToken> AccessTokens { get; set; }
     }
 }

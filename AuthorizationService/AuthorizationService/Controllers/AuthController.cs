@@ -1,7 +1,6 @@
 ﻿using AuthorizationService.DTOs;
 using AuthorizationService.Models;
 using AuthorizationService.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthorizationService.Controllers
@@ -10,17 +9,39 @@ namespace AuthorizationService.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private IMessengerAuthService _messengerAuthService;
+        private IAuthService _authService;
 
-        public AuthController(IMessengerAuthService messengerAuthService)
+        public AuthController(IAuthService messengerAuthService)
         {
-            _messengerAuthService = messengerAuthService;
+            _authService = messengerAuthService;
         }
 
         [HttpPost("create-account")]
         public async Task<ActionResult<ServiceResponse<bool>>> CreateAccount(ClientCreationAccountDTO accountDTO)
         {
-            var response = await _messengerAuthService.CreateAccount(accountDTO);
+            var response = await _authService.CreateAccount(accountDTO);
+
+            if (!response.Success)
+                return BadRequest(response);
+
+            return Ok(response);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<ServiceResponse<bool>>> IsUserExists(string email)
+        {
+            var response = await _authService.IsUserExist(email);
+
+            //if (!response.Success)
+            //    return BadRequest(response);
+
+            return Ok(response);
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<ServiceResponse<int>>> Login(AccountLoginDTO accountDTO)
+        {
+            var response = await _authService.Login(accountDTO.Email, accountDTO.Password);
 
             if (!response.Success)
                 return BadRequest(response);

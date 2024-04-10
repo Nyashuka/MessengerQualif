@@ -26,6 +26,29 @@ namespace MessengerDatabaseService.Services
             return await _databaseContext.Users.AnyAsync(x => x.Username.ToLower().Equals(username.ToLower()));
         }
 
+        public async Task<ServiceResponse<AccountDTO>> GetAccount(string email) 
+        {
+            var account = await _databaseContext.Accounts.FirstOrDefaultAsync(x => x.Email.Equals(email));
+
+            if (account == null)
+            {
+                return new ServiceResponse<AccountDTO>() 
+                {
+                    Data = null,
+                    Success = false,
+                    ErrorMessage = "Account does not exists!"
+                };
+            }
+
+            AccountDTO accountDTO = new AccountDTO();
+            accountDTO.Id = account.Id;
+            accountDTO.Email = account.Email;
+            accountDTO.PasswordHash = Convert.ToBase64String(account.PasswordHash);
+            accountDTO.PasswordSalt = Convert.ToBase64String(account.PasswordSalt);
+
+            return new ServiceResponse<AccountDTO>() { Data = accountDTO };
+        }
+
         public async Task<ServiceResponse<int>> CreateAccount(CreationAccountDTO accountDTO)
         {
             if (await IsAccountExists(accountDTO.Email))
@@ -61,6 +84,14 @@ namespace MessengerDatabaseService.Services
             {
                 Data = account.Id
             };
+        }
+
+        public async Task<ServiceResponse<bool>> SaveAccessToken(AccessToken accessToken)
+        {
+            _databaseContext.AccessTokens.Add(accessToken);
+            await _databaseContext.SaveChangesAsync();
+
+            return new ServiceResponse<bool>() { Data = true };
         }
     }
 }
