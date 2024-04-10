@@ -2,7 +2,6 @@
 using MessengerDatabaseService.Models;
 using MessengerDatabaseService.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace MessengerDatabaseService.Controllers
 {
@@ -18,12 +17,24 @@ namespace MessengerDatabaseService.Controllers
         }
 
         [HttpPost("create-account")]
-        public async Task<ActionResult<ServiceResponse<CreatedAccountDTO>>> CreateAccount(AccountDTO accountDTO)
+        public async Task<ActionResult<ServiceResponse<int>>> CreateAccount(CreationAccountDTO creationAccountDTO)
         {
-            var response = await _accountService.CreateAccount(accountDTO);
+            var response = await _accountService.CreateAccount(creationAccountDTO);
 
-            if(!response.Success)
+            if (!response.Success)
                 return BadRequest(response);
+
+            return Ok(response);
+        }
+
+        [HttpGet("user-exists")]
+        public async Task<ActionResult<ServiceResponse<bool>>> IsUserExists(string email)
+        {
+            bool isExists = await _accountService.IsAccountExists(email);
+            var response = new ServiceResponse<bool>()
+            {
+                Data = isExists
+            };
 
             return Ok(response);
         }

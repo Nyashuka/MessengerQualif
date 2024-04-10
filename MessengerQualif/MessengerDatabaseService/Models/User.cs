@@ -4,9 +4,9 @@
     {
         public int Id { get; set; }
         public string Username { get; set; } = string.Empty;
-        public string ProfileName { get; set; } = string.Empty;
+        public string DisplayName { get; set; } = string.Empty;
 
-        public required int AccountId { get; set; }
-        public required Account Account { get; set; }
+        public int AccountId { get; set; }
+        public Account Account { get; set; }
     }
 }

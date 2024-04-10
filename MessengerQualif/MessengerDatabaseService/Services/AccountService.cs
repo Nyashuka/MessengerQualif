@@ -21,41 +21,45 @@ namespace MessengerDatabaseService.Services
             return await _databaseContext.Accounts.AnyAsync(x => x.Email.ToLower().Equals(email.ToLower()));
         }
 
-        private void CreatePasswordHash(string password, out byte[] hash, out byte[] salt)
+        public async Task<bool> IsUserExists(string username)
         {
-            using (var hmac = new HMACSHA512())
-            {
-                salt = hmac.Key;
-                hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-            }
+            return await _databaseContext.Users.AnyAsync(x => x.Username.ToLower().Equals(username.ToLower()));
         }
 
-        public async Task<ServiceResponse<CreatedAccountDTO>> CreateAccount(AccountDTO accountDTO)
+        public async Task<ServiceResponse<int>> CreateAccount(CreationAccountDTO accountDTO)
         {
             if (await IsAccountExists(accountDTO.Email))
             {
-                return new ServiceResponse<CreatedAccountDTO>
+                return new ServiceResponse<int>
                 {
                     Success = false,
                     ErrorMessage = $"Account with email '{accountDTO.Email}' already exists!"
                 };
             }
 
-            CreatePasswordHash(accountDTO.Password, out byte[] hash, out byte[] salt);
-
             Account account = new Account()
             {
                 Email = accountDTO.Email,
-                PasswordHash = hash,
-                PasswordSalt = salt
+                PasswordHash = Convert.FromBase64String(accountDTO.PasswordHash),
+                PasswordSalt = Convert.FromBase64String(accountDTO.PasswordSalt)
             };
 
             _databaseContext.Accounts.Add(account);
             await _databaseContext.SaveChangesAsync();
 
-            return new ServiceResponse<CreatedAccountDTO>
+            User user = new User()
             {
-                Data = new CreatedAccountDTO() { Id = account.Id }
+                AccountId = account.Id,
+                Username = accountDTO.Username,
+                DisplayName = accountDTO.DisplayName
+            };
+
+            _databaseContext.Users.Add(user);
+            await _databaseContext.SaveChangesAsync();
+
+            return new ServiceResponse<int>
+            {
+                Data = account.Id
             };
         }
     }

@@ -21,7 +21,7 @@ namespace MessengerDatabaseService.Services
             {
                 AccountId = userDTO.AccountId,
                 Username = userDTO.Username,
-                ProfileName = userDTO.ProfileName,
+                DisplayName = userDTO.ProfileName,
                 Account = await _databaseContext.Accounts.FirstAsync(a => a.Id == userDTO.AccountId)
             };
 
@@ -44,7 +44,7 @@ namespace MessengerDatabaseService.Services
                 };
 
             user.Username = newUserData.Username;
-            user.ProfileName = newUserData.ProfileName;
+            user.DisplayName = newUserData.ProfileName;
             await _databaseContext.SaveChangesAsync();
 
             return new ServiceResponse<User>() { Data = user };

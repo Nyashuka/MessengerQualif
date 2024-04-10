@@ -1,7 +1,10 @@
-﻿namespace AuthorizationService.Services.Interfaces
+﻿using AuthorizationService.DTOs;
+using AuthorizationService.Models;
+
+namespace AuthorizationService.Services.Interfaces
 {
     public interface IMessengerAuthService
     {
-        Task<User>
+        Task<ServiceResponse<int>> CreateAccount(ClientCreationAccountDTO creationAccountDTO);
     }
 }

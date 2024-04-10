@@ -5,6 +5,7 @@ namespace MessengerDatabaseService.Services.Interfaces
 {
     public interface IAccountService
     {
-        Task<ServiceResponse<CreatedAccountDTO>> CreateAccount(AccountDTO accountDTO);
+        Task<bool> IsAccountExists(string email);
+        Task<ServiceResponse<int>> CreateAccount(CreationAccountDTO accountDTO);
     }
 }
