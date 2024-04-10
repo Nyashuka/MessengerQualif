@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MessangerWithRoles.WPFClient.MVVM.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,8 @@ namespace MessangerWithRoles.WPFClient.MVVM.Views.UserControls
         public LoginPage()
         {
             InitializeComponent();
+
+            DataContext = new LoginPageViewModel();
         }
 
 

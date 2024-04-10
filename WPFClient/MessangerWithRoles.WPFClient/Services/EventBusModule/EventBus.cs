@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MessangerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
+using MessangerWithRoles.WPFClient.Services.ServiceLocator;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MessangerWithRoles.WPFClient.Services.EventBusModule
 {
-    public class EventBus
+    public class EventBus : IService
     {
         private readonly Dictionary<string, List<EventBusHandler>> _subscribersByEventName;
 

@@ -14,8 +14,8 @@ namespace AuthorizationService.Services
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AuthService(HttpClient httpClient, 
-                                    IConfiguration configuration, 
+        public AuthService(HttpClient httpClient,
+                                    IConfiguration configuration,
                                     IHttpContextAccessor httpContextAccessor)
         {
             _httpClient = httpClient;
@@ -87,11 +87,11 @@ namespace AuthorizationService.Services
             account.Username = clientAccountDTO.Username;
             account.DisplayName = clientAccountDTO.ProfileName;
             account.PasswordHash = Convert.ToBase64String(passwordHash);
-            account.PasswordSalt = Convert.ToBase64String(passwordSalt); 
+            account.PasswordSalt = Convert.ToBase64String(passwordSalt);
 
             var databaseResponse = await _httpClient.PostAsJsonAsync(APIEndpoints.CreateAccountPOST, account);
-            
-            if(!databaseResponse.IsSuccessStatusCode)
+
+            if (!databaseResponse.IsSuccessStatusCode)
             {
                 await Console.Out.WriteLineAsync(databaseResponse.ReasonPhrase);
             }
@@ -125,7 +125,7 @@ namespace AuthorizationService.Services
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-            var token = new JwtSecurityToken(claims: claims, expires: DateTime.Now.AddDays(30), 
+            var token = new JwtSecurityToken(claims: claims, expires: DateTime.Now.AddDays(30),
                 signingCredentials: creds);
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
@@ -157,6 +157,14 @@ namespace AuthorizationService.Services
         public async Task<ServiceResponse<string>> Login(string email, string password)
         {
             var response = new ServiceResponse<string>();
+
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            {
+                response.Success = false;
+                response.ErrorMessage = "Login data can't be empty!";
+                return response;
+            }
+
             var account = await GetAccount(email);
 
             if (account == null)
@@ -164,12 +172,12 @@ namespace AuthorizationService.Services
                 response.Success = false;
                 response.ErrorMessage = "Account is not found!";
             }
-            else if(account.Data == null)
+            else if (account.Data == null)
             {
                 response.Success = false;
                 response.ErrorMessage = account.ErrorMessage;
             }
-            else if (!VerifyPasswordHash(password, Convert.FromBase64String(account.Data.PasswordHash), 
+            else if (!VerifyPasswordHash(password, Convert.FromBase64String(account.Data.PasswordHash),
                                     Convert.FromBase64String(account.Data.PasswordSalt)))
             {
                 response.Success = false;

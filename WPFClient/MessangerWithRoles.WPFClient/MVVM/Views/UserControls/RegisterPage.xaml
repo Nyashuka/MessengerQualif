@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:MessengerWithRoles.WPFClient"
              xmlns:vm="clr-namespace:MessangerWithRoles.WPFClient.MVVM.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="500" d:DesignWidth="400">
+             d:DesignHeight="500" d:DesignWidth="300">
     <Grid>
         <StackPanel Orientation="Vertical"
                 Width="250">
@@ -189,14 +189,39 @@
                        FontSize="12"
                        FontWeight="Medium"
                        FontFamily="Montserrat"/>
-                <TextBlock Text="Login"
-                       Foreground="White"
-                       FontSize="12"
-                       FontWeight="Medium"
-                       FontFamily="Montserrat"
-                       Cursor="Hand"
-                       Margin="8,0,0,0"/>
-               
+
+                <Button Command="{Binding ChangeToLoginWindow}"
+                    Content="Login" 
+                    Foreground="White" 
+                    FontFamily="Montserrat"
+                    FontSize="12"
+                    FontWeight="Medium"
+                    BorderThickness="0"
+                    Margin="8 0 0 0"
+                        
+                    >
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="Transparent"/>
+
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}">
+                                <ContentPresenter VerticalAlignment="Center"
+                                  HorizontalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
             </StackPanel>
 
             <TextBlock Text="{Binding ErrorMessage}"

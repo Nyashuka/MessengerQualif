@@ -1,11 +1,14 @@
-﻿namespace MessangerWithRoles.WPFClient.Services.ServiceLocator
+﻿using System;
+using System.Collections.Generic;
+
+namespace MessangerWithRoles.WPFClient.Services.ServiceLocator
 {
     public class ServiceLocator
     {
         public static ServiceLocator Instance { get; } = new ServiceLocator();
         private readonly Dictionary<Type, IService> _services = new Dictionary<Type, IService>();
 
-        public T? GetService<T>() where T : class, IService
+        public T GetService<T>() where T : class, IService
         {
             if (_services.TryGetValue(typeof(T), out var instance))
             {

@@ -1,9 +1,9 @@
-﻿using MessangerWithRoles.WPFClient.Services.ServiceLocator;
-using System.Net.Http;
+﻿using MessangerWithRoles.WPFClient.Services.EventBusModule;
+using MessangerWithRoles.WPFClient.Services.ServiceLocator;
 using System.Windows;
 using System.Windows.Input;
 
-namespace MessengerWithRoles.WPFClient
+namespace MessengerWithRoles.WPFClient.MVVM.Views.Windows
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -12,8 +12,9 @@ namespace MessengerWithRoles.WPFClient
     {
         public MainWindow()
         {
-            InitializeComponent();
+            ServiceLocator.Instance.RegisterService(new EventBus());
 
+            InitializeComponent();
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace MessangerWithRoles.WPFClient.Services.EventBusModule
 {
-    public class EventBusDefinitions
+    public static class EventBusDefinitions
     {
-
+        public const string NeedToChangeWindowContent = "NeedToChangeWindowContent";
     }
 }

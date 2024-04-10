@@ -2,9 +2,15 @@
 using MessangerWithRoles.WPFClient.MVVM.Infrastracture.Commands;
 using MessangerWithRoles.WPFClient.MVVM.Models;
 using MessangerWithRoles.WPFClient.MVVM.ViewModels.Base;
+using MessangerWithRoles.WPFClient.MVVM.Views.UserControls;
+using MessangerWithRoles.WPFClient.Services.EventBusModule;
+using MessangerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
+using MessangerWithRoles.WPFClient.Services.ServiceLocator;
+using System;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace MessangerWithRoles.WPFClient.MVVM.ViewModels
@@ -87,7 +93,7 @@ namespace MessangerWithRoles.WPFClient.MVVM.ViewModels
 
             try
             {
-                response = await client.PostAsJsonAsync(APIEndpoints.CreateAccount, accountData);
+                response = await client.PostAsJsonAsync(APIEndpoints.CreateAccountPOST, accountData);
             }
             catch (Exception ex)
             {
@@ -112,6 +118,19 @@ namespace MessangerWithRoles.WPFClient.MVVM.ViewModels
                 MessageBox.Show($"Account created successfully with id={data.Data}");
         }
 
+        public ICommand ChangeToLoginWindow { get; }
+        private bool CanChangeToLoginWindowCommandExecute(object p)
+        {
+            return true;
+        }
+
+        private void OnChangeToLoginWindowCommandExecute(object p)
+        {
+            EventBus eventBus = ServiceLocator.Instance.GetService<EventBus>();
+
+            eventBus.Raise(EventBusDefinitions.NeedToChangeWindowContent, new UserControlEventBusArgs(new LoginPage()));
+        }
+
         public RegisterPageViewModel() 
         {
             _email = string.Empty;
@@ -119,8 +138,10 @@ namespace MessangerWithRoles.WPFClient.MVVM.ViewModels
             _confirmPassword = string.Empty;
             _displayName = string.Empty;
             _username = string.Empty;
+            _errorMessage = string.Empty;
 
             Register = new LambdaCommand(OnRegisterCommandExecute, CanRegisterCommandExecute);
+            ChangeToLoginWindow = new LambdaCommand(OnChangeToLoginWindowCommandExecute, CanChangeToLoginWindowCommandExecute);
         }
     }
 }
