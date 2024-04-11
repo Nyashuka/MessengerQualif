@@ -3,6 +3,7 @@ using MessangerWithRoles.WPFClient.MVVM.Infrastracture.Commands;
 using MessangerWithRoles.WPFClient.MVVM.Models;
 using MessangerWithRoles.WPFClient.MVVM.ViewModels.Base;
 using MessangerWithRoles.WPFClient.MVVM.Views.UserControls;
+using MessangerWithRoles.WPFClient.MVVM.Views.Windows;
 using MessangerWithRoles.WPFClient.Services.EventBusModule;
 using MessangerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
 using MessangerWithRoles.WPFClient.Services.ServiceLocator;
@@ -116,6 +117,9 @@ namespace MessangerWithRoles.WPFClient.MVVM.ViewModels
                 
             if(data.Success)
                 MessageBox.Show($"Account created successfully with id={data.Data}");
+
+            var mainWindow = new MainWindow();
+            mainWindow.Show();
         }
 
         public ICommand ChangeToLoginWindow { get; }

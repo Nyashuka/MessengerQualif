@@ -1,40 +1,50 @@
-﻿using MessangerWithRoles.WPFClient.MVVM.ViewModels.Base;
-using MessangerWithRoles.WPFClient.Services.EventBusModule;
-using MessangerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
-using MessangerWithRoles.WPFClient.Services.ServiceLocator;
-using MessengerWithRoles.WPFClient.MVVM.Views.UserControls;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MessangerWithRoles.WPFClient.MVVM.Infrastracture.Commands;
+using MessangerWithRoles.WPFClient.MVVM.Models;
+using MessangerWithRoles.WPFClient.MVVM.ViewModels.Base;
+using MessangerWithRoles.WPFClient.MVVM.Views.UserControls;
+using System.Collections.ObjectModel;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MessangerWithRoles.WPFClient.MVVM.ViewModels
 {
     public class MainWindowViewModel : BaseViewModel
     {
-        private UserControl _currentWindowContent;
+        private UserControl _currentContent;
+        public UserControl CurrentContent { get => _currentContent; set => Set(ref _currentContent, value); }
 
-        public UserControl CurrentWindowContent
+        public ObservableCollection<Chat> Chats { get; private set; }
+        public ObservableCollection<Message> Messages { get; private set; }
+
+        public ICommand OpenFriendsWindow { get; }
+
+        public bool CanExecuteOpenFriendsWindowCommand(object p) => true;
+
+        public void OnExecuteOpenFriendsWindowCommand(object p)
         {
-            get => _currentWindowContent;
-            set => Set(ref _currentWindowContent, value);
+            CurrentContent = new FriendsPage();
         }
 
-        private void ChangeWindowsControl(IEventBusArgs userControlEventBusArgs)
+        public MainWindowViewModel()
         {
-            CurrentWindowContent = null;
-            CurrentWindowContent = ((UserControlEventBusArgs)userControlEventBusArgs).UserControl;
+            OpenFriendsWindow = new LambdaCommand(OnExecuteOpenFriendsWindowCommand, CanExecuteOpenFriendsWindowCommand);
+
+            Chats = new ObservableCollection<Chat>();
+            for (int i = 0; i < 100; i++)
+            {
+                Chats.Add(new Chat("Evelin Parker " + i,
+                    "https://i.pinimg.com/originals/e7/da/8d/e7da8d8b6a269d073efa11108041928d.jpg",
+                    new ObservableCollection<Message>()));
+            }
+
+            Messages = new ObservableCollection<Message>();
+
+            Messages.Add(new Message("Evelin Parker", "dajasjdsadjaskldjaslkdjaslkjdlkasjdlkajlsdjk", true));
+            Messages.Add(new Message("Evelin Parker", "dajasjdsadjaskldjaslkdjaslkjdlkasjdlkajlsdjk", true));
+            Messages.Add(new Message("Evelin Parker", "dajasjdsadjaskldjaslkdjaslkjdlkasjdlkajlsdjk", true));
+            Messages.Add(new Message("Me", "dajasjdsadjaskldjaslkdjaslkjdlkasjdlkajlsdjk", false));
+            Messages.Add(new Message("Me", "dajasjdsadjaskldjaslkdjaslkjdlkasjdlkajlsdjk", false));
+            Messages.Add(new Message("Me", "dajasjdsadjaskldjaslkdjaslkjdlkasjdlkajlsdjk", false));
         }
-
-        public MainWindowViewModel() 
-        {
-            _currentWindowContent = new RegisterPage();
-
-            EventBus eventBus = ServiceLocator.Instance.GetService<EventBus>();
-
-            eventBus.Subscribe<UserControlEventBusArgs>(EventBusDefinitions.NeedToChangeWindowContent, ChangeWindowsControl);
-        }    
     }
 }

@@ -9,5 +9,6 @@ namespace MessengerDatabaseService.Services.Interfaces
         Task<ServiceResponse<int>> CreateAccount(CreationAccountDTO accountDTO);
         Task<ServiceResponse<AccountDTO>> GetAccount(string email);
         Task<ServiceResponse<bool>> SaveAccessToken(AccessToken accessToken);
+        Task<ServiceResponse<AccessToken>> GetAccessToken(int accountId);
     }
 }

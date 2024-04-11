@@ -51,7 +51,7 @@ namespace MessengerDatabaseService.Controllers
         }
 
         [HttpPost("save-token")]
-        public async Task<ActionResult<ServiceResponse<AccountDTO>>> SaveToken(AccessToken accessToken)
+        public async Task<ActionResult<ServiceResponse<bool>>> SaveToken(AccessToken accessToken)
         {
             var savingResponse = await _accountService.SaveAccessToken(accessToken);
 
@@ -59,6 +59,17 @@ namespace MessengerDatabaseService.Controllers
                 return BadRequest(savingResponse);
 
             return Ok(savingResponse);
+        }
+
+        [HttpGet("get-token")]
+        public async Task<ActionResult<ServiceResponse<AccessToken>>> GetToken(int accountId)
+        {
+            var token = await _accountService.GetAccessToken(accountId);
+
+            if (token.Success == false)
+                return BadRequest(token);
+
+            return Ok(token);
         }
     }
 }

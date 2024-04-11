@@ -111,6 +111,30 @@ namespace AuthorizationService.Services
             return parsedResponse;
         }
 
+        private async Task<ServiceResponse<AccessTokenDTO>> TryGetTokenIfExistsInDatabase(int accountId)
+        {
+            var response = await _httpClient.GetAsync($"{APIEndpoints.GetUserGET}?accountId={accountId}");
+
+            if( response == null )
+            {
+                return new ServiceResponse<AccessTokenDTO>() { Data = null, Success = false, ErrorMessage = "Request cannot execute!" };
+            }
+
+            if(!response.IsSuccessStatusCode)
+            {
+                return new ServiceResponse<AccessTokenDTO>() { Data = null, Success = false, ErrorMessage = response.ReasonPhrase };
+            }
+
+            var responseData = await response.Content.ReadFromJsonAsync<ServiceResponse<AccessTokenDTO>>();
+
+            if( responseData == null )
+            {
+                return new ServiceResponse<AccessTokenDTO>() { Data = null, Success = false, ErrorMessage = "Can't parse data from json"}
+            }    
+
+            return responseData;
+        }
+
         private string CreateToken(Account account)
         {
             List<Claim> claims = new List<Claim>()
@@ -185,6 +209,12 @@ namespace AuthorizationService.Services
             }
             else
             {
+                var tokenFromDatabase = await TryGetTokenIfExistsInDatabase(account.Data.Id);
+                if(tokenFromDatabase.Data != null)
+                {
+                    response.Data = tokenFromDatabase.Data.Token;
+                    return response;
+                }    
                 var token = CreateToken(account.Data);
                 response.Data = token;
                 await SaveTokenToDatabase(account.Data.Id, token);

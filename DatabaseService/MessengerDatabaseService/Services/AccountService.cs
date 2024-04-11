@@ -86,8 +86,25 @@ namespace MessengerDatabaseService.Services
             };
         }
 
+        public async Task<ServiceResponse<AccessToken>> GetAccessToken(int accountId)
+        {
+            AccessToken? token = await _databaseContext.AccessTokens.FirstOrDefaultAsync(x => x.AccountId == accountId);
+
+            if (token == null)
+            {
+                return new ServiceResponse<AccessToken>() { Data = null, Success = false, ErrorMessage = "Token does not exists!" };
+            }
+
+            return new ServiceResponse<AccessToken>() { Data = token };
+        }
+
         public async Task<ServiceResponse<bool>> SaveAccessToken(AccessToken accessToken)
         {
+            bool exists = await _databaseContext.AccessTokens.AnyAsync(x => x.AccountId == accessToken.AccountId);
+
+            if (exists)
+                return new ServiceResponse<bool>() { Data = true };
+
             _databaseContext.AccessTokens.Add(accessToken);
             await _databaseContext.SaveChangesAsync();
 

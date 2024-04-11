@@ -9,5 +9,7 @@ namespace MessangerWithRoles.WPFClient.Services.EventBusModule
     public static class EventBusDefinitions
     {
         public const string NeedToChangeWindowContent = "NeedToChangeWindowContent";
+        public const string LoginedInAccount = "LoginedInAccount";
+        public const string OpenFriendsPageClicked = "OpenFriendsPageClicked";
     }
 }

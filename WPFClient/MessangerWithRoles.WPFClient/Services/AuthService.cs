@@ -4,9 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MessangerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments
+namespace MessangerWithRoles.WPFClient.Services
 {
-    public class EventBusArgs : IEventBusArgs
+    public class AuthService
     {
+        public AuthService() 
+        {
+
+        }
     }
 }

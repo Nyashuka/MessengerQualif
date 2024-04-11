@@ -53,7 +53,17 @@ namespace MessangerWithRoles.WPFClient.MVVM.ViewModels
             loginData.Email = Email;
             loginData.Password = Password;
 
-            var response = await httpClient.PostAsJsonAsync(APIEndpoints.LoginPOST, loginData);
+            HttpResponseMessage? response = null;
+            try
+            {
+                response = await httpClient.PostAsJsonAsync(APIEndpoints.LoginPOST, loginData);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return;
+            }
+            
             if (response == null)
             {
                 MessageBox.Show("Login Response in empty");
@@ -74,7 +84,9 @@ namespace MessangerWithRoles.WPFClient.MVVM.ViewModels
                 return;
             }
 
-            MessageBox.Show($"Success!\n{dataFromResponse.Data}");
+            EventBus eventBus = ServiceLocator.Instance.GetService<EventBus>();
+            //eventBus.Raise(EventBusDefinitions.NeedToChangeWindowContent, new UserControlEventBusArgs(new MainLoginedPage()));
+            eventBus.Raise(EventBusDefinitions.LoginedInAccount, new EventBusArgs());
         }
 
         public ICommand ChangeToRegisterWindow { get; }
