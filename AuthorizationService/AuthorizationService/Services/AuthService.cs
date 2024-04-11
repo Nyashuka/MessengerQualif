@@ -129,7 +129,7 @@ namespace AuthorizationService.Services
 
             if( responseData == null )
             {
-                return new ServiceResponse<AccessTokenDTO>() { Data = null, Success = false, ErrorMessage = "Can't parse data from json"}
+                return new ServiceResponse<AccessTokenDTO>() { Data = null, Success = false, ErrorMessage = "Can't parse data from json" };
             }    
 
             return responseData;
