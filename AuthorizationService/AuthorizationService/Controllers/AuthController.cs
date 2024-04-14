@@ -48,5 +48,13 @@ namespace AuthorizationService.Controllers
 
             return Ok(response);
         }
+
+        [HttpGet("is-user-authenticated")]
+        public async Task<ActionResult<ServiceResponse<AuthUserDataDTO>>> IsUserAuthenticated(string accessToken)
+        {
+            var response = await _authService.IsUserAuthenticated(accessToken);
+
+            return Ok(response);
+        }
     }
 }

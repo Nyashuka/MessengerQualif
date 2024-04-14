@@ -16,6 +16,7 @@ using System.Net.Http.Json;
 using MessangerWithRoles.WPFClient.Data;
 using MessangerWithRoles.WPFClient.MVVM.Models;
 using System.Windows;
+using MessangerWithRoles.WPFClient.Services;
 
 namespace MessangerWithRoles.WPFClient.MVVM.ViewModels
 {
@@ -83,6 +84,9 @@ namespace MessangerWithRoles.WPFClient.MVVM.ViewModels
                 MessageBox.Show(dataFromResponse.ErrorMessage);
                 return;
             }
+
+            AuthService authService = new AuthService(dataFromResponse.Data);
+            ServiceLocator.Instance.RegisterService(authService);
 
             EventBus eventBus = ServiceLocator.Instance.GetService<EventBus>();
             //eventBus.Raise(EventBusDefinitions.NeedToChangeWindowContent, new UserControlEventBusArgs(new MainLoginedPage()));

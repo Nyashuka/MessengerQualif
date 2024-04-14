@@ -25,6 +25,8 @@ namespace MessengerDatabaseService
             );
 
             builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<IFriendsService, FriendsService>();
+            builder.Services.AddScoped<IUsersService, UsersService>();
 
             var app = builder.Build();
 

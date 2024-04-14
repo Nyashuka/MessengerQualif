@@ -11,6 +11,7 @@
     <None Remove="Images\Icons\donsenger.jpg" />
     <None Remove="Images\Icons\email-icon.png" />
     <None Remove="Images\Icons\key-icon.png" />
+    <None Remove="Images\Icons\not-twitter-icon.png" />
     <None Remove="Images\Icons\twitter-icon.png" />
     <None Remove="Images\Icons\user-icon.png" />
   </ItemGroup>
@@ -24,6 +25,7 @@
     <Resource Include="Images\Icons\donsenger.jpg" />
     <Resource Include="Images\Icons\email-icon.png" />
     <Resource Include="Images\Icons\key-icon.png" />
+    <Resource Include="Images\Icons\not-twitter-icon.png" />
     <Resource Include="Images\Icons\twitter-icon.png" />
     <Resource Include="Images\Icons\user-icon.png" />
   </ItemGroup>

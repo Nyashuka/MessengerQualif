@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using MessangerWithRoles.WPFClient.MVVM.ViewModels;
+using System.Windows.Controls;
 
 namespace MessangerWithRoles.WPFClient.MVVM.Views.UserControls
 {
@@ -10,6 +11,7 @@ namespace MessangerWithRoles.WPFClient.MVVM.Views.UserControls
         public FriendsPage()
         {
             InitializeComponent();
+            DataContext = new FriendsPageViewModel();
         }
     }
 }

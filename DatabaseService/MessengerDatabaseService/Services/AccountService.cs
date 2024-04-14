@@ -110,5 +110,27 @@ namespace MessengerDatabaseService.Services
 
             return new ServiceResponse<bool>() { Data = true };
         }
+
+        public async Task<ServiceResponse<UserDataByAccessTokenDTO>> GetAccountByAccessToken(string accessToken)
+        {
+            var accessTokenData = _databaseContext.AccessTokens.FirstOrDefault(x => x.Token == accessToken);
+
+            if(accessTokenData == null)
+            {
+                return new ServiceResponse<UserDataByAccessTokenDTO>()
+                {
+                    Data = null,
+                    Success = false,
+                    ErrorMessage = "Token is not exists!"
+                };
+            }
+
+            var user = _databaseContext.Users.FirstOrDefault(x => x.AccountId == accessTokenData.AccountId);
+
+            return new ServiceResponse<UserDataByAccessTokenDTO>
+            {
+                Data = new UserDataByAccessTokenDTO() { AccountId = user.AccountId, UserId = user.Id }
+            };
+        }
     }
 }

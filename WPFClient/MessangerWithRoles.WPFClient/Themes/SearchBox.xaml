@@ -22,7 +22,7 @@
                                  CaretBrush="DarkGray"
                                  Margin="8 0 0 0"
                                  FontSize="12"
-                                 Text="{Binding MessageText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                 Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                                 <TextBox.InputBindings>
                                     <KeyBinding Command="{Binding SendMessageCommand}" Key="Return"/>
                                 </TextBox.InputBindings>

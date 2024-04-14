@@ -2,8 +2,8 @@
 {
     public class UserDTO
     {
-        public int AccountId { get; set; }
+        public int Id { get; set; }
         public string Username { get; set; } = string.Empty;
-        public string ProfileName { get; set; } = string.Empty;
+        public string DisplayName { get; set; } = string.Empty;
     }
 }

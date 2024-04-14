@@ -4,16 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MessangerWithRoles.WPFClient.MVVM.Views.UserControls"
+             xmlns:global="clr-namespace:MessangerWithRoles.WPFClient"
              xmlns:vm="clr-namespace:MessangerWithRoles.WPFClient.MVVM.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="300">
     <Grid>
         <StackPanel Orientation="Vertical"
              Width="250">
-            <Image Source="/Images/Icons/donsenger.jpg"
+            <Image Source="/Images/Icons/twitter-icon.png"
             Width="100" Height="100"/>
 
-            <TextBlock Text="DonSenger"
+            <TextBlock Text="{Binding Source={x:Static global:GlobalVariables.MessengerName}, Mode=OneWay}"
                 Foreground="White"
                 FontSize="25"
                 FontWeight="Medium"

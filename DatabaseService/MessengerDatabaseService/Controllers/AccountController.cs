@@ -71,5 +71,16 @@ namespace MessengerDatabaseService.Controllers
 
             return Ok(token);
         }
+
+        [HttpGet("get-user-by-token")]
+        public async Task<ActionResult<ServiceResponse<UserDataByAccessTokenDTO>>> GetUserByAccessToken(string accessToken)
+        {
+            var response = await _accountService.GetAccountByAccessToken(accessToken);
+
+            if(!response.Success)
+                return BadRequest(response);
+
+            return Ok(response);
+        }
     }
 }

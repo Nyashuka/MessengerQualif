@@ -6,6 +6,6 @@
         public required string Name { get; set; }
 
         public int ChatId { get; set; }
-        public required ChatType Chat { get; set; }
+        public required Chat Chat { get; set; }
     }
 }

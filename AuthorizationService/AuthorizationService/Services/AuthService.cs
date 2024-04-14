@@ -115,22 +115,22 @@ namespace AuthorizationService.Services
         {
             var response = await _httpClient.GetAsync($"{APIEndpoints.GetUserGET}?accountId={accountId}");
 
-            if( response == null )
+            if (response == null)
             {
                 return new ServiceResponse<AccessTokenDTO>() { Data = null, Success = false, ErrorMessage = "Request cannot execute!" };
             }
 
-            if(!response.IsSuccessStatusCode)
+            if (!response.IsSuccessStatusCode)
             {
                 return new ServiceResponse<AccessTokenDTO>() { Data = null, Success = false, ErrorMessage = response.ReasonPhrase };
             }
 
             var responseData = await response.Content.ReadFromJsonAsync<ServiceResponse<AccessTokenDTO>>();
 
-            if( responseData == null )
+            if (responseData == null)
             {
                 return new ServiceResponse<AccessTokenDTO>() { Data = null, Success = false, ErrorMessage = "Can't parse data from json" };
-            }    
+            }
 
             return responseData;
         }
@@ -210,17 +210,51 @@ namespace AuthorizationService.Services
             else
             {
                 var tokenFromDatabase = await TryGetTokenIfExistsInDatabase(account.Data.Id);
-                if(tokenFromDatabase.Data != null)
+                if (tokenFromDatabase.Data != null)
                 {
                     response.Data = tokenFromDatabase.Data.Token;
                     return response;
-                }    
+                }
                 var token = CreateToken(account.Data);
                 response.Data = token;
                 await SaveTokenToDatabase(account.Data.Id, token);
             }
 
             return response;
+        }
+
+        public async Task<ServiceResponse<AuthUserDataDTO>> IsUserAuthenticated(string accessToken)
+        {
+            var response = await _httpClient.GetAsync($"{APIEndpoints.GetAccountByAccessTokenGET}?accessToken={accessToken}");
+            var dataFromResponse = await response.Content.ReadFromJsonAsync<ServiceResponse<UserDataByAccessTokenDTO>>();
+
+            if (dataFromResponse == null)
+            {
+                return new ServiceResponse<AuthUserDataDTO>
+                {
+                    Data = null,
+                    Success = false,
+                    ErrorMessage = "Cannot parse from database response"
+                };
+            }
+
+            if (!dataFromResponse.Success)
+            {
+                return new ServiceResponse<AuthUserDataDTO>
+                {
+                    Success = false,
+                    ErrorMessage = dataFromResponse.ErrorMessage
+                };
+            }
+
+            return new ServiceResponse<AuthUserDataDTO>
+            {
+                Data = new AuthUserDataDTO()
+                {
+                    HasAccess = true,
+                    Data = dataFromResponse.Data
+                }
+            };
         }
     }
 }

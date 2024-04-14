@@ -3,11 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MessengerWithRoles.WPFClient"
-        xmlns:uc="clr-namespace:MessangerWithRoles.WPFClient.MVVM.Views.UserControls"
+        xmlns:local="clr-namespace:MessangerWithRoles.WPFClient.MVVM.Views.Windows"
+        xmlns:global="clr-namespace:MessangerWithRoles.WPFClient"
         xmlns:vm="clr-namespace:MessangerWithRoles.WPFClient.MVVM.ViewModels"
         mc:Ignorable="d"
-        Title="" Height="600" Width="1000"
+        Title="{Binding Source={x:Static global:GlobalVariables.MessengerName}, Mode=OneWay}" Height="600" Width="1000"
         Background="Transparent"
         AllowsTransparency="True"
         WindowStartupLocation="CenterScreen"
@@ -48,7 +48,7 @@
                     <ColumnDefinition Width="5px"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Text="DonSenger" Foreground="DarkGray"
+                <TextBlock Grid.Column="0" Text="{Binding Source={x:Static global:GlobalVariables.MessengerName}, Mode=OneWay}" Foreground="DarkGray"
                            FontSize="15"
                            FontFamily="Montserrat"
                            Margin="5"

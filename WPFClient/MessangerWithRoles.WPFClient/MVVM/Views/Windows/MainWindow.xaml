@@ -4,9 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MessangerWithRoles.WPFClient.MVVM.Views.Windows"
+        xmlns:global="clr-namespace:MessangerWithRoles.WPFClient"
         xmlns:vm="clr-namespace:MessangerWithRoles.WPFClient.MVVM.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="720" Width="1280"
+        Title="{Binding Source={x:Static global:GlobalVariables.MessengerName}, Mode=OneWay}" Height="720" Width="1280"
         WindowStyle="None"
         AllowsTransparency="True" Background="Transparent"
         ResizeMode="CanResizeWithGrip"
@@ -23,7 +24,7 @@
 
             <Border Grid.Row="0" Background="#2B3252" CornerRadius="15 15 0 0" MouseDown="Border_MouseDown">
                 <Grid>
-                    <Label Content="DonSenger" Foreground="White" VerticalAlignment="Center" Margin="10 0 0 0"
+                    <Label Content="{Binding Source={x:Static global:GlobalVariables.MessengerName}, Mode=OneWay}" Foreground="White" VerticalAlignment="Center" Margin="10 0 0 0"
                FontSize="14"/>
                     
                     <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">

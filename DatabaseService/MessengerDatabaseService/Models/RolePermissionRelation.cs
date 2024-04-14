@@ -9,6 +9,6 @@
         public required Role Role { get; set; }
 
         public int ChatPermissionId {  get; set; }
-        public ChatPermission Permission { get; set; }
+        public ChatPermission ChatPermission { get; set; }
     }
 }

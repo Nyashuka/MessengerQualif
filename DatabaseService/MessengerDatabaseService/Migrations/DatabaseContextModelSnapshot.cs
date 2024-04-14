@@ -39,6 +39,8 @@ namespace MessengerDatabaseService.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AccountId");
+
                     b.ToTable("AccessTokens");
                 });
 
@@ -140,6 +142,29 @@ namespace MessengerDatabaseService.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ChatTypes");
+                });
+
+            modelBuilder.Entity("MessengerDatabaseService.Models.FriendRelation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("FriendId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FriendId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("FriendRelations");
                 });
 
             modelBuilder.Entity("MessengerDatabaseService.Models.Message", b =>
@@ -272,6 +297,17 @@ namespace MessengerDatabaseService.Migrations
                     b.ToTable("UserRoleRelations");
                 });
 
+            modelBuilder.Entity("MessengerDatabaseService.Models.AccessToken", b =>
+                {
+                    b.HasOne("MessengerDatabaseService.Models.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+                });
+
             modelBuilder.Entity("MessengerDatabaseService.Models.Chat", b =>
                 {
                     b.HasOne("MessengerDatabaseService.Models.ChatType", "ChatType")
@@ -285,7 +321,7 @@ namespace MessengerDatabaseService.Migrations
 
             modelBuilder.Entity("MessengerDatabaseService.Models.ChatMember", b =>
                 {
-                    b.HasOne("MessengerDatabaseService.Models.ChatType", "Chat")
+                    b.HasOne("MessengerDatabaseService.Models.Chat", "Chat")
                         .WithMany()
                         .HasForeignKey("ChatId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -302,9 +338,28 @@ namespace MessengerDatabaseService.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("MessengerDatabaseService.Models.FriendRelation", b =>
+                {
+                    b.HasOne("MessengerDatabaseService.Models.User", "Friend")
+                        .WithMany()
+                        .HasForeignKey("FriendId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MessengerDatabaseService.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Friend");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("MessengerDatabaseService.Models.Message", b =>
                 {
-                    b.HasOne("MessengerDatabaseService.Models.ChatType", "Chat")
+                    b.HasOne("MessengerDatabaseService.Models.Chat", "Chat")
                         .WithMany()
                         .HasForeignKey("ChatId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -323,7 +378,7 @@ namespace MessengerDatabaseService.Migrations
 
             modelBuilder.Entity("MessengerDatabaseService.Models.Role", b =>
                 {
-                    b.HasOne("MessengerDatabaseService.Models.ChatType", "Chat")
+                    b.HasOne("MessengerDatabaseService.Models.Chat", "Chat")
                         .WithMany()
                         .HasForeignKey("ChatId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -334,7 +389,7 @@ namespace MessengerDatabaseService.Migrations
 
             modelBuilder.Entity("MessengerDatabaseService.Models.RolePermissionRelation", b =>
                 {
-                    b.HasOne("MessengerDatabaseService.Models.ChatPermission", "Permission")
+                    b.HasOne("MessengerDatabaseService.Models.ChatPermission", "ChatPermission")
                         .WithMany()
                         .HasForeignKey("ChatPermissionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -346,7 +401,7 @@ namespace MessengerDatabaseService.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Permission");
+                    b.Navigation("ChatPermission");
 
                     b.Navigation("Role");
                 });
