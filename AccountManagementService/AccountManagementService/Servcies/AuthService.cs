@@ -18,13 +18,21 @@ namespace AccountManagementService.Servcies
             var authenticatedUserResponse = await _httpClient.GetAsync($"{APIEndpoints.IsUserAuthenticatedGET}?accessToken={accessToken}");
             var authenticatedUserData = await authenticatedUserResponse.Content.ReadFromJsonAsync<ServiceResponse<AuthUserDataDTO>>();
 
-            if (authenticatedUserData == null || authenticatedUserData.Success == false ||
-               authenticatedUserData.Data == null)
+            if (authenticatedUserData == null)
             {
                 return new ServiceResponse<AuthUserDataDTO>
                 {
                     Success = false,
                     ErrorMessage = authenticatedUserResponse.ReasonPhrase
+                };
+            }
+
+            if(authenticatedUserData.Data == null)
+            {
+                return new ServiceResponse<AuthUserDataDTO>()
+                {
+                    Success = false,
+                    ErrorMessage = authenticatedUserData.ErrorMessage
                 };
             }
 

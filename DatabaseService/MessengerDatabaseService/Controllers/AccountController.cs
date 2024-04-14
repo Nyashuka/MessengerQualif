@@ -40,7 +40,7 @@ namespace MessengerDatabaseService.Controllers
         }
 
         [HttpGet("get-account")]
-        public async Task<ActionResult<ServiceResponse<AccountDTO>>> GetAccout(string email)
+        public async Task<ActionResult<ServiceResponse<AccountDTO>>> GetAccount(string email)
         {
             var account = await _accountService.GetAccount(email);
 
@@ -51,7 +51,7 @@ namespace MessengerDatabaseService.Controllers
         }
 
         [HttpPost("save-token")]
-        public async Task<ActionResult<ServiceResponse<bool>>> SaveToken(AccessToken accessToken)
+        public async Task<ActionResult<ServiceResponse<bool>>> SaveToken(AccessTokenDTO accessToken)
         {
             var savingResponse = await _accountService.SaveAccessToken(accessToken);
 

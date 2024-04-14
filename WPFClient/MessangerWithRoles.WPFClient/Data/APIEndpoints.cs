@@ -14,9 +14,10 @@ namespace MessangerWithRoles.WPFClient.Data
 
         // account management service
         public const string GetAllUsersGET = "http://127.0.0.1:5293/api/Users";
-        public const string AddFriendPOST = "http://127.0.0.1:5293/api/Friends/add-friend";
-        public const string RemoveFriendPOST = "http://127.0.0.1:5293/api/Friends/remove-friend";
-        public const string GetAllFriendsPOST = "http://127.0.0.1:5293/api/Friends";
+
+        public const string AddFriendGET = "http://127.0.0.1:5293/api/FriendsManagement/add-friend";
+        public const string RemoveFriendGET = "http://127.0.0.1:5293/api/FriendsManagement/remove-friend";
+        public const string GetAllFriendsGET = "http://127.0.0.1:5293/api/FriendsManagement";
 
 
     }

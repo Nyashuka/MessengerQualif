@@ -2,6 +2,7 @@
 using AuthorizationService.Models;
 using AuthorizationService.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace AuthorizationService.Controllers
 {
@@ -55,6 +56,14 @@ namespace AuthorizationService.Controllers
             var response = await _authService.IsUserAuthenticated(accessToken);
 
             return Ok(response);
+        }
+
+        [HttpGet("validate-token")]
+        public ActionResult<ServiceResponse<AuthUserDataDTO>> ValidateToken(string accessToken)
+        {
+            var response = _authService.ValidateToken(accessToken);
+
+            return Ok(response.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         }
     }
 }

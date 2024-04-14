@@ -48,7 +48,7 @@
 
                             </StackPanel>
 
-                            <Button Grid.Column="1" Height="40px" Width="40px" Command="{Binding AddFriend}" 
+                            <Button Grid.Column="1" Height="40px" Width="40px" Command="{Binding AddToFriend}" 
                                     Content="+"
                                     FontSize="18"
                                     HorizontalContentAlignment="Center" VerticalContentAlignment="Center">

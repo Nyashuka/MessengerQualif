@@ -1,5 +1,6 @@
 ﻿using AuthorizationService.DTOs;
 using AuthorizationService.Models;
+using System.Security.Claims;
 
 namespace AuthorizationService.Services.Interfaces
 {
@@ -9,5 +10,6 @@ namespace AuthorizationService.Services.Interfaces
         Task<ServiceResponse<AuthUserDataDTO>> IsUserAuthenticated(string accessToken);
         Task<bool> IsUserExist(string email);
         Task<ServiceResponse<string>> Login(string email, string password);
+        ClaimsPrincipal ValidateToken(string token);
     }
 }

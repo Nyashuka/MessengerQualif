@@ -8,6 +8,12 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows;
 using MessangerWithRoles.WPFClient.MVVM.Infrastracture.Commands;
+using MessangerWithRoles.WPFClient.Services.ServiceLocator;
+using MessangerWithRoles.WPFClient.Services.EventBusModule;
+using MessangerWithRoles.WPFClient.Services;
+using System.Net.Http;
+using MessangerWithRoles.WPFClient.Data;
+using System.Net.Http.Json;
 
 namespace MessangerWithRoles.WPFClient.MVVM.ViewModels
 {
@@ -18,9 +24,28 @@ namespace MessangerWithRoles.WPFClient.MVVM.ViewModels
 
         public ICommand AddToFriend { get; }
         private bool CanAddToFriendCommandExecute(object p) => true;
-        private void OnAddToFriendCommandExecute(object p)
+        private async void OnAddToFriendCommandExecute(object p)
         {
-            MessageBox.Show(_user.Username);
+            var authService = ServiceLocator.Instance.GetService<AuthService>();
+
+            HttpClient httpClient = new HttpClient();
+
+            var response = await httpClient.GetAsync($"{APIEndpoints.AddFriendGET}?accessToken={authService.AccesToken}&friendUserId={User.Id}");
+            var data = await response.Content.ReadFromJsonAsync<ServiceResponse<bool>>();
+
+            if(data == null)
+            {
+                MessageBox.Show("Cant pars data");
+                return;
+            }
+
+            if (!data.Success)
+            {
+                MessageBox.Show(data.ErrorMessage);
+                return;
+            }
+
+            MessageBox.Show("Added to friends " + User.DisplayName);
         }
 
         public UserViewModel(User user)

@@ -98,22 +98,38 @@ namespace MessengerDatabaseService.Services
             return new ServiceResponse<AccessToken>() { Data = token };
         }
 
-        public async Task<ServiceResponse<bool>> SaveAccessToken(AccessToken accessToken)
+        public async Task<ServiceResponse<bool>> SaveAccessToken(AccessTokenDTO accessTokenDTO)
         {
-            bool exists = await _databaseContext.AccessTokens.AnyAsync(x => x.AccountId == accessToken.AccountId);
+            bool exists = await _databaseContext.AccessTokens.AnyAsync(x => x.AccountId == accessTokenDTO.AccountId);
 
             if (exists)
                 return new ServiceResponse<bool>() { Data = true };
 
-            _databaseContext.AccessTokens.Add(accessToken);
+            AccessToken token = new AccessToken()
+            {
+                AccountId = accessTokenDTO.AccountId,
+                Token = accessTokenDTO.Token,
+            };
+
+            _databaseContext.AccessTokens.Add(token);
             await _databaseContext.SaveChangesAsync();
 
             return new ServiceResponse<bool>() { Data = true };
         }
 
+        private bool IsTokensSame(string token1, string token2)
+        {
+            string token1Substring = token1.Substring(0, token1.IndexOf('.'));
+            string token2Substring = token2.Substring(0, token2.IndexOf('.'));
+
+            return token1Substring.Equals(token2Substring);
+        }
+
         public async Task<ServiceResponse<UserDataByAccessTokenDTO>> GetAccountByAccessToken(string accessToken)
         {
-            var accessTokenData = _databaseContext.AccessTokens.FirstOrDefault(x => x.Token == accessToken);
+            //List<AccessToken> accessTokens = _databaseContext.AccessTokens.ToList();
+            //var accessTokenData = accessTokens.FirstOrDefault(x => IsTokensSame(accessToken, x.Token));
+            var accessTokenData = _databaseContext.AccessTokens.FirstOrDefault(x => accessToken.Equals(x.Token));
 
             if(accessTokenData == null)
             {

@@ -42,7 +42,7 @@ namespace AuthorizationService.Services
 
         public async Task<ServiceResponse<Account>> GetAccount(string email)
         {
-            var response = await _httpClient.GetAsync($"{APIEndpoints.GetUserGET}?email={email}");
+            var response = await _httpClient.GetAsync($"{APIEndpoints.GetAccountGET}?email={email}");
             if (response == null)
             {
                 return new ServiceResponse<Account>()
@@ -113,7 +113,7 @@ namespace AuthorizationService.Services
 
         private async Task<ServiceResponse<AccessTokenDTO>> TryGetTokenIfExistsInDatabase(int accountId)
         {
-            var response = await _httpClient.GetAsync($"{APIEndpoints.GetUserGET}?accountId={accountId}");
+            var response = await _httpClient.GetAsync($"{APIEndpoints.GetTokenGET}?accountId={accountId}");
 
             if (response == null)
             {
@@ -129,7 +129,7 @@ namespace AuthorizationService.Services
 
             if (responseData == null)
             {
-                return new ServiceResponse<AccessTokenDTO>() { Data = null, Success = false, ErrorMessage = "Can't parse data from json" };
+                return new ServiceResponse<AccessTokenDTO>() { Success = false, ErrorMessage = "Can't parse data from json" };
             }
 
             return responseData;
@@ -140,7 +140,7 @@ namespace AuthorizationService.Services
             List<Claim> claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.NameIdentifier, account.Id.ToString()),
-                new Claim(ClaimTypes.Name, account.Email),
+                new Claim(ClaimTypes.Email, account.Email),
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
@@ -155,6 +155,37 @@ namespace AuthorizationService.Services
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
             return jwt;
+        }
+
+        public ClaimsPrincipal ValidateToken(string token)
+        {
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
+                         _configuration.GetSection("AppSettings:Token").Value
+            ));
+
+            // Налаштування параметрів перевірки токена
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = key
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            try
+            {
+                ClaimsPrincipal principal = tokenHandler.ValidateToken(
+                    token, tokenValidationParameters, out SecurityToken validatedToken);
+
+                return principal;
+            }
+            catch (SecurityTokenException)
+            {
+                return null;
+            }
         }
 
         private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
