@@ -23,6 +23,14 @@ namespace MessengerDatabaseService.Controllers
 
             return Ok(response);
         }
-        
+
+        [HttpGet("get-user")]
+        public async Task<ActionResult<ServiceResponse<UserDTO>>> GetUserByAccountId(int accountId)
+        {
+            var response = await _userService.GetUserByAccountId(accountId);
+
+            return Ok(response);
+        }
+
     }
 }

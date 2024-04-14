@@ -53,17 +53,9 @@ namespace AuthorizationService.Controllers
         [HttpGet("is-user-authenticated")]
         public async Task<ActionResult<ServiceResponse<AuthUserDataDTO>>> IsUserAuthenticated(string accessToken)
         {
-            var response = await _authService.IsUserAuthenticated(accessToken);
+            var response = await _authService.TryValidateAndGetAccountFromToken(accessToken);
 
             return Ok(response);
-        }
-
-        [HttpGet("validate-token")]
-        public ActionResult<ServiceResponse<AuthUserDataDTO>> ValidateToken(string accessToken)
-        {
-            var response = _authService.ValidateToken(accessToken);
-
-            return Ok(response.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         }
     }
 }

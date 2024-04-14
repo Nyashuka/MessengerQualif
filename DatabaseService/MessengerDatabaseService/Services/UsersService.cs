@@ -2,6 +2,7 @@
 using MessengerDatabaseService.DTOs;
 using MessengerDatabaseService.Models;
 using MessengerDatabaseService.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace MessengerDatabaseService.Services
 {
@@ -32,6 +33,25 @@ namespace MessengerDatabaseService.Services
             };
 
             return Task.FromResult(users);
+        }
+
+        public async Task<ServiceResponse<UserDTO>> GetUserByAccountId(int accountId)
+        {
+            var user = await _databaseContext.Users.FirstOrDefaultAsync(user => user.AccountId == accountId);
+
+            if (user == null)
+            {
+                return new ServiceResponse<UserDTO>()
+                {
+                    Success = false,
+                    ErrorMessage = $"User with account id={accountId} does not exists!"
+                };
+            }
+
+            return new ServiceResponse<UserDTO>
+            {
+                Data = new UserDTO() { DisplayName = user.DisplayName, Username = user.Username, Id = user.Id },
+            };
         }
 
         public Task<ServiceResponse<User>> UpdateUser(int userId, UserDTO newUserData)

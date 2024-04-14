@@ -254,38 +254,64 @@ namespace AuthorizationService.Services
             return response;
         }
 
-        public async Task<ServiceResponse<AuthUserDataDTO>> IsUserAuthenticated(string accessToken)
+        public async Task<ServiceResponse<AuthUserDataDTO>> TryValidateAndGetAccountFromToken(string accessToken)
         {
-            var response = await _httpClient.GetAsync($"{APIEndpoints.GetAccountByAccessTokenGET}?accessToken={accessToken}");
-            var dataFromResponse = await response.Content.ReadFromJsonAsync<ServiceResponse<UserDataByAccessTokenDTO>>();
+            var claimsPrincipal = ValidateToken(accessToken);
 
-            if (dataFromResponse == null)
+            if (claimsPrincipal == null)
             {
-                return new ServiceResponse<AuthUserDataDTO>
+                return new ServiceResponse<AuthUserDataDTO>()
                 {
-                    Data = null,
                     Success = false,
-                    ErrorMessage = "Cannot parse from database response"
+                    ErrorMessage = "Token is not valid!"
                 };
             }
 
-            if (!dataFromResponse.Success)
-            {
-                return new ServiceResponse<AuthUserDataDTO>
-                {
-                    Success = false,
-                    ErrorMessage = dataFromResponse.ErrorMessage
-                };
-            }
+            var id = Convert.ToInt32(claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value);
 
-            return new ServiceResponse<AuthUserDataDTO>
+            var response = await _httpClient.GetAsync($"{APIEndpoints.GetUserGet}?accountId={id}");
+            var responseData = await response.Content.ReadFromJsonAsync<ServiceResponse<UserDTO>>();
+
+            return new ServiceResponse<AuthUserDataDTO>()
             {
                 Data = new AuthUserDataDTO()
                 {
                     HasAccess = true,
-                    Data = dataFromResponse.Data
-                }
+                    Data = new UserDataByAccessTokenDTO() { AccountId = id, UserId = responseData.Data.Id},
+                },
             };
+
+
+            //var response = await _httpClient.GetAsync($"{APIEndpoints.GetAccountByAccessTokenGET}?accessToken={accessToken}");
+            //var dataFromResponse = await response.Content.ReadFromJsonAsync<ServiceResponse<UserDataByAccessTokenDTO>>();
+
+            //if (dataFromResponse == null)
+            //{
+            //    return new ServiceResponse<AuthUserDataDTO>
+            //    {
+            //        Data = null,
+            //        Success = false,
+            //        ErrorMessage = "Cannot parse from database response"
+            //    };
+            //}
+
+            //if (!dataFromResponse.Success)
+            //{
+            //    return new ServiceResponse<AuthUserDataDTO>
+            //    {
+            //        Success = false,
+            //        ErrorMessage = dataFromResponse.ErrorMessage
+            //    };
+            //}
+
+            //return new ServiceResponse<AuthUserDataDTO>
+            //{
+            //    Data = new AuthUserDataDTO()
+            //    {
+            //        HasAccess = true,
+            //        Data = dataFromResponse.Data
+            //    }
+            //};
         }
     }
 }
