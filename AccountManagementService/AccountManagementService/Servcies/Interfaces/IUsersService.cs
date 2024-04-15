@@ -4,7 +4,7 @@ namespace AccountManagementService.Servcies.Interfaces
 {
     public interface IUsersService
     {
-        Task<ServiceResponse<List<User>>> GetAllUsers();
+        Task<ServiceResponse<List<User>>> GetOtherUsersForUser(int userId);
 
     }
 }

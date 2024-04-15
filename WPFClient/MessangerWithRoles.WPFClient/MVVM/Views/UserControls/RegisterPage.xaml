@@ -42,7 +42,7 @@
                    FontFamily="Monsterrat"
                    Margin="0 20 0 0"/>
 
-            <TextBox Text="{Binding Email}"
+            <TextBox Text="{Binding CreationAccount.Email}"
                  FontSize="13"
                  FontWeight="Medium"
                  FontFamily="Montserrat"
@@ -64,7 +64,7 @@
                        FontFamily="Monsterrat"
                        Margin="0 20 0 0"/>
 
-            <TextBox Text="{Binding DisplayName}"
+            <TextBox Text="{Binding CreationAccount.DisplayName}"
                      FontSize="13"
                      FontWeight="Medium"
                      FontFamily="Montserrat"
@@ -86,7 +86,7 @@
                        FontFamily="Monsterrat"
                        Margin="0 20 0 0"/>
 
-            <TextBox Text="{Binding Username}"
+            <TextBox Text="{Binding CreationAccount.Username}"
                      FontSize="13"
                      FontWeight="Medium"
                      FontFamily="Montserrat"
@@ -108,7 +108,7 @@
                    FontFamily="Monsterrat"
                    Margin="0 20 0 0"/>
 
-            <TextBox Text="{Binding Password}"
+            <TextBox Text="{Binding CreationAccount.Password}"
                      FontSize="13"
                      FontWeight="Medium"
                      FontFamily="Montserrat"
@@ -130,7 +130,7 @@
                         FontFamily="Monsterrat"
                         Margin="0 20 0 0"/>
 
-            <TextBox Text="{Binding ConfirmPassword}"
+            <TextBox Text="{Binding CreationAccount.ConfirmPassword}"
                          FontSize="13"
                           FontWeight="Medium"
                           FontFamily="Montserrat"

@@ -1,4 +1,5 @@
-﻿using MessangerWithRoles.WPFClient.Services.ServiceLocator;
+﻿using MessangerWithRoles.WPFClient.Services;
+using MessangerWithRoles.WPFClient.Services.ServiceLocatorModule;
 using System;
 using System.Configuration;
 using System.Data;
@@ -15,6 +16,14 @@ namespace MessengerWithRoles.WPFClient
         {
             get { return "Nyatter"; }
         }
+
+        public App()
+        {
+            InitializeComponent();
+
+            ServiceLocator.Instance.RegisterService(new AuthService());
+        }
+
     }
 
 }

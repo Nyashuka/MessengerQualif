@@ -2,7 +2,7 @@
 using MessangerWithRoles.WPFClient.MVVM.Views.UserControls;
 using MessangerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
 using MessangerWithRoles.WPFClient.Services.EventBusModule;
-using MessangerWithRoles.WPFClient.Services.ServiceLocator;
+using MessangerWithRoles.WPFClient.Services.ServiceLocatorModule;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,49 +48,16 @@ namespace MessangerWithRoles.WPFClient.MVVM.ViewModels
 
         private async void OnLoginCommandExecute(object p)
         {
-            HttpClient httpClient = new HttpClient();
+            var authService = ServiceLocator.Instance.GetService<AuthService>();
 
-            var loginData = new AccountLogin();
-            loginData.Email = Email;
-            loginData.Password = Password;
+            bool result = await authService.Login(Email, Password);
 
-            HttpResponseMessage? response = null;
-            try
+            if (result)
             {
-                response = await httpClient.PostAsJsonAsync(APIEndpoints.LoginPOST, loginData);
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-                return;
-            }
-            
-            if (response == null)
-            {
-                MessageBox.Show("Login Response in empty");
-                return;
-            }
+                EventBus eventBus = ServiceLocator.Instance.GetService<EventBus>();
 
-            var dataFromResponse = await response.Content.ReadFromJsonAsync<ServiceResponse<string>>();
-
-            if(dataFromResponse == null)
-            {
-                MessageBox.Show("Cannot parse data from login response!");
-                return;
+                eventBus.Raise(EventBusDefinitions.LoginedInAccount, new EventBusArgs());
             }
-
-            if(!dataFromResponse.Success)
-            {
-                MessageBox.Show(dataFromResponse.ErrorMessage);
-                return;
-            }
-
-            AuthService authService = new AuthService(dataFromResponse.Data);
-            ServiceLocator.Instance.RegisterService(authService);
-
-            EventBus eventBus = ServiceLocator.Instance.GetService<EventBus>();
-            //eventBus.Raise(EventBusDefinitions.NeedToChangeWindowContent, new UserControlEventBusArgs(new MainLoginedPage()));
-            eventBus.Raise(EventBusDefinitions.LoginedInAccount, new EventBusArgs());
         }
 
         public ICommand ChangeToRegisterWindow { get; }

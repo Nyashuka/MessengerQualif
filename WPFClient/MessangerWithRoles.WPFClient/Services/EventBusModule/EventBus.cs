@@ -1,5 +1,5 @@
 ﻿using MessangerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
-using MessangerWithRoles.WPFClient.Services.ServiceLocator;
+using MessangerWithRoles.WPFClient.Services.ServiceLocatorModule;
 using System;
 using System.Collections.Generic;
 using System.Linq;

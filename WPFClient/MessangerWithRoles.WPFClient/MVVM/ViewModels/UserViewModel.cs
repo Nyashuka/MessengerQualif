@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows;
 using MessangerWithRoles.WPFClient.MVVM.Infrastracture.Commands;
-using MessangerWithRoles.WPFClient.Services.ServiceLocator;
+using MessangerWithRoles.WPFClient.Services.ServiceLocatorModule;
 using MessangerWithRoles.WPFClient.Services.EventBusModule;
 using MessangerWithRoles.WPFClient.Services;
 using System.Net.Http;
@@ -30,7 +30,7 @@ namespace MessangerWithRoles.WPFClient.MVVM.ViewModels
 
             HttpClient httpClient = new HttpClient();
 
-            var response = await httpClient.GetAsync($"{APIEndpoints.AddFriendGET}?accessToken={authService.AccesToken}&friendUserId={User.Id}");
+            var response = await httpClient.GetAsync($"{APIEndpoints.AddFriendGET}?accessToken={authService.AccessToken}&friendUserId={User.Id}");
             var data = await response.Content.ReadFromJsonAsync<ServiceResponse<bool>>();
 
             if(data == null)

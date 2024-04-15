@@ -12,9 +12,9 @@ namespace AccountManagementService.Servcies
             _httpClient = httpClient;
         }
 
-        public async Task<ServiceResponse<List<User>>> GetAllUsers()
+        public async Task<ServiceResponse<List<User>>> GetOtherUsersForUser(int userId)
         {
-            var response = await _httpClient.GetAsync(APIEndpoints.GetUsersGET);
+            var response = await _httpClient.GetAsync($"{APIEndpoints.GetUsersGET}?userId={userId}");
 
             var data = await response.Content.ReadFromJsonAsync<ServiceResponse<List<User>>>();
 

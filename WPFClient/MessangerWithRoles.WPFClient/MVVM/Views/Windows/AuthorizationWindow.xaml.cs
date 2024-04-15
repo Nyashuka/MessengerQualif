@@ -1,7 +1,7 @@
 ﻿using MessangerWithRoles.WPFClient.MVVM.Views.Windows;
 using MessangerWithRoles.WPFClient.Services.EventBusModule;
 using MessangerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
-using MessangerWithRoles.WPFClient.Services.ServiceLocator;
+using MessangerWithRoles.WPFClient.Services.ServiceLocatorModule;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Documents;

@@ -85,7 +85,7 @@ namespace AuthorizationService.Services
             account.Email = clientAccountDTO.Email;
             account.DisplayName = clientAccountDTO.Email;
             account.Username = clientAccountDTO.Username;
-            account.DisplayName = clientAccountDTO.ProfileName;
+            account.DisplayName = clientAccountDTO.DisplayName;
             account.PasswordHash = Convert.ToBase64String(passwordHash);
             account.PasswordSalt = Convert.ToBase64String(passwordSalt);
 
@@ -157,7 +157,7 @@ namespace AuthorizationService.Services
             return jwt;
         }
 
-        public ClaimsPrincipal ValidateToken(string token)
+        public ClaimsPrincipal ValidateTokenOrGetNull(string token)
         {
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
                          _configuration.GetSection("AppSettings:Token").Value
@@ -256,7 +256,7 @@ namespace AuthorizationService.Services
 
         public async Task<ServiceResponse<AuthUserDataDTO>> TryValidateAndGetAccountFromToken(string accessToken)
         {
-            var claimsPrincipal = ValidateToken(accessToken);
+            var claimsPrincipal = ValidateTokenOrGetNull(accessToken);
 
             if (claimsPrincipal == null)
             {

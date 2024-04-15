@@ -2,6 +2,8 @@
 using MessangerWithRoles.WPFClient.MVVM.Infrastracture.Commands;
 using MessangerWithRoles.WPFClient.MVVM.Models;
 using MessangerWithRoles.WPFClient.MVVM.ViewModels.Base;
+using MessangerWithRoles.WPFClient.Services;
+using MessangerWithRoles.WPFClient.Services.ServiceLocatorModule;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -32,7 +34,21 @@ namespace MessangerWithRoles.WPFClient.MVVM.ViewModels
         private bool CanLoadUsersCommandExecute(object p) => true;
         private async void OnLoadUsersCommandExecute(object p)
         {
-            Users = (await GetAllUsersFromServer()).Select(user => new UserViewModel(user)).ToList();
+            Users = (await GetOtherUsersFromServer()).Select(user => new UserViewModel(user)).ToList();
+        }
+
+        private List<UserViewModel> _friends;
+        public List<UserViewModel> Friends
+        {
+            get => _friends;
+            set => Set(ref _friends, value);
+        }
+
+        public ICommand LoadFriends { get; }
+        private bool CanLoadFriendsCommandExecute(object p) => true;
+        private async void OnLoadFriendsCommandExecute(object p)
+        {
+            Friends = (await GetAllFriendsFromServer()).Select(user => new UserViewModel(user)).ToList();
         }
 
         public ICommand AddFriend { get; }
@@ -42,11 +58,24 @@ namespace MessangerWithRoles.WPFClient.MVVM.ViewModels
             MessageBox.Show((p as User).Username);
         }
 
-        private async Task<List<User>> GetAllUsersFromServer()
+        private async Task<List<User>> GetOtherUsersFromServer()
         {
             HttpClient httpClient = new HttpClient();
+            AuthService authService = ServiceLocator.Instance.GetService<AuthService>();
 
-            var response = await httpClient.GetAsync(APIEndpoints.GetAllUsersGET);
+            var response = await httpClient.GetAsync($"{APIEndpoints.GetAllUsersGET}?accessToken={authService.AccessToken}");
+
+            var data = await response.Content.ReadFromJsonAsync<ServiceResponse<List<User>>>();
+
+            return data.Data;
+        }
+
+        private async Task<List<User>> GetAllFriendsFromServer()
+        {
+            HttpClient httpClient = new HttpClient();
+            AuthService authService = ServiceLocator.Instance.GetService<AuthService>();
+
+            var response = await httpClient.GetAsync($"{APIEndpoints.GetAllFriendsGET}?accessToken={authService.AccessToken}");
 
             var data = await response.Content.ReadFromJsonAsync<ServiceResponse<List<User>>>();
 
@@ -56,7 +85,10 @@ namespace MessangerWithRoles.WPFClient.MVVM.ViewModels
         public FriendsPageViewModel() 
         {
             LoadUsers = new LambdaCommand(OnLoadUsersCommandExecute, CanLoadUsersCommandExecute);
+            LoadFriends = new LambdaCommand(OnLoadFriendsCommandExecute, CanLoadFriendsCommandExecute);
             AddFriend = new LambdaCommand(OnAddFriendCommandExecute, CanAddFriendCommandExecute);
+
+            LoadFriends.Execute(this);
         }
     }
 }

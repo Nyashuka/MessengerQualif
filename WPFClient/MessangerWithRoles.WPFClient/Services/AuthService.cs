@@ -1,21 +1,116 @@
-﻿using MessangerWithRoles.WPFClient.MVVM.Models;
-using MessangerWithRoles.WPFClient.Services.ServiceLocator;
+﻿using MessangerWithRoles.WPFClient.Data;
+using MessangerWithRoles.WPFClient.MVVM.Models;
+using MessangerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
+using MessangerWithRoles.WPFClient.Services.EventBusModule;
+using MessangerWithRoles.WPFClient.Services.ServiceLocatorModule;
+using System.Net.Http;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Net.Http.Json;
 
 namespace MessangerWithRoles.WPFClient.Services
 {
     public class AuthService : IService
     {
-        private readonly string _accesToken;
-        public string AccesToken => _accesToken;
+        public bool IsAuthenticated { get; private set; }
+        public string AccessToken { get; private set; }
 
-        public AuthService(string accessToken) 
+        public AuthService()
         {
-            _accesToken = accessToken;   
+            IsAuthenticated = false;
+            AccessToken = string.Empty;
+        }
+
+        public async Task<bool> Login(string email, string password)
+        {
+            HttpClient httpClient = new HttpClient();
+
+            var loginData = new AccountLogin();
+            loginData.Email = email;
+            loginData.Password = password;
+
+            HttpResponseMessage? response = null;
+            try
+            {
+                response = await httpClient.PostAsJsonAsync(APIEndpoints.LoginPOST, loginData);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return IsAuthenticated;
+            }
+
+            if (response == null)
+            {
+                MessageBox.Show("Login Response in empty");
+                return IsAuthenticated;
+            }
+
+            var dataFromResponse = await response.Content.ReadFromJsonAsync<ServiceResponse<string>>();
+
+            if (dataFromResponse == null)
+            {
+                MessageBox.Show("Cannot parse data from login response!");
+                return IsAuthenticated;
+            }
+
+            if (!dataFromResponse.Success)
+            {
+                MessageBox.Show(dataFromResponse.ErrorMessage);
+                return IsAuthenticated;
+            }
+
+            if(dataFromResponse.Data == null)
+            {
+                MessageBox.Show("Can't get Token, but login request successfully");
+                return IsAuthenticated;
+            }
+
+            IsAuthenticated = true;
+            AccessToken = dataFromResponse.Data;
+
+            EventBus eventBus = ServiceLocator.Instance.GetService<EventBus>();
+            eventBus.Raise(EventBusDefinitions.LoginedInAccount, new EventBusArgs());
+
+            return IsAuthenticated;
+        }
+
+        public async Task<bool> Register(CreationAccount accountData)
+        {
+            HttpClient client = new HttpClient();
+
+            HttpResponseMessage? response;
+
+            try
+            {
+                response = await client.PostAsJsonAsync(APIEndpoints.CreateAccountPOST, accountData);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return false;
+            }
+
+            if (!response.IsSuccessStatusCode)
+            {
+                MessageBox.Show(response.ReasonPhrase);
+                return false;
+            }
+
+            var data = await response.Content.ReadFromJsonAsync<ServiceResponse<int>>();
+            if (data == null)
+            {
+                MessageBox.Show("Response is success, but data cannot be parsed!");
+                return false;
+            }
+
+            if (data.Success)
+                MessageBox.Show($"Account created successfully with id={data.Data}");
+
+            IsAuthenticated = await Login(accountData.Email, accountData.Password);
+
+            return IsAuthenticated;
         }
     }
 }

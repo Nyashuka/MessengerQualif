@@ -1,4 +1,4 @@
-﻿using MessangerWithRoles.WPFClient.Services.ServiceLocator;
+﻿using MessangerWithRoles.WPFClient.Services.ServiceLocatorModule;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;

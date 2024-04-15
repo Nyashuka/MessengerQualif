@@ -10,16 +10,30 @@ namespace AccountManagementService.Controllers
     public class UsersController : ControllerBase
     {
         private IUsersService _userService;
+        private IAuthService _authService;
 
-        public UsersController(IUsersService usersService) 
+        public UsersController(IUsersService usersService, IAuthService authService) 
         {
             _userService = usersService;    
+            _authService = authService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<User>>>> GetAllUsers()
+        public async Task<ActionResult<ServiceResponse<List<User>>>> GetOtherUsersForUser(string accessToken)
         {
-            var response = await _userService.GetAllUsers();
+            var authenticatedUser = await _authService.TryGetAuthenticatedUser(accessToken);
+
+            if (authenticatedUser.Success == false)
+            {
+                var badResponse = new ServiceResponse<List<User>>
+                {
+                    Success = false,
+                    ErrorMessage = authenticatedUser.ErrorMessage
+                };
+                return BadRequest(badResponse);
+            }
+
+            var response = await _userService.GetOtherUsersForUser(authenticatedUser.Data.Data.UserId);
 
             return Ok(response);
         }

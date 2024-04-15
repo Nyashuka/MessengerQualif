@@ -15,6 +15,8 @@ namespace AccountManagementService.Servcies
 
         public async Task<ServiceResponse<bool>> AddFriend(int userId, int friendUserId)
         {
+
+
             var friendRelation = new FriendRelationDTO()
             {
                 UserId = userId,
