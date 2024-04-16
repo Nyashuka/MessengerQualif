@@ -4,8 +4,8 @@ namespace LongPollingConsoleClientTest
 {
     public class ChatMessage
     {
-        public string User { get; set; }
-        public string Message { get; set; }
+        public string User { get; set; } = string.Empty;
+        public string Message { get; set; } = string.Empty;
         public DateTime Timestamp { get; set; }
     }
 
@@ -14,17 +14,24 @@ namespace LongPollingConsoleClientTest
         static async Task Main(string[] args)
         {
             HttpClient client = new HttpClient();
-            string serverUrl = "http://127.0.0.1:6999/api/chat";
+            string serverUrl = "http://127.0.0.1:6999/api/chat";        
+            
+            string? user = string.Empty;
+            while (string.IsNullOrEmpty(user))
+            {
+                Console.Clear();
+                Console.Write("Your name: ");
+                user = Console.ReadLine();
+            }
+                
 
-            Console.Write("Your name: ");
-            string user = Console.ReadLine();
-
-            _ = PollMessages(client, serverUrl, user);
+            Task polling = PollMessages(client, serverUrl, user);
+           
 
             while (true)
             {
                 Console.Write("Enter message: ");
-                string message = Console.ReadLine();
+                string? message = Console.ReadLine();
 
                 if (!string.IsNullOrWhiteSpace(message))
                 {

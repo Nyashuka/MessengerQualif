@@ -1,4 +1,9 @@
 
+
+using Microsoft.Extensions.DependencyInjection;
+using NotificationService.Services;
+using NotificationService.Services.Interfaces;
+
 namespace NotificationService
 {
     public class Program
@@ -8,6 +13,9 @@ namespace NotificationService
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+
+            builder.Services.AddScoped(sp => new HttpClient { });
+            builder.Services.AddScoped<IAuthService, AuthService>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -25,10 +33,12 @@ namespace NotificationService
 
             app.UseAuthorization();
 
-
             app.MapControllers();
 
+            app.UseWebSockets();
+            
             app.Run();
+
         }
     }
 }
