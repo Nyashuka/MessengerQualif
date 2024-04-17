@@ -10,8 +10,8 @@ namespace WebSocketConsoleClientTest
             string uri = "ws://127.0.0.1:6999/api/Notification/connect";
 
             string? name = string.Empty;
-            //name = Console.ReadLine();
-            name = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjExIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6InRlc3QiLCJleHAiOjE3MTU0NjYxMTR9.vB6fnfE4Cw-BQrUEpooWPPIqay8ll_FoFhe4GbDyKXviN8UQubxj8LQrzFId8Yii1Pss24Z3gaNbXAo91qeksg";
+            name = Console.ReadLine();
+            //name = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjExIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6InRlc3QiLCJleHAiOjE3MTU0NjYxMTR9.vB6fnfE4Cw-BQrUEpooWPPIqay8ll_FoFhe4GbDyKXviN8UQubxj8LQrzFId8Yii1Pss24Z3gaNbXAo91qeksg";
 
             using (ClientWebSocket socket = new ClientWebSocket())
             {
