@@ -1,11 +1,11 @@
-﻿using MessangerWithRoles.WPFClient.MVVM.Infrastracture.Commands.Base;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MessengerWithRoles.WPFClient.MVVM.Infrastracture.Commands.Base;
 
-namespace MessangerWithRoles.WPFClient.MVVM.Infrastracture.Commands
+namespace MessengerWithRoles.WPFClient.MVVM.Infrastracture.Commands
 {
     public class LambdaCommand : Command
     {

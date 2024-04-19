@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MessangerWithRoles.WPFClient.Data
+namespace MessengerWithRoles.WPFClient.Data
 {
     public static class APIEndpoints
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MessangerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments
+namespace MessengerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments
 {
     public class EventBusArgs : IEventBusArgs
     {

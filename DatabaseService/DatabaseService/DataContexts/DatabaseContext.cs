@@ -1,5 +1,4 @@
-﻿
-using DatabaseService.Models;
+﻿using DatabaseService.Models.DatabaseModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 

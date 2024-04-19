@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace MessangerWithRoles.WPFClient.MVVM.ViewModels.Base
+namespace MessengerWithRoles.WPFClient.MVVM.ViewModels.Base
 {
     public class BaseViewModel : INotifyPropertyChanged
     {

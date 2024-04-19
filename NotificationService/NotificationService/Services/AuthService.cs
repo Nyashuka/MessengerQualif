@@ -6,7 +6,7 @@ namespace NotificationService.Services
 {
     public class AuthService : IAuthService
     {
-        private HttpClient _httpClient;
+        private readonly HttpClient _httpClient;
 
         public AuthService(HttpClient httpClient) 
         {

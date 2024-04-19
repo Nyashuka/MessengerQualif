@@ -1,24 +1,23 @@
-﻿using MessangerWithRoles.WPFClient.MVVM.ViewModels.Base;
-using MessangerWithRoles.WPFClient.MVVM.Views.UserControls;
-using MessangerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
-using MessangerWithRoles.WPFClient.Services.EventBusModule;
-using MessangerWithRoles.WPFClient.Services.ServiceLocatorModule;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using MessengerWithRoles.WPFClient.MVVM.Views.UserControls;
-using MessangerWithRoles.WPFClient.MVVM.Infrastracture.Commands;
 using System.Net.Http;
 using System.Net.Http.Json;
-using MessangerWithRoles.WPFClient.Data;
-using MessangerWithRoles.WPFClient.MVVM.Models;
+using MessengerWithRoles.WPFClient.Data;
+using MessengerWithRoles.WPFClient.MVVM.Models;
 using System.Windows;
-using MessangerWithRoles.WPFClient.Services;
+using MessengerWithRoles.WPFClient.MVVM.Infrastracture.Commands;
+using MessengerWithRoles.WPFClient.MVVM.ViewModels.Base;
+using MessengerWithRoles.WPFClient.Services;
+using MessengerWithRoles.WPFClient.Services.EventBusModule;
+using MessengerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
+using MessengerWithRoles.WPFClient.Services.ServiceLocatorModule;
 
-namespace MessangerWithRoles.WPFClient.MVVM.ViewModels
+namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 {
     public class LoginPageViewModel : BaseViewModel
     {

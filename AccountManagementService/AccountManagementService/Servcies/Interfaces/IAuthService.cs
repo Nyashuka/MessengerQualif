@@ -1,4 +1,4 @@
-﻿using AccountManagementService.DTOs;
+﻿using AccountManagementService.DTOs.Auth;
 using AccountManagementService.Models;
 
 namespace AccountManagementService.Servcies.Interfaces

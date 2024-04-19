@@ -16,7 +16,7 @@ namespace NotificationService
 
             builder.Services.AddScoped(sp => new HttpClient { });
             builder.Services.AddScoped<IAuthService, AuthService>();
-            builder.Services.AddSingleton<IClientsService, ClientsService>();
+            builder.Services.AddSingleton<IConnectionsService, ConnectionsService>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

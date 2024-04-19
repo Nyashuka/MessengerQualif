@@ -1,6 +1,7 @@
 ﻿using DatabaseService.DataContexts;
 using DatabaseService.DTOs;
 using DatabaseService.Models;
+using DatabaseService.Models.DatabaseModels;
 using DatabaseService.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;

@@ -1,11 +1,12 @@
 ﻿using DatabaseService.DataContexts;
 using DatabaseService.DTOs;
 using DatabaseService.Models;
+using DatabaseService.Models.DatabaseModels;
 using DatabaseService.Services.Interfaces;
 
 namespace DatabaseService.Services
 {
-    public class ChatMembersService : IChatMemebersService
+    public class ChatMembersService : IChatMembersService
     {
         private readonly DatabaseContext _databaseContext;
 
@@ -14,12 +15,12 @@ namespace DatabaseService.Services
             _databaseContext = databaseContext;
         }
 
-        public async Task<ServiceResponse<ChatMember>> AddMember(ChatMemberDTO chatMemberDTO)
+        public async Task<ServiceResponse<ChatMember>> AddMember(ChatMemberDTO chatMemberDto)
         {
             var chatMember = new ChatMember()
             {
-                ChatId = chatMemberDTO.ChatId,
-                UserId = chatMemberDTO.UserId,
+                ChatId = chatMemberDto.ChatId,
+                UserId = chatMemberDto.UserId,
             };
 
             _databaseContext.ChatMembers.Add(chatMember);
@@ -28,9 +29,11 @@ namespace DatabaseService.Services
             return new ServiceResponse<ChatMember> { Data = chatMember };
         }
 
-        public async Task<ServiceResponse<bool>> DeleteMember(int memberId)
+        public async Task<ServiceResponse<bool>> DeleteMember(ChatMemberDTO chatMemberDto)
         {
-            var chatMember = _databaseContext.ChatMembers.FirstOrDefault(x => x.UserId == memberId);
+            var chatMember = _databaseContext.ChatMembers
+                            .FirstOrDefault(x => x.ChatId == chatMemberDto.ChatId && 
+                                                           x.UserId == chatMemberDto.UserId);
 
             if (chatMember == null)
             {
@@ -38,7 +41,7 @@ namespace DatabaseService.Services
                 {
                     Data = false,
                     Success = false,
-                    ErrorMessage = $"Chat member with id={memberId} is not exists!"
+                    ErrorMessage = $"Chat member with id={chatMemberDto.UserId} is not exists!"
                 };
             }
 

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MessangerWithRoles.WPFClient.MVVM.Models
+namespace MessengerWithRoles.WPFClient.MVVM.Models
 {
     public class Chat
     {

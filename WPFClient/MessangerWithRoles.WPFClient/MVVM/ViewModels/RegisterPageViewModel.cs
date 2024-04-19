@@ -1,15 +1,15 @@
-﻿using MessangerWithRoles.WPFClient.MVVM.Infrastracture.Commands;
-using MessangerWithRoles.WPFClient.MVVM.Models;
-using MessangerWithRoles.WPFClient.MVVM.ViewModels.Base;
-using MessangerWithRoles.WPFClient.MVVM.Views.UserControls;
-using MessangerWithRoles.WPFClient.MVVM.Views.Windows;
-using MessangerWithRoles.WPFClient.Services;
-using MessangerWithRoles.WPFClient.Services.EventBusModule;
-using MessangerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
-using MessangerWithRoles.WPFClient.Services.ServiceLocatorModule;
+﻿using MessengerWithRoles.WPFClient.MVVM.Views.Windows;
 using System.Windows.Input;
+using MessengerWithRoles.WPFClient.MVVM.Infrastracture.Commands;
+using MessengerWithRoles.WPFClient.MVVM.Models;
+using MessengerWithRoles.WPFClient.MVVM.ViewModels.Base;
+using MessengerWithRoles.WPFClient.MVVM.Views.UserControls;
+using MessengerWithRoles.WPFClient.Services;
+using MessengerWithRoles.WPFClient.Services.EventBusModule;
+using MessengerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
+using MessengerWithRoles.WPFClient.Services.ServiceLocatorModule;
 
-namespace MessangerWithRoles.WPFClient.MVVM.ViewModels
+namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 {
     public class RegisterPageViewModel : BaseViewModel
     {

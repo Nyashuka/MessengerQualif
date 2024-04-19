@@ -1,15 +1,15 @@
-﻿using MessangerWithRoles.WPFClient.Data;
-using MessangerWithRoles.WPFClient.MVVM.Models;
-using MessangerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
-using MessangerWithRoles.WPFClient.Services.EventBusModule;
-using MessangerWithRoles.WPFClient.Services.ServiceLocatorModule;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Net.Http.Json;
+using MessengerWithRoles.WPFClient.Data;
+using MessengerWithRoles.WPFClient.MVVM.Models;
+using MessengerWithRoles.WPFClient.Services.EventBusModule;
+using MessengerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
+using MessengerWithRoles.WPFClient.Services.ServiceLocatorModule;
 
-namespace MessangerWithRoles.WPFClient.Services
+namespace MessengerWithRoles.WPFClient.Services
 {
     public class AuthService : IService
     {

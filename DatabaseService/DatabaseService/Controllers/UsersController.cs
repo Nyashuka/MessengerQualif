@@ -9,7 +9,7 @@ namespace DatabaseService.Controllers
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
-        private IUsersService _userService;
+        private readonly IUsersService _userService;
 
         public UsersController(IUsersService userService)
         {

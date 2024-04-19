@@ -1,5 +1,5 @@
-﻿using MessangerWithRoles.WPFClient.Services;
-using MessangerWithRoles.WPFClient.Services.ServiceLocatorModule;
+﻿using MessengerWithRoles.WPFClient.Services;
+using MessengerWithRoles.WPFClient.Services.ServiceLocatorModule;
 using System;
 using System.Configuration;
 using System.Data;

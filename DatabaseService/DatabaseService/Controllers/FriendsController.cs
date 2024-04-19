@@ -10,7 +10,7 @@ namespace DatabaseService.Controllers
     [ApiController]
     public class FriendsController : ControllerBase
     {
-        private IFriendsService _friendsService;
+        private readonly IFriendsService _friendsService;
 
         public FriendsController(IFriendsService friendsService) 
         {
@@ -18,12 +18,9 @@ namespace DatabaseService.Controllers
         }
 
         [HttpPost("add-friend")]
-        public async Task<ActionResult<ServiceResponse<bool>>> AddFriend(FriendRelationDTO friendDTO)
+        public async Task<ActionResult<ServiceResponse<bool>>> AddFriend(FriendRelationDTO friendDto)
         {
-            var response = await _friendsService.AddFriend(friendDTO);
-
-            if (response == null)
-                BadRequest(response);
+            var response = await _friendsService.AddFriend(friendDto);
 
             return Ok(response);
         }
@@ -33,9 +30,6 @@ namespace DatabaseService.Controllers
         {
             var response = await _friendsService.GetFriends(userId);
 
-            if (response == null)
-                BadRequest(response);
-
             return Ok(response);
         }
 
@@ -43,9 +37,6 @@ namespace DatabaseService.Controllers
         public async Task<ActionResult<ServiceResponse<bool>>> RemoveFriend(FriendRelationDTO friendDTO)
         {
             var response = await _friendsService.RemoveFriend(friendDTO);
-
-            if (response == null)
-                BadRequest(response);
 
             return Ok(response);
         }

@@ -1,4 +1,4 @@
-﻿namespace MessangerWithRoles.WPFClient.Services.ServiceLocatorModule
+﻿namespace MessengerWithRoles.WPFClient.Services.ServiceLocatorModule
 {
     public interface IService
     {

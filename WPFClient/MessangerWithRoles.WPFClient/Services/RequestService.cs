@@ -1,9 +1,9 @@
-﻿using MessangerWithRoles.WPFClient.Services.ServiceLocatorModule;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using MessengerWithRoles.WPFClient.Services.ServiceLocatorModule;
 
-namespace MessangerWithRoles.WPFClient.Services
+namespace MessengerWithRoles.WPFClient.Services
 {
     public class RequestService : IService
     {

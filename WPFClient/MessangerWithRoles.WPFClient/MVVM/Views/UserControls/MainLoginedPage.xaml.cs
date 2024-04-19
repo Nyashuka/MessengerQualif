@@ -1,5 +1,4 @@
-﻿using MessangerWithRoles.WPFClient.MVVM.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,8 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MessengerWithRoles.WPFClient.MVVM.ViewModels;
 
-namespace MessangerWithRoles.WPFClient.MVVM.Views.UserControls
+namespace MessengerWithRoles.WPFClient.MVVM.Views.UserControls
 {
     /// <summary>
     /// Interaction logic for MainLoginedPage.xaml

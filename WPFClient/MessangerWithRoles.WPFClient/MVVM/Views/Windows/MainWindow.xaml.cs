@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 
-namespace MessangerWithRoles.WPFClient.MVVM.Views.Windows
+namespace MessengerWithRoles.WPFClient.MVVM.Views.Windows
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

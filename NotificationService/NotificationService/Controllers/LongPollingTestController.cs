@@ -43,10 +43,10 @@ namespace NotificationService.Controllers
                 foreach (var waitingClient in waitingClients)
                 {
                     // Перевірте, чи користувач не є відправником повідомлення
-                    if (waitingClient.User != message.User)
-                    {
-                        waitingClient.TaskCompletionSource.SetResult(new List<ChatMessage> { message });
-                    }
+                    //if (waitingClient.User != message.User)
+                    //{
+                    //    waitingClient.TaskCompletionSource.SetResult(new List<ChatMessage> { message });
+                    //}
                 }
                 waitingClients.RemoveAll(client => client.TaskCompletionSource.Task.IsCompleted);
             }

@@ -1,4 +1,4 @@
-﻿using MessangerWithRoles.WPFClient.MVVM.ViewModels;
+﻿using MessengerWithRoles.WPFClient.MVVM.ViewModels;
 using System.Windows.Controls;
 
 namespace MessengerWithRoles.WPFClient.MVVM.Views.UserControls

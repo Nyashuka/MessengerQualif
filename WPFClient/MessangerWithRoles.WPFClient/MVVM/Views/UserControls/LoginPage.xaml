@@ -1,11 +1,11 @@
-﻿<UserControl x:Class="MessangerWithRoles.WPFClient.MVVM.Views.UserControls.LoginPage"
+﻿<UserControl x:Class="MessengerWithRoles.WPFClient.MVVM.Views.UserControls.LoginPage"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MessangerWithRoles.WPFClient.MVVM.Views.UserControls"
-             xmlns:global="clr-namespace:MessangerWithRoles.WPFClient"
-             xmlns:vm="clr-namespace:MessangerWithRoles.WPFClient.MVVM.ViewModels"
+             xmlns:local="clr-namespace:MessengerWithRoles.WPFClient.MVVM.Views.UserControls"
+             xmlns:global="clr-namespace:MessengerWithRoles.WPFClient"
+             xmlns:vm="clr-namespace:MessengerWithRoles.WPFClient.MVVM.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="300">
     <Grid>

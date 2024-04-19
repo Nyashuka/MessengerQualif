@@ -1,12 +1,12 @@
-﻿using MessangerWithRoles.WPFClient.MVVM.Infrastracture.Commands;
-using MessangerWithRoles.WPFClient.MVVM.Models;
-using MessangerWithRoles.WPFClient.MVVM.ViewModels.Base;
-using MessangerWithRoles.WPFClient.MVVM.Views.UserControls;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.Windows.Input;
+using MessengerWithRoles.WPFClient.MVVM.Infrastracture.Commands;
+using MessengerWithRoles.WPFClient.MVVM.Models;
+using MessengerWithRoles.WPFClient.MVVM.ViewModels.Base;
+using MessengerWithRoles.WPFClient.MVVM.Views.UserControls;
 
-namespace MessangerWithRoles.WPFClient.MVVM.ViewModels
+namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 {
     public class MainWindowViewModel : BaseViewModel
     {
@@ -25,9 +25,20 @@ namespace MessangerWithRoles.WPFClient.MVVM.ViewModels
             CurrentContent = new FriendsPage();
         }
 
+        public ICommand OpenCreateChatWindow { get; }
+
+        public bool CanExecuteOpenCreateChatWindowCommand(object p) => true;
+
+        public void OnExecuteOpenCreateChatWindowCommand(object p)
+        {
+            CurrentContent = new CreatePersonalChatPage();
+            CurrentContent.DataContext = new CreatePersonalChatViewModel();
+        }
+
         public MainWindowViewModel()
         {
             OpenFriendsWindow = new LambdaCommand(OnExecuteOpenFriendsWindowCommand, CanExecuteOpenFriendsWindowCommand);
+            OpenCreateChatWindow = new LambdaCommand(OnExecuteOpenCreateChatWindowCommand, CanExecuteOpenCreateChatWindowCommand);
 
             Chats = new ObservableCollection<Chat>();
             for (int i = 0; i < 100; i++)

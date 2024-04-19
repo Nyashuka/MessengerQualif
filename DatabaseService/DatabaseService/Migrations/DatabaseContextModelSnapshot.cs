@@ -22,7 +22,7 @@ namespace DatabaseService.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("MessengerDatabaseService.Models.AccessToken", b =>
+            modelBuilder.Entity("DatabaseService.Models.DatabaseModels.AccessToken", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -44,7 +44,7 @@ namespace DatabaseService.Migrations
                     b.ToTable("AccessTokens");
                 });
 
-            modelBuilder.Entity("MessengerDatabaseService.Models.Account", b =>
+            modelBuilder.Entity("DatabaseService.Models.DatabaseModels.Account", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -69,7 +69,7 @@ namespace DatabaseService.Migrations
                     b.ToTable("Accounts");
                 });
 
-            modelBuilder.Entity("MessengerDatabaseService.Models.Chat", b =>
+            modelBuilder.Entity("DatabaseService.Models.DatabaseModels.Chat", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -87,7 +87,7 @@ namespace DatabaseService.Migrations
                     b.ToTable("Chats");
                 });
 
-            modelBuilder.Entity("MessengerDatabaseService.Models.ChatMember", b =>
+            modelBuilder.Entity("DatabaseService.Models.DatabaseModels.ChatMember", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -110,7 +110,7 @@ namespace DatabaseService.Migrations
                     b.ToTable("ChatMembers");
                 });
 
-            modelBuilder.Entity("MessengerDatabaseService.Models.ChatPermission", b =>
+            modelBuilder.Entity("DatabaseService.Models.DatabaseModels.ChatPermission", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -127,7 +127,7 @@ namespace DatabaseService.Migrations
                     b.ToTable("ChatPermissions");
                 });
 
-            modelBuilder.Entity("MessengerDatabaseService.Models.ChatType", b =>
+            modelBuilder.Entity("DatabaseService.Models.DatabaseModels.ChatType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -144,7 +144,7 @@ namespace DatabaseService.Migrations
                     b.ToTable("ChatTypes");
                 });
 
-            modelBuilder.Entity("MessengerDatabaseService.Models.FriendRelation", b =>
+            modelBuilder.Entity("DatabaseService.Models.DatabaseModels.FriendRelation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -167,7 +167,7 @@ namespace DatabaseService.Migrations
                     b.ToTable("FriendRelations");
                 });
 
-            modelBuilder.Entity("MessengerDatabaseService.Models.Message", b =>
+            modelBuilder.Entity("DatabaseService.Models.DatabaseModels.Message", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -179,8 +179,13 @@ namespace DatabaseService.Migrations
                         .HasColumnType("integer");
 
                     b.Property<byte[]>("Data")
-                        .IsRequired()
                         .HasColumnType("bytea");
+
+                    b.Property<string>("MediaUrl")
+                        .HasColumnType("text");
+
+                    b.Property<int>("RecipientId")
+                        .HasColumnType("integer");
 
                     b.Property<int>("SenderId")
                         .HasColumnType("integer");
@@ -188,19 +193,18 @@ namespace DatabaseService.Migrations
                     b.Property<DateTime>("Timestamp")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ChatId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("RecipientId");
+
+                    b.HasIndex("SenderId");
 
                     b.ToTable("Messages");
                 });
 
-            modelBuilder.Entity("MessengerDatabaseService.Models.Role", b =>
+            modelBuilder.Entity("DatabaseService.Models.DatabaseModels.Role", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -222,7 +226,7 @@ namespace DatabaseService.Migrations
                     b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("MessengerDatabaseService.Models.RolePermissionRelation", b =>
+            modelBuilder.Entity("DatabaseService.Models.DatabaseModels.RolePermissionRelation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -248,7 +252,7 @@ namespace DatabaseService.Migrations
                     b.ToTable("RolePermissionRelations");
                 });
 
-            modelBuilder.Entity("MessengerDatabaseService.Models.User", b =>
+            modelBuilder.Entity("DatabaseService.Models.DatabaseModels.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -274,7 +278,7 @@ namespace DatabaseService.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("MessengerDatabaseService.Models.UserRoleRelation", b =>
+            modelBuilder.Entity("DatabaseService.Models.DatabaseModels.UserRoleRelation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -297,9 +301,9 @@ namespace DatabaseService.Migrations
                     b.ToTable("UserRoleRelations");
                 });
 
-            modelBuilder.Entity("MessengerDatabaseService.Models.AccessToken", b =>
+            modelBuilder.Entity("DatabaseService.Models.DatabaseModels.AccessToken", b =>
                 {
-                    b.HasOne("MessengerDatabaseService.Models.Account", "Account")
+                    b.HasOne("DatabaseService.Models.DatabaseModels.Account", "Account")
                         .WithMany()
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -308,9 +312,9 @@ namespace DatabaseService.Migrations
                     b.Navigation("Account");
                 });
 
-            modelBuilder.Entity("MessengerDatabaseService.Models.Chat", b =>
+            modelBuilder.Entity("DatabaseService.Models.DatabaseModels.Chat", b =>
                 {
-                    b.HasOne("MessengerDatabaseService.Models.ChatType", "ChatType")
+                    b.HasOne("DatabaseService.Models.DatabaseModels.ChatType", "ChatType")
                         .WithMany()
                         .HasForeignKey("ChatTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -319,15 +323,15 @@ namespace DatabaseService.Migrations
                     b.Navigation("ChatType");
                 });
 
-            modelBuilder.Entity("MessengerDatabaseService.Models.ChatMember", b =>
+            modelBuilder.Entity("DatabaseService.Models.DatabaseModels.ChatMember", b =>
                 {
-                    b.HasOne("MessengerDatabaseService.Models.Chat", "Chat")
+                    b.HasOne("DatabaseService.Models.DatabaseModels.Chat", "Chat")
                         .WithMany()
                         .HasForeignKey("ChatId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MessengerDatabaseService.Models.User", "User")
+                    b.HasOne("DatabaseService.Models.DatabaseModels.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -338,15 +342,15 @@ namespace DatabaseService.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MessengerDatabaseService.Models.FriendRelation", b =>
+            modelBuilder.Entity("DatabaseService.Models.DatabaseModels.FriendRelation", b =>
                 {
-                    b.HasOne("MessengerDatabaseService.Models.User", "Friend")
+                    b.HasOne("DatabaseService.Models.DatabaseModels.User", "Friend")
                         .WithMany()
                         .HasForeignKey("FriendId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MessengerDatabaseService.Models.User", "User")
+                    b.HasOne("DatabaseService.Models.DatabaseModels.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -357,28 +361,36 @@ namespace DatabaseService.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MessengerDatabaseService.Models.Message", b =>
+            modelBuilder.Entity("DatabaseService.Models.DatabaseModels.Message", b =>
                 {
-                    b.HasOne("MessengerDatabaseService.Models.Chat", "Chat")
+                    b.HasOne("DatabaseService.Models.DatabaseModels.Chat", "Chat")
                         .WithMany()
                         .HasForeignKey("ChatId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MessengerDatabaseService.Models.User", "User")
+                    b.HasOne("DatabaseService.Models.DatabaseModels.User", "Recipient")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("RecipientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DatabaseService.Models.DatabaseModels.User", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Chat");
 
-                    b.Navigation("User");
+                    b.Navigation("Recipient");
+
+                    b.Navigation("Sender");
                 });
 
-            modelBuilder.Entity("MessengerDatabaseService.Models.Role", b =>
+            modelBuilder.Entity("DatabaseService.Models.DatabaseModels.Role", b =>
                 {
-                    b.HasOne("MessengerDatabaseService.Models.Chat", "Chat")
+                    b.HasOne("DatabaseService.Models.DatabaseModels.Chat", "Chat")
                         .WithMany()
                         .HasForeignKey("ChatId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -387,15 +399,15 @@ namespace DatabaseService.Migrations
                     b.Navigation("Chat");
                 });
 
-            modelBuilder.Entity("MessengerDatabaseService.Models.RolePermissionRelation", b =>
+            modelBuilder.Entity("DatabaseService.Models.DatabaseModels.RolePermissionRelation", b =>
                 {
-                    b.HasOne("MessengerDatabaseService.Models.ChatPermission", "ChatPermission")
+                    b.HasOne("DatabaseService.Models.DatabaseModels.ChatPermission", "ChatPermission")
                         .WithMany()
                         .HasForeignKey("ChatPermissionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MessengerDatabaseService.Models.Role", "Role")
+                    b.HasOne("DatabaseService.Models.DatabaseModels.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -406,9 +418,9 @@ namespace DatabaseService.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("MessengerDatabaseService.Models.User", b =>
+            modelBuilder.Entity("DatabaseService.Models.DatabaseModels.User", b =>
                 {
-                    b.HasOne("MessengerDatabaseService.Models.Account", "Account")
+                    b.HasOne("DatabaseService.Models.DatabaseModels.Account", "Account")
                         .WithMany()
                         .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -417,15 +429,15 @@ namespace DatabaseService.Migrations
                     b.Navigation("Account");
                 });
 
-            modelBuilder.Entity("MessengerDatabaseService.Models.UserRoleRelation", b =>
+            modelBuilder.Entity("DatabaseService.Models.DatabaseModels.UserRoleRelation", b =>
                 {
-                    b.HasOne("MessengerDatabaseService.Models.Role", "Role")
+                    b.HasOne("DatabaseService.Models.DatabaseModels.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MessengerDatabaseService.Models.User", "User")
+                    b.HasOne("DatabaseService.Models.DatabaseModels.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

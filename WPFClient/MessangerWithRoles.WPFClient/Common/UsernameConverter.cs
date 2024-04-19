@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace MessangerWithRoles.WPFClient.Common
+namespace MessengerWithRoles.WPFClient.Common
 {
     public class UsernameConverter : IValueConverter
     {

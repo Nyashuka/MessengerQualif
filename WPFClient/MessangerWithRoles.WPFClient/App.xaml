@@ -17,6 +17,7 @@
                 <ResourceDictionary Source="./Themes/MessageItem.xaml"/>
                 <ResourceDictionary Source="./Themes/ChatTypeComboBox.xaml"/>
                 <ResourceDictionary Source="./Themes/FriendsListView.xaml"/>
+                <ResourceDictionary Source="./Themes/UsersForCreateChatListView.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
 

@@ -1,5 +1,6 @@
 ﻿using DatabaseService.DTOs;
 using DatabaseService.Models;
+using DatabaseService.Models.DatabaseModels;
 using DatabaseService.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,4 +1,4 @@
-﻿namespace MessangerWithRoles.WPFClient.MVVM.Models
+﻿namespace MessengerWithRoles.WPFClient.MVVM.Models
 {
     public class AccountLogin
     {

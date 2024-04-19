@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:common="clr-namespace:MessangerWithRoles.WPFClient.Common">
+                    xmlns:common="clr-namespace:MessengerWithRoles.WPFClient.Common">
 
     <common:UsernameConverter x:Key="UsernameConverter"/>
 

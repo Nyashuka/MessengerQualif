@@ -1,7 +1,7 @@
-﻿using MessangerWithRoles.WPFClient.MVVM.ViewModels;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
+using MessengerWithRoles.WPFClient.MVVM.ViewModels;
 
-namespace MessangerWithRoles.WPFClient.MVVM.Views.UserControls
+namespace MessengerWithRoles.WPFClient.MVVM.Views.UserControls
 {
     /// <summary>
     /// Interaction logic for LoginPage.xaml

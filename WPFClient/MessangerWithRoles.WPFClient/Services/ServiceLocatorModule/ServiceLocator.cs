@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MessangerWithRoles.WPFClient.Services.ServiceLocatorModule
+namespace MessengerWithRoles.WPFClient.Services.ServiceLocatorModule
 {
     public class ServiceLocator
     {

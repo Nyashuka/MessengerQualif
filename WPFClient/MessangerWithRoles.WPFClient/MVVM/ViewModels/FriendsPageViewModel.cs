@@ -1,18 +1,18 @@
-﻿using MessangerWithRoles.WPFClient.Data;
-using MessangerWithRoles.WPFClient.MVVM.Infrastracture.Commands;
-using MessangerWithRoles.WPFClient.MVVM.Models;
-using MessangerWithRoles.WPFClient.MVVM.ViewModels.Base;
-using MessangerWithRoles.WPFClient.Services;
-using MessangerWithRoles.WPFClient.Services.ServiceLocatorModule;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using MessengerWithRoles.WPFClient.Data;
+using MessengerWithRoles.WPFClient.MVVM.Infrastracture.Commands;
+using MessengerWithRoles.WPFClient.MVVM.Models;
+using MessengerWithRoles.WPFClient.MVVM.ViewModels.Base;
+using MessengerWithRoles.WPFClient.Services;
+using MessengerWithRoles.WPFClient.Services.ServiceLocatorModule;
 
-namespace MessangerWithRoles.WPFClient.MVVM.ViewModels
+namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 {
     public class FriendsPageViewModel : BaseViewModel
     {

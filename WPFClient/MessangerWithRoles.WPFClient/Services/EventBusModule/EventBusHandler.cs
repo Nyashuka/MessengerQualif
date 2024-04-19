@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MessangerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
+using MessengerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
 
-namespace MessangerWithRoles.WPFClient.Services.EventBusModule
+namespace MessengerWithRoles.WPFClient.Services.EventBusModule
 {
     public delegate void EventBusHandler(IEventBusArgs e);
 }

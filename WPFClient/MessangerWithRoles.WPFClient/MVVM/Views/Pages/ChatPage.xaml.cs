@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MessangerWithRoles.WPFClient.MVVM.Views.Pages
+namespace MessengerWithRoles.WPFClient.MVVM.Views.Pages
 {
     /// <summary>
     /// Interaction logic for ChatPage.xaml
