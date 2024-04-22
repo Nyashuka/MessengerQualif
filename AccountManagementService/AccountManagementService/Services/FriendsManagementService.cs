@@ -1,22 +1,20 @@
 ﻿using AccountManagementService.DTOs;
 using AccountManagementService.Models;
-using AccountManagementService.Servcies.Interfaces;
+using AccountManagementService.Services.Interfaces;
 
-namespace AccountManagementService.Servcies
+namespace AccountManagementService.Services
 {
-    public class FriendsManagementServcie : IFriendsManagementService
+    public class FriendsManagementService : IFriendsManagementService
     {
-        private HttpClient _httpClient;
+        private readonly HttpClient _httpClient;
 
-        public FriendsManagementServcie(HttpClient httpClient)
+        public FriendsManagementService(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
 
         public async Task<ServiceResponse<bool>> AddFriend(int userId, int friendUserId)
         {
-
-
             var friendRelation = new FriendRelationDTO()
             {
                 UserId = userId,

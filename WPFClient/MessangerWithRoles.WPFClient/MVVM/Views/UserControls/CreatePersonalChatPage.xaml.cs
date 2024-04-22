@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MessengerWithRoles.WPFClient.MVVM.ViewModels;
 
 namespace MessengerWithRoles.WPFClient.MVVM.Views.UserControls
 {
@@ -23,6 +24,13 @@ namespace MessengerWithRoles.WPFClient.MVVM.Views.UserControls
         public CreatePersonalChatPage()
         {
             InitializeComponent();
+        }
+
+        private void CreatePersonalChatPage_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            var vm = (CreatePersonalChatViewModel)DataContext;
+
+            vm.LoadUsers.Execute(this);
         }
     }
 }

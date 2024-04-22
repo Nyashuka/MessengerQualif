@@ -6,7 +6,9 @@ namespace DatabaseService.Services.Interfaces
 {
     public interface IChatService
     {
-        Task<ServiceResponse<Chat>> CreateChat(ChatDTO chatDTO);
+        Task<ServiceResponse<ChatDto>> GetPersonalChatIfExists(List<UserDto> users);
+        Task<ServiceResponse<List<ChatDto>>> GetAllPersonalChats(int userId);
+        Task<ServiceResponse<ChatDto>> CreatePersonalChatIfNotExists(ChatDto chatDTO);
         Task<ServiceResponse<bool>> DeleteChat(int id);
     }
 }

@@ -1,10 +1,7 @@
-﻿using MessengerWithRoles.WPFClient.MVVM.Views.Windows;
-using MessengerWithRoles.WPFClient.Services.EventBusModule;
+﻿using MessengerWithRoles.WPFClient.Services.EventBusModule;
 using MessengerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
 using MessengerWithRoles.WPFClient.Services.ServiceLocatorModule;
-using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace MessengerWithRoles.WPFClient.MVVM.Views.Windows
@@ -17,7 +14,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.Views.Windows
         public AuthorizationWindow()
         {
             EventBus eventBus = new EventBus();
-            eventBus.Subscribe<EventBusArgs>(EventBusDefinitions.LoginedInAccount, OnLoginedInAccount);
+            eventBus.Subscribe<EventBusArgs>(EventBusDefinitions.LoginedInAccount, OnLoggedInAccount);
             ServiceLocator.Instance.RegisterService(eventBus);
 
             InitializeComponent();
@@ -31,7 +28,8 @@ namespace MessengerWithRoles.WPFClient.MVVM.Views.Windows
 
         private void buttonMinimize_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.MainWindow.WindowState = WindowState.Minimized;
+            if (Application.Current.MainWindow != null)
+                Application.Current.MainWindow.WindowState = WindowState.Minimized;
         }
 
         private void buttonClose_Click(object sender, RoutedEventArgs e)
@@ -39,7 +37,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.Views.Windows
             Application.Current.Shutdown();
         }
 
-        private void OnLoginedInAccount(IEventBusArgs eventBusArgs)
+        private void OnLoggedInAccount(IEventBusArgs eventBusArgs)
         {
             var mainWindow = new MainWindow();
             Application.Current.MainWindow = mainWindow;

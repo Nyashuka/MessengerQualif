@@ -17,7 +17,7 @@ namespace DatabaseService.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<UserDTO>>>> GetOtherUsersForUser(int userId)
+        public async Task<ActionResult<ServiceResponse<List<UserDto>>>> GetOtherUsersForUser(int userId)
         {
             var response = await _userService.GetOtherUsersForUser(userId);
 
@@ -25,7 +25,15 @@ namespace DatabaseService.Controllers
         }
 
         [HttpGet("get-user")]
-        public async Task<ActionResult<ServiceResponse<UserDTO>>> GetUserByAccountId(int accountId)
+        public async Task<ActionResult<ServiceResponse<UserDto>>> GetUserByUserId(int userId)
+        {
+            var response = await _userService.GetUserByUserId(userId);
+
+            return Ok(response);
+        }
+
+        [HttpGet("get-user-by-account-id")]
+        public async Task<ActionResult<ServiceResponse<UserDto>>> GetUserByAccountId(int accountId)
         {
             var response = await _userService.GetUserByAccountId(accountId);
 

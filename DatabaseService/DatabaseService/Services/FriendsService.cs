@@ -40,10 +40,10 @@ namespace DatabaseService.Services
             return response;
         }
 
-        public async Task<ServiceResponse<List<UserDTO>>> GetFriends(int userId)
+        public async Task<ServiceResponse<List<UserDto>>> GetFriends(int userId)
         {
             var friends = _databaseContext.FriendRelations.Where(x => x.UserId == userId)
-                                                          .Select(x => new UserDTO
+                                                          .Select(x => new UserDto
                                                           {
                                                               Id = x.Friend.Id,
                                                               Username = x.Friend.Username,
@@ -51,7 +51,7 @@ namespace DatabaseService.Services
                                                           })
                                                           .ToList();
 
-            return new ServiceResponse<List<UserDTO>> { Data = friends };
+            return new ServiceResponse<List<UserDto>> { Data = friends };
         }
 
         public async Task<ServiceResponse<bool>> RemoveFriend(FriendRelationDTO friend)

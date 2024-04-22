@@ -16,6 +16,8 @@ namespace MessengerWithRoles.WPFClient.Services
         public bool IsAuthenticated { get; private set; }
         public string AccessToken { get; private set; }
 
+        public User User { get; private set; }
+
         public AuthService()
         {
             IsAuthenticated = false;
@@ -69,6 +71,9 @@ namespace MessengerWithRoles.WPFClient.Services
 
             IsAuthenticated = true;
             AccessToken = dataFromResponse.Data;
+
+            var userDataRequest = await httpClient.GetAsync($"{APIEndpoints.GetUserGET}?accessToken={AccessToken}");
+            User = (await userDataRequest.Content.ReadFromJsonAsync<ServiceResponse<User>>()).Data;
 
             EventBus eventBus = ServiceLocator.Instance.GetService<EventBus>();
             eventBus.Raise(EventBusDefinitions.LoginedInAccount, new EventBusArgs());

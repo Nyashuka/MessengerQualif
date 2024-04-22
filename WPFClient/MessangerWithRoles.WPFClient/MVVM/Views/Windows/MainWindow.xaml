@@ -11,7 +11,8 @@
         WindowStyle="None"
         AllowsTransparency="True" Background="Transparent"
         ResizeMode="CanResizeWithGrip"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        Loaded="MainWindow_OnLoaded">
     <Window.DataContext>
         <vm:MainWindowViewModel/>
     </Window.DataContext>
@@ -145,20 +146,13 @@
                         </Border>
 
 
-                        <ListView Grid.Row="2" ItemsSource="{Binding Chats}"
+                        <ListView Grid.Row="2" ItemsSource="{Binding Chats}" 
                        HorizontalAlignment="Stretch"
                        Background="Transparent"
                        BorderThickness="0"
                        ItemContainerStyle="{StaticResource ChatCard}"
                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                       ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                       >
-
-                            <ListView.Resources>
-                                <Style TargetType="ScrollViewer" BasedOn="{StaticResource ChatsListViewScrollViewer}"/>
-                            </ListView.Resources>
-
-                        </ListView>
+                       />
 
                     </Grid>
                 </Border>

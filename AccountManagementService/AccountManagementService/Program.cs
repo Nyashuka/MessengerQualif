@@ -1,6 +1,6 @@
 
-using AccountManagementService.Servcies;
-using AccountManagementService.Servcies.Interfaces;
+using AccountManagementService.Services;
+using AccountManagementService.Services.Interfaces;
 
 namespace AccountManagementService
 {
@@ -13,9 +13,10 @@ namespace AccountManagementService
             // Add services to the container.
 
             builder.Services.AddScoped(sp => new HttpClient { });
-            builder.Services.AddScoped<IFriendsManagementService, FriendsManagementServcie>();
-            builder.Services.AddScoped<IUsersService, UsersServcie>();
+            builder.Services.AddScoped<IFriendsManagementService, FriendsManagementService>();
+            builder.Services.AddScoped<IUsersService, UsersService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IChatsService, ChatsService>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

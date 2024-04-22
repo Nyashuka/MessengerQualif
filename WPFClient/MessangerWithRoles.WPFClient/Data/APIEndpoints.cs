@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MessengerWithRoles.WPFClient.Data
+﻿namespace MessengerWithRoles.WPFClient.Data
 {
     public static class APIEndpoints
     {
@@ -14,11 +8,15 @@ namespace MessengerWithRoles.WPFClient.Data
 
         // account management service
         public const string GetAllUsersGET = "http://127.0.0.1:5293/api/Users";
+        public const string GetUserGET = "http://127.0.0.1:5293/api/Users/get-user";
 
         public const string AddFriendGET = "http://127.0.0.1:5293/api/FriendsManagement/add-friend";
         public const string RemoveFriendGET = "http://127.0.0.1:5293/api/FriendsManagement/remove-friend";
         public const string GetAllFriendsGET = "http://127.0.0.1:5293/api/FriendsManagement";
 
-
+        // chats
+        public const string CreatePersonalChatPOST = "http://127.0.0.1:5293/api/Chats/create-personal";
+        public const string GetPersonalChatPOST = "http://127.0.0.1:5293/api/Chats/get-personal";
+        public const string GetAllChatsGET = "http://127.0.0.1:5293/api/Chats/get-personal";
     }
 }

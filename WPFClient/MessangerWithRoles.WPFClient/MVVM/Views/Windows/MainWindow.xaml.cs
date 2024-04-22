@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Input;
+using MessengerWithRoles.WPFClient.MVVM.ViewModels;
 
 namespace MessengerWithRoles.WPFClient.MVVM.Views.Windows
 {
@@ -43,6 +44,13 @@ namespace MessengerWithRoles.WPFClient.MVVM.Views.Windows
         private void ButtonClose_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
+        }
+
+        private async void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            var vm = (MainWindowViewModel)DataContext;
+
+            await vm.LoadPersonalChats();
         }
     }
 }

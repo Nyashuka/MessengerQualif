@@ -1,7 +1,6 @@
-﻿using AccountManagementService.DTOs;
-using AccountManagementService.Models;
+﻿using AccountManagementService.Models;
 
-namespace AccountManagementService.Servcies.Interfaces
+namespace AccountManagementService.Services.Interfaces
 {
     public interface IFriendsManagementService
     {

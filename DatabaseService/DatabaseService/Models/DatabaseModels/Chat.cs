@@ -4,6 +4,6 @@
     {
         public int Id { get; set; }
         public int ChatTypeId { get; set; }
-        public required ChatType ChatType { get; set; }
+        public ChatType? ChatType { get; set; }
     }
 }

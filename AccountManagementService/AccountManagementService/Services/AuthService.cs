@@ -1,8 +1,8 @@
 ﻿using AccountManagementService.DTOs.Auth;
 using AccountManagementService.Models;
-using AccountManagementService.Servcies.Interfaces;
+using AccountManagementService.Services.Interfaces;
 
-namespace AccountManagementService.Servcies
+namespace AccountManagementService.Services
 {
     public class AuthService : IAuthService
     {

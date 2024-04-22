@@ -14,8 +14,8 @@
         </Grid.RowDefinitions>
 
         <Border Grid.Row="0" 
- Background="#1B1A22" 
- BorderBrush="#2B3252" BorderThickness="0 0 0 3">
+             Background="#1B1A22" 
+             BorderBrush="#2B3252" BorderThickness="0 0 0 3">
             <Grid >
                 <StackPanel Orientation="Horizontal" Margin="20 0 0 0">
                     <Ellipse Width="55" Height="55">
@@ -25,7 +25,7 @@
                         </Ellipse.Fill>
                     </Ellipse>
                     <StackPanel>
-                        <Label Content="Evelin Parker"
+                        <Label Content="{Binding Chat.Username}"
             Foreground="White"
             VerticalAlignment="Center"
             FontWeight="SemiBold"
@@ -48,11 +48,11 @@
             </Grid>
         </Border>
 
-        <ListView Grid.Row="1" ItemsSource="{Binding Messages}" 
-   ItemContainerStyle="{StaticResource MessageItem}"
-   Background="Transparent" BorderThickness="0"
-   VerticalAlignment="Bottom"
-   />
+        <ListView Grid.Row="1" ItemsSource="{Binding Chat.Messages}" 
+                   ItemContainerStyle="{StaticResource MessageItem}"
+                   Background="Transparent" BorderThickness="0"
+                   VerticalAlignment="Bottom"
+                   />
 
         <Grid Grid.Row="2">
             <Border CornerRadius="8"

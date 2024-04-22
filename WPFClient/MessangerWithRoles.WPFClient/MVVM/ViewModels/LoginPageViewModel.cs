@@ -49,14 +49,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
         {
             var authService = ServiceLocator.Instance.GetService<AuthService>();
 
-            bool result = await authService.Login(Email, Password);
-
-            if (result)
-            {
-                EventBus eventBus = ServiceLocator.Instance.GetService<EventBus>();
-
-                eventBus.Raise(EventBusDefinitions.LoginedInAccount, new EventBusArgs());
-            }
+            await authService.Login(Email, Password);
         }
 
         public ICommand ChangeToRegisterWindow { get; }

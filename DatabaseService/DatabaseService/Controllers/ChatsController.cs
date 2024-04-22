@@ -1,8 +1,6 @@
 ﻿using DatabaseService.DTOs;
 using DatabaseService.Models;
-using DatabaseService.Models.DatabaseModels;
 using DatabaseService.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DatabaseService.Controllers
@@ -20,10 +18,26 @@ namespace DatabaseService.Controllers
             _chatMembersService = chatMembersService;
         }
 
-        [HttpPost("create")]
-        public async Task<ActionResult> CreateChat(ChatDTO chatDto)
+        [HttpGet("get-personal")]
+        public async Task<ActionResult<ServiceResponse<List<ChatDto>>>> GetAllPersonalChats(int userId)
         {
-            var response = await _chatService.CreateChat(chatDto);
+            var response = await _chatService.GetAllPersonalChats(userId);
+
+            return Ok(response);
+        }
+
+        [HttpPost("get-personal")]
+        public async Task<ActionResult<ServiceResponse<ChatDto>>> GetPersonalChat(List<UserDto> users)
+        {
+            var response = await _chatService.GetPersonalChatIfExists(users);
+
+            return Ok(response);
+        }
+
+        [HttpPost("create-personal")]
+        public async Task<ActionResult<ServiceResponse<ChatDto>>> CreateChat(ChatDto chatDto)
+        {
+            var response = await _chatService.CreatePersonalChatIfNotExists(chatDto);
 
             return Ok(response);
         }

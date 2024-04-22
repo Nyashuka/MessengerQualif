@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MessengerWithRoles.WPFClient.MVVM.Views.UserControls"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             Loaded="CreatePersonalChatPage_OnLoaded">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50px"/>
@@ -21,7 +22,7 @@
                          Height="20"
                          Style="{StaticResource SearchBox}"/>
             </Border>
-            <Button Grid.Row="0" Content="Search" Command="{Binding LoadUsers}"
+            <Button Width="50" Content="Search" Command="{Binding LoadUsers}"
                  BorderThickness="3"
                  Margin="5" >
                 <Button.Style>
@@ -32,7 +33,7 @@
                             <Setter.Value>
                                 <ControlTemplate TargetType="{x:Type Button}">
                                     <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="#2B3252"
-                                         BorderThickness="3">
+                                         BorderThickness="3" CornerRadius="10">
                                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                     </Border>
                                     <ControlTemplate.Triggers>
@@ -61,13 +62,8 @@
              BorderThickness="0"
              ItemContainerStyle="{StaticResource UsersForCreateChatListView}"
              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-             ScrollViewer.VerticalScrollBarVisibility="Hidden"
-             >
+             />
 
-            <ListView.Resources>
-                <Style TargetType="ScrollViewer" BasedOn="{StaticResource ChatsListViewScrollViewer}"/>
-            </ListView.Resources>
-
-        </ListView>
+        
     </Grid>
 </UserControl>

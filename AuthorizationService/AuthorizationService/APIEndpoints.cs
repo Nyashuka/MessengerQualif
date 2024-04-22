@@ -10,6 +10,6 @@
         public const string GetTokenGET = $"{DatabaseServiceEndpoint}/api/account/get-token";
         public const string GetAccountByAccessTokenGET = $"{DatabaseServiceEndpoint}/api/account/get-user-by-token";
 
-        public const string GetUserGet = $"{DatabaseServiceEndpoint}/api/Users/get-user";
+        public const string GetUserByAccountIdGet = $"{DatabaseServiceEndpoint}/api/Users/get-user-by-account-id";
     }
 }

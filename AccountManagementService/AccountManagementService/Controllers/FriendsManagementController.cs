@@ -1,6 +1,6 @@
 ﻿using AccountManagementService.DTOs;
 using AccountManagementService.Models;
-using AccountManagementService.Servcies.Interfaces;
+using AccountManagementService.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,8 +10,8 @@ namespace AccountManagementService.Controllers
     [ApiController]
     public class FriendsManagementController : ControllerBase
     {
-        public IFriendsManagementService _friendsManagementService;
-        public IAuthService _authService;
+        private readonly IFriendsManagementService _friendsManagementService;
+        private readonly IAuthService _authService;
 
         public FriendsManagementController(IFriendsManagementService friendsManagementController, IAuthService authService)
         {
@@ -36,7 +36,7 @@ namespace AccountManagementService.Controllers
 
             var response = await _friendsManagementService.GetFriends(authenticatedUser.Data.Data.UserId);
 
-            if (response == null || !response.Success)
+            if (response.Data == null || !response.Success)
                 return BadRequest(response);
 
             return Ok(response);

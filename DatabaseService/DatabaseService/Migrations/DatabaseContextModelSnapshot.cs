@@ -130,10 +130,7 @@ namespace DatabaseService.Migrations
             modelBuilder.Entity("DatabaseService.Models.DatabaseModels.ChatType", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -142,6 +139,18 @@ namespace DatabaseService.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ChatTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 0,
+                            Name = "personal"
+                        },
+                        new
+                        {
+                            Id = 1,
+                            Name = "group"
+                        });
                 });
 
             modelBuilder.Entity("DatabaseService.Models.DatabaseModels.FriendRelation", b =>

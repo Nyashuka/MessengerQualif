@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MessengerWithRoles.WPFClient.MVVM.Views.UserControls"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             Loaded="FriendsPage_OnLoaded">
     <Grid>
         <TabControl Background="#0B0B11">
             <TabItem Header="My Friends">
@@ -24,7 +25,7 @@
                                     Height="20"
                                     Style="{StaticResource SearchBox}"/>    
                         </Border>
-                        <Button Grid.Row="0" Content="Search" Command="{Binding LoadFriends}"
+                        <Button Width="50" Content="Search" Command="{Binding LoadFriends}"
                 BorderThickness="3"
                 Margin="5" >
                             <Button.Style>
@@ -35,7 +36,7 @@
                                         <Setter.Value>
                                             <ControlTemplate TargetType="{x:Type Button}">
                                                 <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="#2B3252"
-                                        BorderThickness="3">
+                                        BorderThickness="3" CornerRadius="10">
                                                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                 </Border>
                                                 <ControlTemplate.Triggers>
@@ -64,14 +65,7 @@
                             BorderThickness="0"
                             ItemContainerStyle="{StaticResource FriendsListView}"
                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                            ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                            >
-
-                        <ListView.Resources>
-                            <Style TargetType="ScrollViewer" BasedOn="{StaticResource ChatsListViewScrollViewer}"/>
-                        </ListView.Resources>
-
-                    </ListView>
+                            />
                 </Grid>
             </TabItem>
             <TabItem Header="Add Friend" >
@@ -81,7 +75,7 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
                         <Border MinWidth="170px" Width="170" MaxWidth="190" Height="40px"
                                 Background="#1B1A22" 
                                 BorderBrush="#2B3252" BorderThickness="3" CornerRadius="10">
@@ -90,7 +84,7 @@
                                         Height="20"
                                         Style="{StaticResource SearchBox}"/>
                         </Border>
-                        <Button Grid.Row="0" Content="Search" Command="{Binding LoadUsers}"
+                        <Button Width="50" Content="Search" Command="{Binding LoadUsers}"
                                 BorderThickness="3"
                                 Margin="5" >
                             <Button.Style>
@@ -101,7 +95,7 @@
                                         <Setter.Value>
                                             <ControlTemplate TargetType="{x:Type Button}">
                                                 <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="#2B3252"
-                                                        BorderThickness="3">
+                                                        BorderThickness="3" CornerRadius="10">
                                                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                 </Border>
                                                 <ControlTemplate.Triggers>
@@ -130,14 +124,7 @@
                             BorderThickness="0"
                             ItemContainerStyle="{StaticResource FriendsListView}"
                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                            ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                            >
-
-                        <ListView.Resources>
-                            <Style TargetType="ScrollViewer" BasedOn="{StaticResource ChatsListViewScrollViewer}"/>
-                        </ListView.Resources>
-
-                    </ListView>
+                            />
                 </Grid>
                 
                

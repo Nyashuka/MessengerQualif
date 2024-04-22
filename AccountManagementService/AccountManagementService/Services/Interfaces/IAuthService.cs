@@ -1,7 +1,7 @@
 ﻿using AccountManagementService.DTOs.Auth;
 using AccountManagementService.Models;
 
-namespace AccountManagementService.Servcies.Interfaces
+namespace AccountManagementService.Services.Interfaces
 {
     public interface IAuthService
     {

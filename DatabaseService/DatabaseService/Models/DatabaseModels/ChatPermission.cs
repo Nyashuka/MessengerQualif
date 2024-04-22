@@ -1,8 +1,12 @@
-﻿namespace DatabaseService.Models.DatabaseModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DatabaseService.Models.DatabaseModels
 {
     public class ChatPermission
     {
         public int Id { get; set; }
-        public required string Name { get; set; }
+
+        [Required]
+        public string Name { get; set; }
     }
 }

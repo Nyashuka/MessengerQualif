@@ -269,7 +269,7 @@ namespace AuthorizationService.Services
 
             var id = Convert.ToInt32(claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value);
 
-            var response = await _httpClient.GetAsync($"{APIEndpoints.GetUserGet}?accountId={id}");
+            var response = await _httpClient.GetAsync($"{APIEndpoints.GetUserByAccountIdGet}?accountId={id}");
             var responseData = await response.Content.ReadFromJsonAsync<ServiceResponse<UserDTO>>();
 
             return new ServiceResponse<AuthUserDataDTO>()
