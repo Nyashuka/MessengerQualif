@@ -4,12 +4,12 @@ using System;
 using System.Net.WebSockets;
 using System.Text;
 
-namespace NotificationService.Controllers
+namespace NotificationService.Controllers.Tested
 {
     public class WebSocketTestController : ControllerBase
     {
         [HttpGet("/ws")]
-        public async Task Get([FromHeader]string username)
+        public async Task Get([FromHeader] string username)
         {
             if (HttpContext.WebSockets.IsWebSocketRequest)
             {

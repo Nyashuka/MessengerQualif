@@ -18,19 +18,19 @@ namespace DatabaseService.Services
 
         public Task<ServiceResponse<List<ChatDto>>> GetAllPersonalChats(int userId)
         {
-            var chats = _databaseContext.Chats.Where(c => c.ChatTypeId == 0 && 
+            var chats = _databaseContext.Chats.Where(c => c.ChatTypeId == 0 &&
                                                            _databaseContext.ChatMembers.Any(m => m.ChatId == c.Id && m.UserId == userId)).ToList();
-            
+
             List<ChatDto> chatListForResponse = new List<ChatDto>();
             foreach (var chat in chats)
             {
-                var chatMembers = 
+                var chatMembers =
                     _databaseContext.ChatMembers.Where(cm => cm.ChatId == chat.Id).ToList();
 
                 var users = new List<UserDto>();
                 foreach (var member in chatMembers)
                 {
-                    User user =_databaseContext.Users.First(u => u.Id == member.UserId);
+                    User user = _databaseContext.Users.First(u => u.Id == member.UserId);
                     users.Add(new UserDto()
                     {
                         Id = user.Id,
@@ -46,7 +46,7 @@ namespace DatabaseService.Services
                 });
             }
 
-            return Task.FromResult( new ServiceResponse<List<ChatDto>>()
+            return Task.FromResult(new ServiceResponse<List<ChatDto>>()
             {
                 Data = chatListForResponse
             });
@@ -89,7 +89,7 @@ namespace DatabaseService.Services
             var existsChat = await GetPersonalChatIfExists(chatDTO.Members);
 
             if (existsChat.Data != null)
-                return new ServiceResponse<ChatDto>() { Success = false, ErrorMessage = "Already exists"};
+                return new ServiceResponse<ChatDto>() { Success = false, ErrorMessage = "Already exists" };
 
             var chatType = _databaseContext.ChatTypes.FirstOrDefault(x => x.Id == chatDTO.ChatTypeId);
 
@@ -151,6 +151,38 @@ namespace DatabaseService.Services
             await _databaseContext.SaveChangesAsync();
 
             return new ServiceResponse<bool> { Data = true };
+        }
+
+        public async Task<ServiceResponse<ChatDto>> GetChatById(int chatId)
+        {
+            Chat chat = await _databaseContext.Chats.FirstOrDefaultAsync(x => x.Id == chatId);
+
+            if (chat == null)
+                return new ServiceResponse<ChatDto>()
+                {
+                    Data = null,
+                    Success = false,
+                    ErrorMessage = "Chat does not exists"
+                };
+
+            List<UserDto> members = _databaseContext.ChatMembers
+                     .Where(cm => cm.ChatId == chatId)
+                     .Select(cm => new UserDto
+                     {
+                         Id = cm.User.Id,
+                         Username = cm.User.Username,
+                         DisplayName = cm.User.DisplayName
+                     })
+                     .ToList();
+
+            ChatDto chatToResponse = new ChatDto()
+            {
+                ChatTypeId = chat.ChatTypeId,
+                Members = members,
+                ChatInfo = _databaseContext.GroupChatInfos.FirstOrDefault(x => x.Id == chatId)
+            };
+
+            return new ServiceResponse<ChatDto>() { Data = chatToResponse };
         }
     }
 }

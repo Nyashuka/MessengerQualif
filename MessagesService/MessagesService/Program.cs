@@ -1,4 +1,7 @@
 
+using MessagesService.Services;
+using MessagesService.Services.Interfaces;
+
 namespace MessagesService
 {
     public class Program
@@ -8,6 +11,10 @@ namespace MessagesService
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddScoped(sp => new HttpClient { });
+            builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IChatService, ChatService>();
+            builder.Services.AddScoped<IMessageService, MessageService>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

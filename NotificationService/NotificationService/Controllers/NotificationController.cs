@@ -4,6 +4,7 @@ using System.Net.WebSockets;
 using System.Text;
 using NotificationService.DTOs;
 using NotificationService.Services;
+using NotificationService.Models;
 
 namespace NotificationService.Controllers
 {
@@ -35,28 +36,27 @@ namespace NotificationService.Controllers
 
             var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
             
-            await _connectionsService.AddClientAndStartReceiving(userId, webSocket);
-
-            //var buffer = Encoding.UTF8.GetBytes($"Connected: {userId}");
-            //var arraySegment = new ArraySegment<byte>(buffer, 0, buffer.Length);
-
-            //await client.SendAsync(arraySegment, WebSocketMessageType.Text, true, CancellationToken.None);
-            
+            await _connectionsService.AddClientAndStartReceiving(userId, webSocket);            
         }
 
-        [HttpGet("notify")]
-        public async Task<ActionResult> NotifyUsers(MessageSendingData data)
+        [HttpPost("notify")]
+        public async Task<ActionResult<ServiceResponse<bool>>> NotifyUsers([FromQuery]string accessToken, NotifyDataDto data)
         {
-            var activeConnections = _connectionsService.GetActiveConnections(data.Users);
+            int userId = await _authService.TryGetAuthenticatedUser(accessToken);
+
+            if (userId == -1)
+                return Unauthorized();
 
             if (data.Message == null)
             {
                 return BadRequest();
             }
 
+            var activeConnections = _connectionsService.GetActiveConnections(data.Recipients);
+
             await _messageNotifier.NotifyUsers(activeConnections, data.Message);
 
-            return Ok();
+            return Ok(true);
         }
     }
 }

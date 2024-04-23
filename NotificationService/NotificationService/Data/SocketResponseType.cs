@@ -1,6 +1,6 @@
 ﻿namespace NotificationService.Data
 {
-    public enum SocketResponseTypes
+    public enum SocketResponseType
     {
         TextMessage = 0
     }

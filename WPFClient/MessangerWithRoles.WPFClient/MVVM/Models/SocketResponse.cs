@@ -1,6 +1,6 @@
-﻿using NotificationService.Data;
+﻿using MessengerWithRoles.WPFClient.Data;
 
-namespace NotificationService.Models
+namespace MessengerWithRoles.WPFClient.MVVM.Models
 {
     public class SocketResponse
     {

@@ -27,9 +27,9 @@ namespace MessagesService.Controllers
 
             if (senderId == -1) return Unauthorized();
 
-            if(!await _chatService.IsUserChatMember(senderId)) return Unauthorized();
+            //if(!await _chatService.IsUserChatMember(senderId)) return Unauthorized();
 
-            await _messageService.HandleMessage(senderId, clientMessageDTO);
+            await _messageService.HandleMessage(senderId, accessToken, clientMessageDTO);
 
             return Ok();
         }

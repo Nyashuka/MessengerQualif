@@ -13,9 +13,10 @@ namespace NotificationService.Services
             string jsonMessage = JsonSerializer.Serialize(message);
             var responseObject = new SocketResponse()
             {
-                ResponseType = (int)SocketResponseTypes.TextMessage,
+                ResponseType = SocketResponseType.TextMessage,
                 JsonData = jsonMessage
             };
+
             string response = JsonSerializer.Serialize(responseObject);
 
             var buffer = Encoding.UTF8.GetBytes(response);

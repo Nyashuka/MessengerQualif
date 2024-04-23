@@ -1,5 +1,3 @@
-
-
 using Microsoft.Extensions.DependencyInjection;
 using NotificationService.Services;
 using NotificationService.Services.Interfaces;
@@ -31,8 +29,6 @@ namespace NotificationService
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
-            app.UseAuthorization();
 
             app.MapControllers();
 

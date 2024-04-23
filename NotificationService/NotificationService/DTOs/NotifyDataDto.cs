@@ -2,10 +2,10 @@
 
 namespace NotificationService.DTOs
 {
-    public class MessageSendingData
+    public class NotifyDataDto
     {
         public ChatMessage? Message { get; set; }
 
-        public List<int>? Users { get; set; }
+        public List<int>? Recipients { get; set; }
     }
 }

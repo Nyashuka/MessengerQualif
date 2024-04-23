@@ -1,4 +1,5 @@
-﻿using MessagesService.Services.Interfaces;
+﻿using MessagesService.Models.Requests;
+using MessagesService.Services.Interfaces;
 
 namespace MessagesService.Services
 {
@@ -15,5 +16,6 @@ namespace MessagesService.Services
         {
             throw new NotImplementedException();
         }
+
     }
 }

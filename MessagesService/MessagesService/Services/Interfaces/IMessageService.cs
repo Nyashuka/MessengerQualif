@@ -4,6 +4,6 @@ namespace MessagesService.Services.Interfaces
 {
     public interface IMessageService
     {
-        Task HandleMessage(int senderId, ClientMessageDTO clientMessageDTO);
+        Task HandleMessage(int senderId, string accessToken, ClientMessageDTO clientMessageDTO);
     }
 }

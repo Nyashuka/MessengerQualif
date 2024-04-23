@@ -103,12 +103,17 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             }
         }
 
+        public void OpenChat(Chat chat)
+        {
+            CurrentContent = new ChatPage();
+            CurrentContent.DataContext = new ChatPageViewModel(chat);
+        }
+
         private void OpenChat(IEventBusArgs args)
         {
             var chatArgs = (ChatDataIEventBusArgs)args;
 
-            CurrentContent = new ChatPage();
-            CurrentContent.DataContext = new ChatPageViewModel(chatArgs.Chat);
+            OpenChat(chatArgs.Chat);
         }
 
         private void AddChat(IEventBusArgs args)
@@ -117,8 +122,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 
             Chats.Add(chatArgs.Chat);
 
-            CurrentContent = new ChatPage();
-            CurrentContent.DataContext = new ChatPageViewModel(chatArgs.Chat);
+            OpenChat(chatArgs.Chat);
         }
 
         public MainWindowViewModel()
@@ -130,6 +134,11 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             Chats = new ObservableCollection<Chat>();
 
             EventBus eventBus = ServiceLocator.Instance.GetService<EventBus>();
+
+            AuthService authService = ServiceLocator.Instance.GetService<AuthService>();
+            MessagesService messagesService = new MessagesService();
+            messagesService.Start(authService.AccessToken);
+            ServiceLocator.Instance.RegisterService(messagesService);
 
             eventBus.Subscribe<ChatDataIEventBusArgs>(EventBusDefinitions.OpenChat, OpenChat);
             eventBus.Subscribe<ChatDataIEventBusArgs>(EventBusDefinitions.ChatCreated, AddChat);

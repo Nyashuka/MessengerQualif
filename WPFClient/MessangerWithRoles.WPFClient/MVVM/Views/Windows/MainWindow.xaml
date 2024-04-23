@@ -146,7 +146,8 @@
                         </Border>
 
 
-                        <ListView Grid.Row="2" ItemsSource="{Binding Chats}" 
+                        <ListView Grid.Row="2" ItemsSource="{Binding Chats}"
+                                  SelectionChanged="Selector_OnSelectionChanged"
                        HorizontalAlignment="Stretch"
                        Background="Transparent"
                        BorderThickness="0"

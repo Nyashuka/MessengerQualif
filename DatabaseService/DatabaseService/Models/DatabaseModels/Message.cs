@@ -1,4 +1,6 @@
-﻿namespace DatabaseService.Models.DatabaseModels
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DatabaseService.Models.DatabaseModels
 {
     public class Message
     {
@@ -10,7 +12,7 @@
         public int SenderId { get; set; }
         public User? Sender { get; set; }
 
-        public int RecipientId { get; set; }
+        public int? RecipientId { get; set; }
         public User? Recipient { get; set; }
 
         public byte[]? Data { get; set; }

@@ -18,6 +18,22 @@ namespace DatabaseService.Controllers
             _chatMembersService = chatMembersService;
         }
 
+        [HttpGet("get-chat-by-id")]
+        public async Task<ActionResult<ServiceResponse<ChatDto>>> GetChatById(int chatId)
+        {
+            var response = await _chatService.GetChatById(chatId);
+
+            return Ok(response);
+        }
+
+        [HttpGet("get-chat-members")]
+        public async Task<ActionResult<ServiceResponse<ChatDto>>> GetChatMembers(int chatId)
+        {
+            var response = await _chatMembersService.GetChatMembersByChatId(chatId);
+
+            return Ok(response);
+        }
+
         [HttpGet("get-personal")]
         public async Task<ActionResult<ServiceResponse<List<ChatDto>>>> GetAllPersonalChats(int userId)
         {

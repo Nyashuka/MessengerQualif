@@ -1,5 +1,7 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using MessengerWithRoles.WPFClient.MVVM.Models;
 using MessengerWithRoles.WPFClient.MVVM.ViewModels;
 
 namespace MessengerWithRoles.WPFClient.MVVM.Views.Windows
@@ -33,12 +35,9 @@ namespace MessengerWithRoles.WPFClient.MVVM.Views.Windows
             if (Application.Current.MainWindow == null)
                 return;
 
-            if (Application.Current.MainWindow.WindowState != WindowState.Maximized)
-                Application.Current.MainWindow.WindowState = WindowState.Maximized;
-            else
-            {
-                Application.Current.MainWindow.WindowState = WindowState.Normal;
-            }
+            Application.Current.MainWindow.WindowState = 
+                Application.Current.MainWindow.WindowState != WindowState.Maximized ? 
+                    WindowState.Maximized : WindowState.Normal;
         }
 
         private void ButtonClose_Click(object sender, RoutedEventArgs e)
@@ -51,6 +50,13 @@ namespace MessengerWithRoles.WPFClient.MVVM.Views.Windows
             var vm = (MainWindowViewModel)DataContext;
 
             await vm.LoadPersonalChats();
+        }
+
+        private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var chat = (Chat)((ListView)sender).SelectedItem;
+
+            ((MainWindowViewModel)DataContext).OpenChat(chat);
         }
     }
 }

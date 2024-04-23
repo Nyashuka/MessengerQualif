@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NotificationService.Models;
 
-namespace NotificationService.Controllers
+namespace NotificationService.Controllers.Tested
 {
     [Route("api/chat")]
     [ApiController]

@@ -8,5 +8,6 @@ namespace DatabaseService.Services.Interfaces
     {
         Task<ServiceResponse<ChatMember>> AddMember(ChatMemberDTO chatMemberDto);
         Task<ServiceResponse<bool>> DeleteMember(ChatMemberDTO chatMemberDto);
+        Task<ServiceResponse<List<ChatMember>>> GetChatMembersByChatId(int chatId);
     }
 }

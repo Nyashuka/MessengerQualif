@@ -15,6 +15,13 @@ namespace DatabaseService.Services
             _databaseContext = databaseContext;
         }
 
+        public async Task<ServiceResponse<List<ChatMember>>> GetChatMembersByChatId(int chatId)
+        {
+            var chatMembers = _databaseContext.ChatMembers.Where(m => m.ChatId == chatId).ToList();
+
+            return new ServiceResponse<List<ChatMember>> { Data = chatMembers };
+        }
+
         public async Task<ServiceResponse<ChatMember>> AddMember(ChatMemberDTO chatMemberDto)
         {
             var chatMember = new ChatMember()

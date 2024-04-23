@@ -13,7 +13,7 @@ namespace NotificationService.Services
             if (!Clients.TryAdd(userId, client))
                 throw new Exception("Cant add client with user id=" + userId);
 
-            await HandleWebSocket(userId, client);
+           await HandleWebSocket(userId, client);
         }
 
         public async Task RemoveClientAndCloseAsync(int userId)
