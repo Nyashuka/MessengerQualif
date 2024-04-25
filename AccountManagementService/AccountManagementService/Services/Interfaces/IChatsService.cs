@@ -9,5 +9,6 @@ namespace AccountManagementService.Services.Interfaces
         Task<ServiceResponse<ChatDto>> CreatePersonalChatIfNotExists(ChatDto chatDto);
         Task<ServiceResponse<List<ChatDto>>> GetAllPersonalChats(int userId);
         Task<ServiceResponse<ChatDto>> GetPersonalChat(List<UserDto> users);
+        Task<ServiceResponse<ChatDto>> GetPersonalChatById(int chatId);
     }
 }

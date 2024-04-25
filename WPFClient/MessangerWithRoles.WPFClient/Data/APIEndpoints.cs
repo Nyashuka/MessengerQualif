@@ -18,5 +18,11 @@
         public const string CreatePersonalChatPOST = "http://127.0.0.1:5293/api/Chats/create-personal";
         public const string GetPersonalChatPOST = "http://127.0.0.1:5293/api/Chats/get-personal";
         public const string GetAllChatsGET = "http://127.0.0.1:5293/api/Chats/get-personal";
+        public const string GetChatById = "http://127.0.0.1:5293/api/Chats/get-personal-by-id";
+
+        // messages service
+        public const string GetChatMessagesByChatIdGET = "http://127.0.0.1:5294/api/Messages";
+        public const string SendMessagePOST = "http://127.0.0.1:5294/api/Messages";
+
     }
 }

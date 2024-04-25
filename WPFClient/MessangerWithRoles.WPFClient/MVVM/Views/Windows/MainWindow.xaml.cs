@@ -54,7 +54,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.Views.Windows
 
         private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var chat = (Chat)((ListView)sender).SelectedItem;
+            var chat = (ChatViewModel)((ListView)sender).SelectedItem;
 
             ((MainWindowViewModel)DataContext).OpenChat(chat);
         }

@@ -44,5 +44,13 @@ namespace AccountManagementService.Services
         {
             throw new NotImplementedException();
         }
+
+        public async Task<ServiceResponse<ChatDto>> GetPersonalChatById(int chatId)
+        {
+            var response = await _httpClient.GetAsync($"{APIEndpoints.GetChatByIdGET}?chatId={chatId}");
+            var chat = await response.Content.ReadFromJsonAsync<ServiceResponse<ChatDto>>();
+
+            return chat;
+        }
     }
 }

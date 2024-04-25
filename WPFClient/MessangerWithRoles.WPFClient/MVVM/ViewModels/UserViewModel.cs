@@ -36,7 +36,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             var response = await httpClient.GetAsync($"{APIEndpoints.AddFriendGET}?accessToken={authService.AccessToken}&friendUserId={User.Id}");
             var data = await response.Content.ReadFromJsonAsync<ServiceResponse<bool>>();
 
-            if(data == null)
+            if (data == null)
             {
                 MessageBox.Show("Cant pars data");
                 return;
@@ -65,14 +65,14 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
                 authService.User,
                 User
             };
-            
+
             var result = await httpClient.PostAsJsonAsync($"{APIEndpoints.GetPersonalChatPOST}?accessToken={authService.AccessToken}", members);
             var chat = await result.Content.ReadFromJsonAsync<ServiceResponse<ChatDto>>();
 
             if (chat.Data != null)
             {
                 ServiceLocator.Instance.GetService<EventBus>()
-                    .Raise(EventBusDefinitions.OpenChat, 
+                    .Raise(EventBusDefinitions.OpenChat,
                         new ChatDataIEventBusArgs(ChatDtoToChat(chat.Data, authService.User.Id)));
                 return;
             }
@@ -103,11 +103,13 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
                 .Raise(EventBusDefinitions.ChatCreated, new ChatDataIEventBusArgs(ChatDtoToChat(createdChat.Data, authService.User.Id)));
         }
 
-        private Chat ChatDtoToChat(ChatDto chatDto, int userId)
+        private ChatViewModel ChatDtoToChat(ChatDto chatDto, int userId)
         {
-           return new Chat(chatDto.Members.First(u => u.Id != userId).DisplayName,
-                "https://i.pinimg.com/originals/e7/da/8d/e7da8d8b6a269d073efa11108041928d.jpg",
-                new ObservableCollection<Message>());
+            AuthService authService = ServiceLocator.Instance.GetService<AuthService>();
+
+            return new ChatViewModel(chatDto.Id, chatDto.Members.First(u => u.Id != userId).DisplayName,
+                 "https://i.pinimg.com/originals/e7/da/8d/e7da8d8b6a269d073efa11108041928d.jpg",
+                 new ObservableCollection<Message>(), chatDto.Members.FirstOrDefault(m => m.Id != authService.User.Id));
         }
 
         public UserViewModel(User user)

@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
 using System.Net.WebSockets;
-using System.Security.Policy;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Xml.Linq;
+using MessengerWithRoles.WPFClient.Data;
+using MessengerWithRoles.WPFClient.DTOs;
+using MessengerWithRoles.WPFClient.MVVM.Models;
 using MessengerWithRoles.WPFClient.Services.EventBusModule;
+using MessengerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
 using MessengerWithRoles.WPFClient.Services.ServiceLocatorModule;
 
 namespace MessengerWithRoles.WPFClient.Services
@@ -49,9 +49,17 @@ namespace MessengerWithRoles.WPFClient.Services
                     while (_webSocket.State == WebSocketState.Open || !_cancellationToken.IsCancellationRequested)
                     {
                         WebSocketReceiveResult result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+
                         string receivedData = Encoding.UTF8.GetString(buffer, 0, result.Count);
 
-                        MessageBox.Show($"Received data from server: {receivedData}");
+                        SocketResponse? response = JsonSerializer.Deserialize<SocketResponse>(receivedData);
+
+                        if (response != null)
+                        {
+                            NotifyClient_MessageReceived(response);
+                            //MessageBox.Show($"Received data from server: {response.JsonData}");
+                        }
+
                     }
 
                     await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Connection closed.", CancellationToken.None);
@@ -63,6 +71,17 @@ namespace MessengerWithRoles.WPFClient.Services
                 }
 
                 await Task.Delay(5000);
+            }
+        }
+
+        private void NotifyClient_MessageReceived(SocketResponse response)
+        {
+            if (response.ResponseType == SocketResponseType.TextMessage)
+            {
+                MessageDto message = JsonSerializer.Deserialize<MessageDto>(response.JsonData);
+
+                ServiceLocator.Instance.GetService<EventBus>().Raise(EventBusDefinitions.TextMessageReceived, 
+                    new TextMessageEventBusArgs(message));
             }
         }
 

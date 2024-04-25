@@ -41,6 +41,7 @@ namespace DatabaseService.Services
 
                 chatListForResponse.Add(new ChatDto()
                 {
+                    Id = chat.Id,
                     ChatTypeId = chat.ChatTypeId,
                     Members = users
                 });
@@ -126,6 +127,7 @@ namespace DatabaseService.Services
 
             ChatDto chatForResponse = new ChatDto()
             {
+                Id = newChat.Id,
                 ChatTypeId = chatDTO.ChatTypeId,
                 Members = chatDTO.Members
             };
@@ -177,6 +179,7 @@ namespace DatabaseService.Services
 
             ChatDto chatToResponse = new ChatDto()
             {
+                Id = chat.Id,
                 ChatTypeId = chat.ChatTypeId,
                 Members = members,
                 ChatInfo = _databaseContext.GroupChatInfos.FirstOrDefault(x => x.Id == chatId)

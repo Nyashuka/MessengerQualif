@@ -5,15 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using MessengerWithRoles.WPFClient.DTOs;
-using MessengerWithRoles.WPFClient.MVVM.Models;
+using MessengerWithRoles.WPFClient.MVVM.ViewModels;
 
 namespace MessengerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments
 {
     internal class ChatDataIEventBusArgs : IEventBusArgs
     {
-        public Chat Chat { get; private set; }
+        public ChatViewModel Chat { get; private set; }
 
-        public ChatDataIEventBusArgs(Chat chat)
+        public ChatDataIEventBusArgs(ChatViewModel chat)
         {
             Chat = chat;
         }

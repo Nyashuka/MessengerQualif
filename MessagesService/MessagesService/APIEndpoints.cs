@@ -11,6 +11,7 @@
         public const string GetMessagesByChatIdGET = $"{DatabaseService}/api/Messages";
 
         public const string GetChatByIdGET = $"{DatabaseService}/api/Chats/get-chat-by-id";
+        public const string GetChatMessagesByChatIdGET = $"{DatabaseService}/api/Messages";
 
         public const string NotificationService = "http://127.0.0.1:6999";
         public const string NotifyUsersSendingMessagePOST = $"{NotificationService}/api/Notification/notify";

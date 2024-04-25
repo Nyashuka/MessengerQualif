@@ -23,9 +23,9 @@
                                  Margin="8 0 0 0"
                                  FontSize="12"
                                  Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                <TextBox.InputBindings>
+                                <!--<TextBox.InputBindings>
                                     <KeyBinding Command="{Binding SendMessageCommand}" Key="Return"/>
-                                </TextBox.InputBindings>
+                                </TextBox.InputBindings>-->
                             </TextBox>
 
                             <TextBlock IsHitTestVisible="False"

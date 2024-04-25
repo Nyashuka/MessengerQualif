@@ -26,29 +26,30 @@
                     </Ellipse>
                     <StackPanel>
                         <Label Content="{Binding Chat.Username}"
-            Foreground="White"
-            VerticalAlignment="Center"
-            FontWeight="SemiBold"
-            FontSize="14"
-            Margin="10 0 0 0"/>
+                                Foreground="White"
+                                VerticalAlignment="Center"
+                                FontWeight="SemiBold"
+                                FontSize="14"
+                                Margin="10 0 0 0"/>
                         <Label Content="Offline"
-            Foreground="DarkGray"
-            VerticalAlignment="Center"
-            FontWeight="SemiBold"
-            FontSize="12"
-            Margin="10 0 0 0"/>
+                                Foreground="DarkGray"
+                                VerticalAlignment="Center"
+                                FontWeight="SemiBold"
+                                FontSize="12"
+                                Margin="10 0 0 0"/>
                     </StackPanel>
                 </StackPanel>
 
                 <Button Width="40" 
-         Background="Transparent" Foreground="White" BorderThickness="0"
-         Content="⋮" FontSize="25" 
-         HorizontalAlignment="Right"  
-         Style="{StaticResource UserAdditionalSettingsButton}"/>
+                         Background="Transparent" Foreground="White" BorderThickness="0"
+                         Content="⋮" FontSize="25" 
+                         HorizontalAlignment="Right"  
+                         Style="{StaticResource UserAdditionalSettingsButton}"/>
             </Grid>
         </Border>
 
-        <ListView Grid.Row="1" ItemsSource="{Binding Chat.Messages}" 
+        <ListView Grid.Row="1" x:Name="messagesListView" Loaded="messagesListView_Loaded"
+                  ItemsSource="{Binding Chat.Messages}" 
                    ItemContainerStyle="{StaticResource MessageItem}"
                    Background="Transparent" BorderThickness="0"
                    VerticalAlignment="Bottom"

@@ -27,16 +27,23 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
         private UserControl _currentContent;
         public UserControl CurrentContent { get => _currentContent; set => Set(ref _currentContent, value); }
 
-        private Chat _selectedChat;
+        private ChatViewModel _selectedChat;
 
-        public Chat SelectedChat
+        public ChatViewModel SelectedChat
         {
             get => _selectedChat;
             set => Set(ref _selectedChat, value);
         }
 
-        private ObservableCollection<Chat> _chats;
-        public ObservableCollection<Chat> Chats
+        private string _searchText;
+        public string SearchText
+        {
+            get => _searchText;
+            set => Set(ref _searchText, value);
+        }
+
+        private ObservableCollection<ChatViewModel> _chats;
+        public ObservableCollection<ChatViewModel> Chats
         {
             get => _chats;
             set => Set(ref _chats, value);
@@ -71,7 +78,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 
         public void OnExecuteSelectedChatCommandCommand(object p)
         {
-            SelectedChat = (Chat)p;
+            SelectedChat = (ChatViewModel)p;
         }
 
         public async Task LoadPersonalChats()
@@ -82,7 +89,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             try
             {
                 var result = await httpClient.GetAsync($"{APIEndpoints.GetAllChatsGET}?accessToken={authService.AccessToken}");
-                if (!result.IsSuccessStatusCode!)
+                if (!result.IsSuccessStatusCode)
                 {
                     MessageBox.Show(result.ReasonPhrase);
                     return;
@@ -92,9 +99,20 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 
                 foreach (var chatDto in data)
                 {
-                    Chats.Add(new Chat(chatDto.Members.First(u => u.Id != authService.User.Id).DisplayName,
+                    var messagesResponse = await httpClient.GetAsync($"{APIEndpoints.GetChatMessagesByChatIdGET}?accessToken={authService.AccessToken}&chatId={chatDto.Id}");
+                    var messagesResponseData = await messagesResponse.Content.ReadFromJsonAsync<ServiceResponse<List<MessageDto>>>();
+
+                    ObservableCollection<Message> chatMessages = new ObservableCollection<Message>();
+                    foreach (var currentMessage in messagesResponseData.Data)
+                    {
+                        chatMessages.Add(new Message(currentMessage.Sender.DisplayName, 
+                            currentMessage.Data, authService.User.Id != currentMessage.Sender.Id));
+                    }
+
+                    User parcipient = chatDto.Members.FirstOrDefault(m => m.Id != authService.User.Id);
+                    Chats.Add(new ChatViewModel(chatDto.Id, chatDto.Members.First(u => u.Id != authService.User.Id).DisplayName,
                         "https://i.pinimg.com/originals/e7/da/8d/e7da8d8b6a269d073efa11108041928d.jpg",
-                        new ObservableCollection<Message>()));
+                        chatMessages, parcipient));
                 }
             }
             catch (Exception e)
@@ -103,10 +121,9 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             }
         }
 
-        public void OpenChat(Chat chat)
+        public void OpenChat(ChatViewModel chat)
         {
-            CurrentContent = new ChatPage();
-            CurrentContent.DataContext = new ChatPageViewModel(chat);
+            CurrentContent = new ChatPage(new ChatPageViewModel(chat));
         }
 
         private void OpenChat(IEventBusArgs args)
@@ -125,13 +142,57 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             OpenChat(chatArgs.Chat);
         }
 
+        private async Task<ChatViewModel> GetChat(int chatId)
+        {
+            var authService = ServiceLocator.Instance.GetService<AuthService>();
+            var httpClient = new HttpClient();
+
+            var response = await httpClient.GetAsync($"{APIEndpoints.GetChatById}?accessToken={authService.AccessToken}&chatId={chatId}");
+            var chatData = (await response.Content.ReadFromJsonAsync<ServiceResponse<ChatDto>>()).Data;
+
+            var messagesResponse = await httpClient.GetAsync($"{APIEndpoints.GetChatMessagesByChatIdGET}?accessToken={authService.AccessToken}&chatId={chatId}");
+            var messagesResponseData = await messagesResponse.Content.ReadFromJsonAsync<ServiceResponse<List<MessageDto>>>();
+
+            ObservableCollection<Message> chatMessages = new ObservableCollection<Message>();
+            foreach (var currentMessage in messagesResponseData.Data)
+            {
+                chatMessages.Add(new Message(currentMessage.Sender.DisplayName,
+                    currentMessage.Data, authService.User.Id != currentMessage.Sender.Id));
+            }
+
+            User parcipient = chatData.Members.FirstOrDefault(m => m.Id != authService.User.Id);
+            return new ChatViewModel(chatData.Id, chatData.Members.First(u => u.Id != authService.User.Id).DisplayName,
+                "https://i.pinimg.com/originals/e7/da/8d/e7da8d8b6a269d073efa11108041928d.jpg",
+                chatMessages, parcipient);
+        }
+
+        private async void UpdateMessages(IEventBusArgs args)
+        {
+            var messageArgs = (TextMessageEventBusArgs)args;
+            var message = messageArgs.Message;
+
+            var chat = Chats.FirstOrDefault(c => c.Id == message.ChatId);
+            if(chat == null)
+            {
+                chat = await GetChat(message.ChatId);
+
+                System.Windows.Application.Current.Dispatcher.Invoke(delegate // <--- HERE
+                {
+                    Chats.Add(chat);
+                });
+                return;
+            }
+
+            chat.AddMessage(message, true);
+        }
+
         public MainWindowViewModel()
         {
             OpenFriendsWindow = new LambdaCommand(OnExecuteOpenFriendsWindowCommand, CanExecuteOpenFriendsWindowCommand);
             OpenCreateChatWindow = new LambdaCommand(OnExecuteOpenCreateChatWindowCommand, CanExecuteOpenCreateChatWindowCommand);
             SelectedChatCommand = new LambdaCommand(OnExecuteSelectedChatCommandCommand, CanExecuteSelectedChatCommandCommand);
 
-            Chats = new ObservableCollection<Chat>();
+            Chats = new ObservableCollection<ChatViewModel>();
 
             EventBus eventBus = ServiceLocator.Instance.GetService<EventBus>();
 
@@ -142,6 +203,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 
             eventBus.Subscribe<ChatDataIEventBusArgs>(EventBusDefinitions.OpenChat, OpenChat);
             eventBus.Subscribe<ChatDataIEventBusArgs>(EventBusDefinitions.ChatCreated, AddChat);
+            eventBus.Subscribe<ChatDataIEventBusArgs>(EventBusDefinitions.TextMessageReceived, UpdateMessages);
         }
     }
 }

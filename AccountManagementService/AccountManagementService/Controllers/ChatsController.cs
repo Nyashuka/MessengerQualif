@@ -34,8 +34,24 @@ namespace AccountManagementService.Controllers
             return Ok(response);    
         }
 
+        [HttpGet("get-personal-by-id")]
+        public async Task<ActionResult<ServiceResponse<ChatDto>>> GetPersonalChatById([FromQuery] string accessToken, int chatId)
+        {
+            var authData = await _authService.TryGetAuthenticatedUser(accessToken);
+
+            if (!authData.Success || !authData.Data.HasAccess)
+                return Unauthorized();
+
+            ServiceResponse<ChatDto> response = await _chatsService.GetPersonalChatById(chatId);
+
+            if(!response.Data.Members.Any(m => m.Id == authData.Data.Data.UserId))
+                return Unauthorized();
+
+            return Ok(response);
+        }
+
         [HttpGet("get-personal")]
-        public async Task<ActionResult<ServiceResponse<ChatDto>>> GetAllPersonalChats([FromQuery] string accessToken)
+        public async Task<ActionResult<ServiceResponse<List<ChatDto>>>> GetAllPersonalChats([FromQuery] string accessToken)
         {
             var authData = await _authService.TryGetAuthenticatedUser(accessToken);
 

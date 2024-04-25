@@ -33,7 +33,7 @@
                                        FontSize="15"/>
                                 <Label Content="{Binding LastMessage}" 
                                        Foreground="Gray" 
-                                       FontSize="10" />
+                                       FontSize="14" />
                             </StackPanel>
                         </StackPanel>
                     </Border>

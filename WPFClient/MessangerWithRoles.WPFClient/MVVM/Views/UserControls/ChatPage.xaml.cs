@@ -1,5 +1,7 @@
-﻿using System;
+﻿using MessengerWithRoles.WPFClient.MVVM.ViewModels;
+using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,9 +22,26 @@ namespace MessengerWithRoles.WPFClient.MVVM.Views.UserControls
     /// </summary>
     public partial class ChatPage : UserControl
     {
-        public ChatPage()
+        public ChatPage(ChatPageViewModel chatPageViewModel)
         {
+            DataContext = chatPageViewModel;
+
             InitializeComponent();
+
+            ((INotifyCollectionChanged)messagesListView.ItemsSource).CollectionChanged +=
+             (s, e) =>
+             {
+                 if (e.Action == NotifyCollectionChangedAction.Add && messagesListView.Items.Count > 0)
+                 {
+                     messagesListView.ScrollIntoView(messagesListView.Items[messagesListView.Items.Count - 1]);
+                 }
+             };
+        }
+
+        private void messagesListView_Loaded(object sender, RoutedEventArgs e)
+        {
+            if(messagesListView.Items != null && messagesListView.Items.Count > 0)
+                messagesListView.ScrollIntoView(messagesListView.Items[messagesListView.Items.Count - 1]);
         }
     }
 }

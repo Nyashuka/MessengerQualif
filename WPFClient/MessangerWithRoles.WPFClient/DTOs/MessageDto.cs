@@ -1,12 +1,14 @@
-﻿using DatabaseService.Models.DatabaseModels;
+﻿using MessengerWithRoles.WPFClient.MVVM.Models;
+using System;
 
-namespace DatabaseService.DTOs
+namespace MessengerWithRoles.WPFClient.DTOs
 {
     public class MessageDto
     {
         public int Id { get; set; }
+
         public int ChatId { get; set; }
-        public Chat? Chat { get; set; }
+        public ChatDto? Chat { get; set; }
 
         public int SenderId { get; set; }
         public User? Sender { get; set; }
