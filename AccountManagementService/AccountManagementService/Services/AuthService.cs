@@ -13,32 +13,20 @@ namespace AccountManagementService.Services
             _httpClient = httpClient;
         }
 
-        public async Task<ServiceResponse<AuthUserDataDTO>> TryGetAuthenticatedUser(string accessToken)
+        public async Task<AuthUserDataDTO> TryGetAuthenticatedUser(string accessToken)
         {
             var authenticatedUserResponse = await _httpClient.GetAsync($"{APIEndpoints.IsUserAuthenticatedGET}?accessToken={accessToken}");
             var authenticatedUserData = await authenticatedUserResponse.Content.ReadFromJsonAsync<ServiceResponse<AuthUserDataDTO>>();
 
-            if (authenticatedUserData == null)
+            if (authenticatedUserData == null || authenticatedUserData.Data == null)
             {
-                return new ServiceResponse<AuthUserDataDTO>
-                {
-                    Success = false,
-                    ErrorMessage = authenticatedUserResponse.ReasonPhrase
-                };
+                return new AuthUserDataDTO() { Data = null, HasAccess = false};
             }
 
-            if(authenticatedUserData.Data == null)
+            return new AuthUserDataDTO()
             {
-                return new ServiceResponse<AuthUserDataDTO>()
-                {
-                    Success = false,
-                    ErrorMessage = authenticatedUserData.ErrorMessage
-                };
-            }
-
-            return new ServiceResponse<AuthUserDataDTO> 
-            {
-                Data = authenticatedUserData.Data
+                Data = authenticatedUserData.Data.Data,
+                HasAccess = true
             };
         }
     }

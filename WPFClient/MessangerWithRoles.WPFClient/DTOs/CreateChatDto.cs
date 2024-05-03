@@ -7,5 +7,6 @@ namespace MessengerWithRoles.WPFClient.DTOs
     {
         public int ChatTypeId { get; set; }
         public List<User>? Members { get; set; }
+
     }
 }

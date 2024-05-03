@@ -23,17 +23,10 @@ namespace AccountManagementService.Controllers
         {
             var authenticatedUser = await _authService.TryGetAuthenticatedUser(accessToken);
 
-            if (authenticatedUser.Success == false)
-            {
-                var badResponse = new ServiceResponse<List<User>>
-                {
-                    Success = false,
-                    ErrorMessage = authenticatedUser.ErrorMessage
-                };
-                return BadRequest(badResponse);
-            }
+            if (!authenticatedUser.HasAccess || authenticatedUser.Data == null)
+                return Unauthorized();
 
-            var response = await _userService.GetOtherUsersForUser(authenticatedUser.Data.Data.UserId);
+            var response = await _userService.GetOtherUsersForUser(authenticatedUser.Data.UserId);
 
             return Ok(response);
         }
@@ -43,17 +36,10 @@ namespace AccountManagementService.Controllers
         {
             var authenticatedUser = await _authService.TryGetAuthenticatedUser(accessToken);
 
-            if (authenticatedUser.Success == false)
-            {
-                var badResponse = new ServiceResponse<List<User>>
-                {
-                    Success = false,
-                    ErrorMessage = authenticatedUser.ErrorMessage
-                };
-                return BadRequest(badResponse);
-            }
+            if (!authenticatedUser.HasAccess || authenticatedUser.Data == null)
+                return Unauthorized();
 
-            var response = await _userService.GetUserData(authenticatedUser.Data.Data.UserId);
+            var response = await _userService.GetUserData(authenticatedUser.Data.UserId);
 
             return Ok(response);
         }

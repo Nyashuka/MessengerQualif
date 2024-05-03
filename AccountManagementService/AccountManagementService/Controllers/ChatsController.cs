@@ -23,10 +23,10 @@ namespace AccountManagementService.Controllers
         {
             var authData = await _authService.TryGetAuthenticatedUser(accessToken);
 
-            if (!authData.Success)
+            if (!authData.HasAccess || authData.Data == null)
                 return Unauthorized();
 
-            if (chatDto.Members.Count != 2 || !chatDto.Members.Any(m => m.Id == authData.Data.Data.UserId))
+            if (chatDto.Members.Count != 2 || !chatDto.Members.Any(m => m.Id == authData.Data.UserId))
                 return Unauthorized();
 
             var response = await _chatsService.CreatePersonalChatIfNotExists(chatDto);
@@ -39,12 +39,13 @@ namespace AccountManagementService.Controllers
         {
             var authData = await _authService.TryGetAuthenticatedUser(accessToken);
 
-            if (!authData.Success || !authData.Data.HasAccess)
+            if (!authData.HasAccess || authData.Data == null)
                 return Unauthorized();
 
             ServiceResponse<ChatDto> response = await _chatsService.GetPersonalChatById(chatId);
 
-            if(!response.Data.Members.Any(m => m.Id == authData.Data.Data.UserId))
+            if(response.Data == null || response.Data.Members == null ||
+                !response.Data.Members.Any(m => m.Id == authData.Data.UserId))
                 return Unauthorized();
 
             return Ok(response);
@@ -55,10 +56,10 @@ namespace AccountManagementService.Controllers
         {
             var authData = await _authService.TryGetAuthenticatedUser(accessToken);
 
-            if (!authData.Success)
+            if (!authData.HasAccess || authData.Data == null)
                 return Unauthorized();
 
-            var response = await _chatsService.GetAllPersonalChats(authData.Data.Data.UserId);
+            var response = await _chatsService.GetAllPersonalChats(authData.Data.UserId);
 
             return Ok(response);
         }
@@ -68,10 +69,10 @@ namespace AccountManagementService.Controllers
         {
             var authData = await _authService.TryGetAuthenticatedUser(accessToken);
 
-            if (!authData.Success)
+            if (!authData.HasAccess || authData.Data == null)
                 return Unauthorized();
 
-            if (!users.Any(m => m.Id == authData.Data.Data.UserId))
+            if (!users.Any(m => m.Id == authData.Data.UserId))
                 return Unauthorized();
 
             var response = await _chatsService.GetPersonalChat(users);
@@ -79,5 +80,23 @@ namespace AccountManagementService.Controllers
             return Ok(response);
         }
 
+        [HttpPost]
+        public async Task<ActionResult<ServiceResponse<ChatDto>>> CreateGroupChat([FromQuery] string accessToken, ChatDto chatDto)
+        {
+            var authData = await _authService.TryGetAuthenticatedUser(accessToken);
+
+            if (!authData.HasAccess || authData.Data == null)
+                return Unauthorized();
+
+            if (chatDto.ChatInfo == null)
+                return Unauthorized();
+
+            if(chatDto.ChatInfo.OwnerUser == null || chatDto.ChatInfo.OwnerUser.Id != authData.Data.UserId)
+                return Unauthorized();
+
+            var response = await _chatsService.CreateGroupChatIfNotExists(chatDto);
+
+            return Ok(response);
+        }
     }
 }

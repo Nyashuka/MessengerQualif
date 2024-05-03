@@ -15,6 +15,7 @@ namespace AccountManagementService
         public const string GetUserDataGET = $"{DatabaseServiceIP}/api/Users/get-user";
         // [chats]
         public const string CreatePersonalChat_POST = $"{DatabaseServiceIP}/api/Chats/create-personal";
+        public const string CreateGroupChat_POST = $"{DatabaseServiceIP}/api/Chats/create-group";
         public const string GetAllPersonalChats_GET = $"{DatabaseServiceIP}/api/Chats/get-personal";
         public const string GetPersonalChat_POST = $"{DatabaseServiceIP}/api/Chats/get-personal";
         public const string GetChatByIdGET = $"{DatabaseServiceIP}/api/Chats/get-chat-by-id";

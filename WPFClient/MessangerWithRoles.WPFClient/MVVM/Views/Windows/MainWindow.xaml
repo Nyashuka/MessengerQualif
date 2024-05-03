@@ -106,6 +106,7 @@
                                         HorizontalContentAlignment="Left"
                                         Background="#1B1A22" Foreground="White"
                                         BorderThickness="0" Command="{Binding OpenCreateChatWindow}">
+                                   
                                     <Button.Style>
                                         <Style TargetType="Button">
                                             <Setter Property="Background" Value="#1B1A22"/>
@@ -144,7 +145,7 @@
                                 </ComboBox>
                             </StackPanel>
                         </Border>
-
+                       
 
                         <ListView Grid.Row="2" ItemsSource="{Binding Chats}"
                                   SelectionChanged="Selector_OnSelectionChanged"

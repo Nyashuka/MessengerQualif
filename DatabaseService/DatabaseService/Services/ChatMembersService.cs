@@ -3,6 +3,7 @@ using DatabaseService.DTOs;
 using DatabaseService.Models;
 using DatabaseService.Models.DatabaseModels;
 using DatabaseService.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace DatabaseService.Services
 {
@@ -15,11 +16,27 @@ namespace DatabaseService.Services
             _databaseContext = databaseContext;
         }
 
-        public async Task<ServiceResponse<List<ChatMember>>> GetChatMembersByChatId(int chatId)
+        public async Task<ServiceResponse<List<UserDto>>> GetChatMembersByChatId(int chatId)
         {
-            var chatMembers = _databaseContext.ChatMembers.Where(m => m.ChatId == chatId).ToList();
+            var chatMembers = _databaseContext.ChatMembers.Where(x => x.ChatId == chatId);
 
-            return new ServiceResponse<List<ChatMember>> { Data = chatMembers };
+            List<UserDto> chatMemberUsersDto = new List<UserDto>();
+            foreach (var chatMember in chatMembers)
+            {
+                var user = await _databaseContext.Users.FirstOrDefaultAsync(x => chatMember.UserId == x.Id);
+
+                if (user == null)
+                    continue;
+
+                chatMemberUsersDto.Add(new UserDto() 
+                {
+                    Id = user.Id,
+                    Username = user.Username,
+                    DisplayName = user.DisplayName,
+                });
+            }
+
+            return new ServiceResponse<List<UserDto>> { Data = chatMemberUsersDto };
         }
 
         public async Task<ServiceResponse<ChatMember>> AddMember(ChatMemberDTO chatMemberDto)

@@ -58,6 +58,14 @@ namespace DatabaseService.Controllers
             return Ok(response);
         }
 
+        [HttpPost("create-group")]
+        public async Task<ActionResult<ServiceResponse<ChatDto>>> CreateGroup(ChatDto chatDto)
+        {
+            var response = await _chatService.CreateGroupChat(chatDto);
+
+            return Ok(response);
+        }
+
         [HttpGet("delete")]
         public async Task<ActionResult> DeleteChat(int chatId)
         {

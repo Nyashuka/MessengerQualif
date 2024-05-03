@@ -5,6 +5,6 @@ namespace AccountManagementService.Services.Interfaces
 {
     public interface IAuthService
     {
-        Task<ServiceResponse<AuthUserDataDTO>> TryGetAuthenticatedUser(string acessToken);
+        Task<AuthUserDataDTO> TryGetAuthenticatedUser(string acessToken);
     }
 }

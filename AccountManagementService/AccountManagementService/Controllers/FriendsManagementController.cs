@@ -24,17 +24,10 @@ namespace AccountManagementService.Controllers
         {
             var authenticatedUser = await _authService.TryGetAuthenticatedUser(accessToken);
 
-            if (authenticatedUser.Success == false)
-            {
-                var badResponse = new ServiceResponse<List<User>>
-                {
-                    Success = false,
-                    ErrorMessage = authenticatedUser.ErrorMessage
-                };
-                return BadRequest(badResponse);
-            }
+            if (!authenticatedUser.HasAccess || authenticatedUser.Data == null)
+                return Unauthorized();
 
-            var response = await _friendsManagementService.GetFriends(authenticatedUser.Data.Data.UserId);
+            var response = await _friendsManagementService.GetFriends(authenticatedUser.Data.UserId);
 
             if (response.Data == null || !response.Success)
                 return BadRequest(response);
@@ -47,18 +40,10 @@ namespace AccountManagementService.Controllers
         {
             var authenticatedUser = await _authService.TryGetAuthenticatedUser(accessToken);
 
-            if (authenticatedUser.Success == false)
-            {
-                var badResponse = new ServiceResponse<bool>()
-                {
-                    Success = false,
-                    ErrorMessage = authenticatedUser.ErrorMessage
-                };
+            if (!authenticatedUser.HasAccess || authenticatedUser.Data == null)
+                return Unauthorized();
 
-                return BadRequest(badResponse);
-            }
-
-            var response = await _friendsManagementService.AddFriend(authenticatedUser.Data.Data.UserId, friendUserId);
+            var response = await _friendsManagementService.AddFriend(authenticatedUser.Data.UserId, friendUserId);
 
             if(!response.Success)
                 return BadRequest(response);
@@ -71,17 +56,10 @@ namespace AccountManagementService.Controllers
         {
             var authenticatedUser = await _authService.TryGetAuthenticatedUser(accessToken);
 
-            if (authenticatedUser.Success == false)
-            {
-                var badResponse = new ServiceResponse<bool>
-                {
-                    Success = false,
-                    ErrorMessage = authenticatedUser.ErrorMessage
-                };
-                return BadRequest(badResponse);
-            }
-
-            var response = await _friendsManagementService.RemoveFriend(authenticatedUser.Data.Data.UserId, friendUserId);
+            if (!authenticatedUser.HasAccess || authenticatedUser.Data == null)
+                return Unauthorized();
+                
+            var response = await _friendsManagementService.RemoveFriend(authenticatedUser.Data.UserId, friendUserId);
 
             if (!response.Success)
                 return BadRequest(response);

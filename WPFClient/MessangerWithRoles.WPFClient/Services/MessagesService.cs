@@ -20,7 +20,7 @@ namespace MessengerWithRoles.WPFClient.Services
         private const string ConnectUri = "ws://127.0.0.1:6999/api/Notification/connect";
         private readonly CancellationTokenSource _cancellationToken;
         private EventBus _eventBus;
-        private Task _thread;
+        private Task _notificationReceiviengTask;
 
         public MessagesService()
         {
@@ -30,7 +30,7 @@ namespace MessengerWithRoles.WPFClient.Services
 
         public void Start(string accessToken)
         {
-            _thread = Task.Run(async () => await ConnectAndReceiveAsync(accessToken));
+            _notificationReceiviengTask = Task.Run(async () => await ConnectAndReceiveAsync(accessToken));
         }
 
         public async Task ConnectAndReceiveAsync(string accessToken)
@@ -57,9 +57,7 @@ namespace MessengerWithRoles.WPFClient.Services
                         if (response != null)
                         {
                             NotifyClient_MessageReceived(response);
-                            //MessageBox.Show($"Received data from server: {response.JsonData}");
                         }
-
                     }
 
                     await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Connection closed.", CancellationToken.None);

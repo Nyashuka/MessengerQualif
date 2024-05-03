@@ -40,9 +40,32 @@ namespace AccountManagementService.Services
             return responseData;
         }
 
-        public Task<ServiceResponse<Chat>> CreateGroupChatIfNotExists(ChatDto chatDto)
+        public async Task<ServiceResponse<ChatDto>> CreateGroupChatIfNotExists(ChatDto chatDto)
         {
-            throw new NotImplementedException();
+            if(chatDto.ChatTypeId == 1)
+            {
+                return await CreateGroupChat(chatDto);
+            }
+
+            return new ServiceResponse<ChatDto>() { Success = false, ErrorMessage = "Chat type is not exists!"};
+        }
+
+        private async Task<ServiceResponse<ChatDto>> CreateGroupChat(ChatDto chatDto)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"{APIEndpoints.CreateGroupChat_POST}", chatDto);
+
+            var responseData = await response.Content.ReadFromJsonAsync<ServiceResponse<ChatDto>>();
+
+            return responseData;
+        }
+
+        private async Task<ServiceResponse<ChatDto>> CreatePersonalChat(ChatDto chatDto)
+        {
+            var databaseResponse = await _httpClient.PostAsJsonAsync(APIEndpoints.CreatePersonalChat_POST, chatDto);
+
+            var responseData = await databaseResponse.Content.ReadFromJsonAsync<ServiceResponse<ChatDto>>();
+
+            return responseData;
         }
 
         public async Task<ServiceResponse<ChatDto>> GetPersonalChatById(int chatId)
