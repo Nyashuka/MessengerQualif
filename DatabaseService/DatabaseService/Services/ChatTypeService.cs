@@ -35,7 +35,7 @@ namespace DatabaseService.Services
                 return new ServiceResponse<ChatType>() { 
                     Data = null, 
                     Success = false, 
-                    ErrorMessage = $"Chat type with id={dto.Id} does not exists!" 
+                    Message = $"Chat type with id={dto.Id} does not exists!" 
                 };
             }
         
@@ -52,7 +52,7 @@ namespace DatabaseService.Services
 
             if (chatType == null)
             {
-                return new ServiceResponse<bool>() { Data = false, Success = false, ErrorMessage = "" };
+                return new ServiceResponse<bool>() { Data = false, Success = false, Message = "" };
             }
 
             _databaseContext.ChatTypes.Remove(chatType);

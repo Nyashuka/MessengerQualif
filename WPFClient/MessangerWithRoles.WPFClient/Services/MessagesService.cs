@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using MessengerWithRoles.WPFClient.Data;
+using MessengerWithRoles.WPFClient.Data.Requests;
 using MessengerWithRoles.WPFClient.DTOs;
 using MessengerWithRoles.WPFClient.MVVM.Models;
 using MessengerWithRoles.WPFClient.Services.EventBusModule;

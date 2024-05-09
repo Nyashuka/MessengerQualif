@@ -80,7 +80,7 @@ namespace AccountManagementService.Controllers
             return Ok(response);
         }
 
-        [HttpPost]
+        [HttpPost("create-group")]
         public async Task<ActionResult<ServiceResponse<ChatDto>>> CreateGroupChat([FromQuery] string accessToken, ChatDto chatDto)
         {
             var authData = await _authService.TryGetAuthenticatedUser(accessToken);

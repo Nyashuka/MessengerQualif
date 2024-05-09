@@ -8,6 +8,7 @@ using MessengerWithRoles.WPFClient.MVVM.Models;
 using MessengerWithRoles.WPFClient.Services.EventBusModule;
 using MessengerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
 using MessengerWithRoles.WPFClient.Services.ServiceLocatorModule;
+using MessengerWithRoles.WPFClient.Data.Requests;
 
 namespace MessengerWithRoles.WPFClient.Services
 {
@@ -15,6 +16,7 @@ namespace MessengerWithRoles.WPFClient.Services
     {
         public bool IsAuthenticated { get; private set; }
         public string AccessToken { get; private set; }
+        private RequestService _requestService;
 
         public User User { get; private set; }
 
@@ -22,6 +24,7 @@ namespace MessengerWithRoles.WPFClient.Services
         {
             IsAuthenticated = false;
             AccessToken = string.Empty;
+            _requestService = ServiceLocator.Instance.GetService<RequestService>();
         }
 
         public async Task<bool> Login(string email, string password)
@@ -32,45 +35,18 @@ namespace MessengerWithRoles.WPFClient.Services
             loginData.Email = email;
             loginData.Password = password;
 
-            HttpResponseMessage? response = null;
-            try
-            {
-                response = await httpClient.PostAsJsonAsync(APIEndpoints.LoginPOST, loginData);
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-                return IsAuthenticated;
-            }
 
-            if (response == null)
-            {
-                MessageBox.Show("Login Response in empty");
-                return IsAuthenticated;
-            }
+            var loginResponse = await _requestService
+                                         .PostAsJsonAsync<string, AccountLogin>($"{APIEndpoints.LoginPOST}?accessToken={AccessToken}", loginData);
 
-            var dataFromResponse = await response.Content.ReadFromJsonAsync<ServiceResponse<string>>();
-
-            if (dataFromResponse == null)
+            if(!loginResponse.Success || loginResponse.Data == null)
             {
-                MessageBox.Show("Cannot parse data from login response!");
-                return IsAuthenticated;
-            }
-
-            if (!dataFromResponse.Success)
-            {
-                MessageBox.Show(dataFromResponse.ErrorMessage);
-                return IsAuthenticated;
-            }
-
-            if(dataFromResponse.Data == null)
-            {
-                MessageBox.Show("Can't get Token, but login request successfully");
-                return IsAuthenticated;
-            }
+                MessageBox.Show(loginResponse.Message);
+                return false; 
+            }    
 
             IsAuthenticated = true;
-            AccessToken = dataFromResponse.Data;
+            AccessToken = loginResponse.Data;
 
             var userDataRequest = await httpClient.GetAsync($"{APIEndpoints.GetUserGET}?accessToken={AccessToken}");
             User = (await userDataRequest.Content.ReadFromJsonAsync<ServiceResponse<User>>()).Data;

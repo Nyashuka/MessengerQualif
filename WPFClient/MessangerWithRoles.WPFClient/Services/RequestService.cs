@@ -1,7 +1,10 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using MessengerWithRoles.WPFClient.Data;
 using MessengerWithRoles.WPFClient.Services.ServiceLocatorModule;
+using MessengerWithRoles.WPFClient.Data.Requests;
 
 namespace MessengerWithRoles.WPFClient.Services
 {
@@ -14,9 +17,46 @@ namespace MessengerWithRoles.WPFClient.Services
             _httpClient = new HttpClient();
         }
 
-        public async Task<HttpResponseMessage> PostAsJsonAsync<T>(string endpoint, T obj)
+        public async Task<ServiceResponse<TReturnType>> PostAsJsonAsync<TReturnType, TPostData>(string endpoint, TPostData postData)
         {
-            return await _httpClient.PostAsJsonAsync(endpoint, obj);
+            HttpResponseMessage? response = null;
+            try
+            {
+                response = await _httpClient.PostAsJsonAsync(APIEndpoints.LoginPOST, postData);
+            }
+            catch (Exception e)
+            {
+                return new ServiceResponse<TReturnType>($"Request by: \n{endpoint}\n error{e.Message}");
+            }
+
+            if (response == null)
+            {
+                return new ServiceResponse<TReturnType>($"Request by: \n{endpoint}\n can't get response.");
+            }
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return new ServiceResponse<TReturnType>($"Request by: \n{endpoint}\n is not success.\nStatus code: {response.StatusCode}\nReasonPhrase: {response.ReasonPhrase}");
+            }
+
+            var dataFromResponse = await response.Content.ReadFromJsonAsync<ServiceResponse<TReturnType>>();
+
+            if (dataFromResponse == null)
+            {
+                return new ServiceResponse<TReturnType>($"Cannot parse data from \n{endpoint}\n response!");
+            }
+
+            if (!dataFromResponse.Success)
+            {
+                return new ServiceResponse<TReturnType>(dataFromResponse.Message);
+            }
+
+            if (dataFromResponse.Data == null)
+            {
+                return new ServiceResponse<TReturnType>("Can't get data");
+            }
+
+            return new ServiceResponse<TReturnType>(dataFromResponse.Data, true, dataFromResponse.Message);
         }
     }
 }

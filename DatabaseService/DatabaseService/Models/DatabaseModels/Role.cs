@@ -6,6 +6,7 @@
         public required string Name { get; set; }
 
         public int ChatId { get; set; }
-        public required Chat Chat { get; set; }
+        public Chat? Chat { get; set; }
+        public List<ChatPermission>? Permissions { get; set; }
     }
 }

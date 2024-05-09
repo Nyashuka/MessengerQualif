@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using MessengerWithRoles.WPFClient.Data;
+using MessengerWithRoles.WPFClient.Data.Requests;
 using MessengerWithRoles.WPFClient.DTOs;
 using MessengerWithRoles.WPFClient.MVVM.Infrastracture.Commands;
 using MessengerWithRoles.WPFClient.MVVM.Models;

@@ -17,6 +17,7 @@ using MessengerWithRoles.WPFClient.MVVM.ViewModels.Base;
 using MessengerWithRoles.WPFClient.Services;
 using MessengerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
 using MessengerWithRoles.WPFClient.Services.ServiceLocatorModule;
+using MessengerWithRoles.WPFClient.Data.Requests;
 
 namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 {
@@ -44,7 +45,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 
             if (!data.Success)
             {
-                MessageBox.Show(data.ErrorMessage);
+                MessageBox.Show(data.Message);
                 return;
             }
 
@@ -95,7 +96,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 
             if (!createdChat.Success)
             {
-                MessageBox.Show(createdChat.ErrorMessage);
+                MessageBox.Show(createdChat.Message);
                 return;
             }
 

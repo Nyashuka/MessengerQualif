@@ -24,5 +24,5 @@
         public const string GetChatMessagesByChatIdGET = "http://127.0.0.1:5294/api/Messages";
         public const string SendMessagePOST = "http://127.0.0.1:5294/api/Messages";
 
-    }
+    } 
 }

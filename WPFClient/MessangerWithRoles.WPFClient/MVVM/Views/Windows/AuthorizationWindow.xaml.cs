@@ -1,4 +1,5 @@
-﻿using MessengerWithRoles.WPFClient.Services.EventBusModule;
+﻿using MessengerWithRoles.WPFClient.Services;
+using MessengerWithRoles.WPFClient.Services.EventBusModule;
 using MessengerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
 using MessengerWithRoles.WPFClient.Services.ServiceLocatorModule;
 using System.Windows;

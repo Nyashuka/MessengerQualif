@@ -25,7 +25,7 @@ namespace DatabaseService.Services
             if (alreadyFriend)
             {
                 response.Data = true;
-                response.ErrorMessage = $"This user with account id={friend.FriendUserId} is already friend";
+                response.Message = $"This user with account id={friend.FriendUserId} is already friend";
                 return response;
             }
 
@@ -65,7 +65,7 @@ namespace DatabaseService.Services
                 {
                     Data = false,
                     Success = false,
-                    ErrorMessage = $"User with accountid={friend.FriendUserId} not your friend"
+                    Message = $"User with accountid={friend.FriendUserId} not your friend"
                 };
             }
 

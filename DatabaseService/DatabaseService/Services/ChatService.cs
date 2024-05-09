@@ -84,7 +84,7 @@ namespace DatabaseService.Services
                 {
                     Data = null,
                     Success = false,
-                    ErrorMessage = "Chat is not exists!"
+                    Message = "Chat is not exists!"
                 });
             }
 
@@ -108,7 +108,7 @@ namespace DatabaseService.Services
                 {
                     Data = null,
                     Success = false,
-                    ErrorMessage = $"Chat type with id={chatDto.ChatTypeId} is not exists"
+                    Message = $"Chat type with id={chatDto.ChatTypeId} is not exists"
                 };
             }
 
@@ -149,7 +149,7 @@ namespace DatabaseService.Services
             var existsChat = await GetPersonalChatIfExists(chatDTO.Members);
 
             if (existsChat.Data != null)
-                return new ServiceResponse<ChatDto>() { Success = false, ErrorMessage = "Already exists" };
+                return new ServiceResponse<ChatDto>() { Success = false, Message = "Already exists" };
 
             var chatType = _databaseContext.ChatTypes.FirstOrDefault(x => x.Id == chatDTO.ChatTypeId);
 
@@ -159,7 +159,7 @@ namespace DatabaseService.Services
                 {
                     Data = null,
                     Success = false,
-                    ErrorMessage = $"Chat type with id={chatDTO.ChatTypeId} is not exists"
+                    Message = $"Chat type with id={chatDTO.ChatTypeId} is not exists"
                 };
             }
 
@@ -204,7 +204,7 @@ namespace DatabaseService.Services
                 {
                     Data = false,
                     Success = false,
-                    ErrorMessage = $"Chat with id={id} is not exists!"
+                    Message = $"Chat with id={id} is not exists!"
                 };
             }
 
@@ -223,7 +223,7 @@ namespace DatabaseService.Services
                 {
                     Data = null,
                     Success = false,
-                    ErrorMessage = "Chat does not exists"
+                    Message = "Chat does not exists"
                 };
 
             List<UserDto> members = _databaseContext.ChatMembers

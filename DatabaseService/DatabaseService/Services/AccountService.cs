@@ -37,7 +37,7 @@ namespace DatabaseService.Services
                 {
                     Data = null,
                     Success = false,
-                    ErrorMessage = "Account does not exists!"
+                    Message = "Account does not exists!"
                 };
             }
 
@@ -57,7 +57,7 @@ namespace DatabaseService.Services
                 return new ServiceResponse<int>
                 {
                     Success = false,
-                    ErrorMessage = $"Account with email '{accountDTO.Email}' already exists!"
+                    Message = $"Account with email '{accountDTO.Email}' already exists!"
                 };
             }
 
@@ -93,7 +93,7 @@ namespace DatabaseService.Services
 
             if (token == null)
             {
-                return new ServiceResponse<AccessToken>() { Data = null, Success = false, ErrorMessage = "Token does not exists!" };
+                return new ServiceResponse<AccessToken>() { Data = null, Success = false, Message = "Token does not exists!" };
             }
 
             return new ServiceResponse<AccessToken>() { Data = token };
@@ -138,7 +138,7 @@ namespace DatabaseService.Services
                 {
                     Data = null,
                     Success = false,
-                    ErrorMessage = "Token is not exists!"
+                    Message = "Token is not exists!"
                 };
             }
 

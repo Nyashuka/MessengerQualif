@@ -1,6 +1,4 @@
-﻿using MessengerWithRoles.WPFClient.Data;
-
-namespace MessengerWithRoles.WPFClient.MVVM.Models
+﻿namespace MessengerWithRoles.WPFClient.Data.Requests
 {
     public class SocketResponse
     {
