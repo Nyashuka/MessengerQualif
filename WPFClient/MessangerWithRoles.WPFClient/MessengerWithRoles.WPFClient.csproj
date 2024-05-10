@@ -8,17 +8,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Services\APIEndpoints\**" />
+    <Compile Remove="Styles\**" />
+    <EmbeddedResource Remove="Services\APIEndpoints\**" />
+    <EmbeddedResource Remove="Styles\**" />
+    <None Remove="Services\APIEndpoints\**" />
+    <None Remove="Styles\**" />
+    <Page Remove="Services\APIEndpoints\**" />
+    <Page Remove="Styles\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Images\Icons\donsenger.jpg" />
     <None Remove="Images\Icons\email-icon.png" />
     <None Remove="Images\Icons\key-icon.png" />
     <None Remove="Images\Icons\not-twitter-icon.png" />
     <None Remove="Images\Icons\twitter-icon.png" />
     <None Remove="Images\Icons\user-icon.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Services\APIEndpoints\" />
-    <Folder Include="Styles\" />
   </ItemGroup>
 
   <ItemGroup>

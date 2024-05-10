@@ -197,7 +197,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             EventBus eventBus = ServiceLocator.Instance.GetService<EventBus>();
 
             AuthService authService = ServiceLocator.Instance.GetService<AuthService>();
-            MessagesService messagesService = new MessagesService();
+            NotificationService messagesService = new NotificationService();
             messagesService.Start(authService.AccessToken);
             ServiceLocator.Instance.RegisterService(messagesService);
 

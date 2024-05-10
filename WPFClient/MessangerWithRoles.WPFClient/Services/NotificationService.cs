@@ -14,15 +14,14 @@ using MessengerWithRoles.WPFClient.Services.ServiceLocatorModule;
 
 namespace MessengerWithRoles.WPFClient.Services
 {
-    public class MessagesService : IService
+    public class NotificationService : IService
     {
         private ClientWebSocket _webSocket;
-        private const string ConnectUri = "ws://127.0.0.1:6999/api/Notification/connect";
         private readonly CancellationTokenSource _cancellationToken;
         private EventBus _eventBus;
         private Task _notificationReceiviengTask;
 
-        public MessagesService()
+        public NotificationService()
         {
             _cancellationToken = new CancellationTokenSource();
             _eventBus = ServiceLocator.Instance.GetService<EventBus>();
@@ -42,7 +41,7 @@ namespace MessengerWithRoles.WPFClient.Services
                     _webSocket = new ClientWebSocket();
                     _webSocket.Options.SetRequestHeader("accessToken", accessToken);
 
-                    await _webSocket.ConnectAsync(new Uri(ConnectUri), CancellationToken.None);
+                    await _webSocket.ConnectAsync(new Uri(APIEndpoints.NotificationsWS), CancellationToken.None);
 
                     byte[] buffer = new byte[1024];
 
