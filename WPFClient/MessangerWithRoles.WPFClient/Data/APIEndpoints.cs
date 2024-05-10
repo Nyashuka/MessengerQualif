@@ -2,27 +2,28 @@
 {
     public static class APIEndpoints
     {
+        public static string ip = "91.201.235.100";
         // auth service
-        public const string CreateAccountPOST = "http://127.0.0.1:5292/api/Auth/create-account";
-        public const string LoginPOST = "http://127.0.0.1:5292/api/Auth/login";
+        public static string CreateAccountPOST = $"http://{ip}:5292/api/Auth/create-account";
+        public static string LoginPOST = $"http://{ip}:5292/api/Auth/login";
 
         // account management service
-        public const string GetAllUsersGET = "http://127.0.0.1:5293/api/Users";
-        public const string GetUserGET = "http://127.0.0.1:5293/api/Users/get-user";
+        public static string GetAllUsersGET = $"http://{ip}:5293/api/Users";
+        public static string GetUserGET = $"http://{ip}:5293/api/Users/get-user";
 
-        public const string AddFriendGET = "http://127.0.0.1:5293/api/FriendsManagement/add-friend";
-        public const string RemoveFriendGET = "http://127.0.0.1:5293/api/FriendsManagement/remove-friend";
-        public const string GetAllFriendsGET = "http://127.0.0.1:5293/api/FriendsManagement";
+        public static string AddFriendGET = $"http://{ip}:5293/api/FriendsManagement/add-friend";
+        public static string RemoveFriendGET = $"http://{ip}:5293/api/FriendsManagement/remove-friend";
+        public static string GetAllFriendsGET = $"http://{ip}:5293/api/FriendsManagement";
 
         // chats
-        public const string CreatePersonalChatPOST = "http://127.0.0.1:5293/api/Chats/create-personal";
-        public const string GetPersonalChatPOST = "http://127.0.0.1:5293/api/Chats/get-personal";
-        public const string GetAllChatsGET = "http://127.0.0.1:5293/api/Chats/get-personal";
-        public const string GetChatById = "http://127.0.0.1:5293/api/Chats/get-personal-by-id";
+        public static string CreatePersonalChatPOST = $"http://{ip}/api/Chats/create-personal";
+        public static string GetPersonalChatPOST = $"http://{ip}:5293/api/Chats/get-personal";
+        public static string GetAllChatsGET = $"http://{ip}:5293/api/Chats/get-personal";
+        public static string GetChatById = $"http://{ip}:5293/api/Chats/get-personal-by-id";
 
         // messages service
-        public const string GetChatMessagesByChatIdGET = "http://127.0.0.1:5294/api/Messages";
-        public const string SendMessagePOST = "http://127.0.0.1:5294/api/Messages";
+        public static string GetChatMessagesByChatIdGET = $"http://{ip}:5294/api/Messages";
+        public static string SendMessagePOST = $"http://{ip}:5294/api/Messages";
 
     } 
 }
