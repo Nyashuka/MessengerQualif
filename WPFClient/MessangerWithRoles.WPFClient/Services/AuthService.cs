@@ -8,6 +8,7 @@ using MessengerWithRoles.WPFClient.MVVM.Models;
 using MessengerWithRoles.WPFClient.Services.EventBusModule;
 using MessengerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
 using MessengerWithRoles.WPFClient.Services.ServiceLocatorModule;
+using MessengerWithRoles.WPFClient.Data.Requests;
 
 namespace MessengerWithRoles.WPFClient.Services
 {
@@ -59,7 +60,7 @@ namespace MessengerWithRoles.WPFClient.Services
 
             if (!dataFromResponse.Success)
             {
-                MessageBox.Show(dataFromResponse.ErrorMessage);
+                MessageBox.Show(dataFromResponse.Message);
                 return IsAuthenticated;
             }
 

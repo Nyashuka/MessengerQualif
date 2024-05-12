@@ -36,12 +36,19 @@ namespace MessengerWithRoles.WPFClient.MVVM.Views.UserControls
                      messagesListView.ScrollIntoView(messagesListView.Items[messagesListView.Items.Count - 1]);
                  }
              };
+
+            chatPageViewModel.MessegesListChanged += ScrollIntoLastMessage;
+        }
+
+        public void ScrollIntoLastMessage()
+        {
+            if (messagesListView.Items != null && messagesListView.Items.Count > 0)
+                messagesListView.ScrollIntoView(messagesListView.Items[messagesListView.Items.Count - 1]);
         }
 
         private void messagesListView_Loaded(object sender, RoutedEventArgs e)
         {
-            if(messagesListView.Items != null && messagesListView.Items.Count > 0)
-                messagesListView.ScrollIntoView(messagesListView.Items[messagesListView.Items.Count - 1]);
+            ScrollIntoLastMessage();
         }
     }
 }

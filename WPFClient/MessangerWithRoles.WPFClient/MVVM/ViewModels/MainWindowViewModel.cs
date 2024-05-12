@@ -7,9 +7,9 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
 using MessengerWithRoles.WPFClient.Data;
+using MessengerWithRoles.WPFClient.Data.Requests;
 using MessengerWithRoles.WPFClient.DTOs;
 using MessengerWithRoles.WPFClient.MVVM.Infrastracture.Commands;
 using MessengerWithRoles.WPFClient.MVVM.Models;
@@ -42,6 +42,21 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             set => Set(ref _searchText, value);
         }
 
+        private Visibility _chatListVisibility = Visibility.Visible;
+        private Visibility _groupListVisibility = Visibility.Collapsed;
+
+        public Visibility ChatListVisibility
+        {
+            get => _chatListVisibility;
+            set => Set(ref _chatListVisibility, value);
+        }
+
+        public Visibility GroupListVisibility
+        {
+            get => _groupListVisibility;
+            set => Set(ref _groupListVisibility, value);
+        }
+
         private ObservableCollection<ChatViewModel> _chats;
         public ObservableCollection<ChatViewModel> Chats
         {
@@ -49,9 +64,12 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             set => Set(ref _chats, value);
         }
 
-        public MainWindowViewModel DataContext => this;
-
-        public ObservableCollection<Message> Messages { get; private set; }
+        private ObservableCollection<GroupViewModel> _groups;
+        public ObservableCollection<GroupViewModel> Groups
+        {
+            get => _groups;
+            set => Set(ref _groups, value);
+        }
 
         public ICommand OpenFriendsWindow { get; }
 
@@ -62,14 +80,14 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             CurrentContent = new FriendsPage();
         }
 
-        public ICommand OpenCreateChatWindow { get; }
+        public ICommand OpenCreateGroupWindow { get; }
 
-        public bool CanExecuteOpenCreateChatWindowCommand(object p) => true;
+        public bool CanExecuteOpenCreateGroupWindowCommand(object p) => true;
 
-        public void OnExecuteOpenCreateChatWindowCommand(object p)
+        public void OnExecuteOpenCreateGroupWindowCommand(object p)
         {
-            CurrentContent = new CreatePersonalChatPage();
-            CurrentContent.DataContext = new CreatePersonalChatViewModel();
+            CurrentContent = new CreateGroupPage();
+            CurrentContent.DataContext = this;
         }
 
         public ICommand SelectedChatCommand { get; }
@@ -81,39 +99,56 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             SelectedChat = (ChatViewModel)p;
         }
 
-        public async Task LoadPersonalChats()
+        private async Task LoadPersonalChats()
         {
             AuthService authService = ServiceLocator.Instance.GetService<AuthService>();
+            var chatsService = ServiceLocator.Instance.GetService<ChatsService>();
             HttpClient httpClient = new HttpClient();
 
+            var result = await httpClient.GetAsync($"{APIEndpoints.GetAllChatsGET}?accessToken={authService.AccessToken}");
+            if (!result.IsSuccessStatusCode)
+            {
+                MessageBox.Show(result.ReasonPhrase);
+                return;
+            }
+
+            var data = (await result.Content.ReadFromJsonAsync<ServiceResponse<List<ChatDto>>>()).Data;
+
+            foreach (var chatDto in data)
+            {
+                ObservableCollection<Message> chatMessages = await chatsService.GetChatMessages(chatDto.Id);
+
+                User parcipient = chatDto.Members.FirstOrDefault(m => m.Id != authService.User.Id);
+                Chats.Add(new ChatViewModel(chatDto.Id, chatDto.Members.First(u => u.Id != authService.User.Id).DisplayName,
+                    "https://i.pinimg.com/originals/e7/da/8d/e7da8d8b6a269d073efa11108041928d.jpg",
+                    chatMessages, parcipient));
+            }
+        }
+
+        private async Task LoadGroups()
+        {
+            var groupsService = ServiceLocator.Instance.GetService<GroupsServcie>();
+
+            var groupsResposne = await groupsService.GetGroups();
+
+            if (groupsResposne.Data == null)
+            {
+                Groups = new ObservableCollection<GroupViewModel>();
+                return;
+            }
+
+            foreach (var group in groupsResposne.Data)
+            {
+                Groups.Add(await groupsService.GroupModelToViewModel(group));
+            }
+        }
+
+        public async Task LoadChats()
+        {
             try
             {
-                var result = await httpClient.GetAsync($"{APIEndpoints.GetAllChatsGET}?accessToken={authService.AccessToken}");
-                if (!result.IsSuccessStatusCode)
-                {
-                    MessageBox.Show(result.ReasonPhrase);
-                    return;
-                }
-
-                var data = (await result.Content.ReadFromJsonAsync<ServiceResponse<List<ChatDto>>>()).Data;
-
-                foreach (var chatDto in data)
-                {
-                    var messagesResponse = await httpClient.GetAsync($"{APIEndpoints.GetChatMessagesByChatIdGET}?accessToken={authService.AccessToken}&chatId={chatDto.Id}");
-                    var messagesResponseData = await messagesResponse.Content.ReadFromJsonAsync<ServiceResponse<List<MessageDto>>>();
-
-                    ObservableCollection<Message> chatMessages = new ObservableCollection<Message>();
-                    foreach (var currentMessage in messagesResponseData.Data)
-                    {
-                        chatMessages.Add(new Message(currentMessage.Sender.DisplayName, 
-                            currentMessage.Data, authService.User.Id != currentMessage.Sender.Id));
-                    }
-
-                    User parcipient = chatDto.Members.FirstOrDefault(m => m.Id != authService.User.Id);
-                    Chats.Add(new ChatViewModel(chatDto.Id, chatDto.Members.First(u => u.Id != authService.User.Id).DisplayName,
-                        "https://i.pinimg.com/originals/e7/da/8d/e7da8d8b6a269d073efa11108041928d.jpg",
-                        chatMessages, parcipient));
-                }
+                await LoadPersonalChats();
+                await LoadGroups();
             }
             catch (Exception e)
             {
@@ -121,7 +156,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             }
         }
 
-        public void OpenChat(ChatViewModel chat)
+        public void OpenChatWindow(ChatViewModel chat)
         {
             CurrentContent = new ChatPage(new ChatPageViewModel(chat));
         }
@@ -130,69 +165,125 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
         {
             var chatArgs = (ChatDataIEventBusArgs)args;
 
-            OpenChat(chatArgs.Chat);
-        }
-
-        private void AddChat(IEventBusArgs args)
-        {
-            var chatArgs = (ChatDataIEventBusArgs)args;
-
-            Chats.Add(chatArgs.Chat);
-
-            OpenChat(chatArgs.Chat);
-        }
-
-        private async Task<ChatViewModel> GetChat(int chatId)
-        {
-            var authService = ServiceLocator.Instance.GetService<AuthService>();
-            var httpClient = new HttpClient();
-
-            var response = await httpClient.GetAsync($"{APIEndpoints.GetChatById}?accessToken={authService.AccessToken}&chatId={chatId}");
-            var chatData = (await response.Content.ReadFromJsonAsync<ServiceResponse<ChatDto>>()).Data;
-
-            var messagesResponse = await httpClient.GetAsync($"{APIEndpoints.GetChatMessagesByChatIdGET}?accessToken={authService.AccessToken}&chatId={chatId}");
-            var messagesResponseData = await messagesResponse.Content.ReadFromJsonAsync<ServiceResponse<List<MessageDto>>>();
-
-            ObservableCollection<Message> chatMessages = new ObservableCollection<Message>();
-            foreach (var currentMessage in messagesResponseData.Data)
+            if (Chats.Any(x => x.Id != chatArgs.Chat.Id))
             {
-                chatMessages.Add(new Message(currentMessage.Sender.DisplayName,
-                    currentMessage.Data, authService.User.Id != currentMessage.Sender.Id));
+                Chats.Add(chatArgs.Chat);
             }
 
-            User parcipient = chatData.Members.FirstOrDefault(m => m.Id != authService.User.Id);
-            return new ChatViewModel(chatData.Id, chatData.Members.First(u => u.Id != authService.User.Id).DisplayName,
-                "https://i.pinimg.com/originals/e7/da/8d/e7da8d8b6a269d073efa11108041928d.jpg",
-                chatMessages, parcipient);
+            OpenChatWindow(chatArgs.Chat);
+        }
+
+        public void OpenGroupWindow(GroupViewModel chat)
+        {
+            CurrentContent = new GroupPage(new GroupPageViewModel(chat));
+        }
+
+        private void OpenGroup(IEventBusArgs args)
+        {
+            var groupArgs = (GroupDataIEventBusArgs)args;
+
+            if (Groups.Any(x => x.Id != groupArgs.Group.Id))
+            {
+                Groups.Add(groupArgs.Group);
+            }
+
+            OpenGroupWindow(groupArgs.Group);
         }
 
         private async void UpdateMessages(IEventBusArgs args)
         {
             var messageArgs = (TextMessageEventBusArgs)args;
             var message = messageArgs.Message;
+            var chatsService = ServiceLocator.Instance.GetService<ChatsService>();
 
             var chat = Chats.FirstOrDefault(c => c.Id == message.ChatId);
-            if(chat == null)
-            {
-                chat = await GetChat(message.ChatId);
+            var chatFromDB = await chatsService.GetExistsPersonalChat(message.ChatId);
 
-                System.Windows.Application.Current.Dispatcher.Invoke(delegate // <--- HERE
+            if (chat == null)
+            {
+                System.Windows.Application.Current.Dispatcher.Invoke(delegate
                 {
-                    Chats.Add(chat);
+                    Chats.Add(chatFromDB);
                 });
                 return;
             }
+            System.Windows.Application.Current.Dispatcher.Invoke(delegate
+            {
+                chat.UpdateMessages(chatFromDB.Messages);
+            });
+        }
 
-            chat.AddMessage(message, true);
+        private CreateGroupChatDto _reateGroupChatDto;
+        public CreateGroupChatDto CreateGroupChatDto
+        {
+            get => _reateGroupChatDto;
+            set => Set(ref _reateGroupChatDto, value);
+        }
+
+        public ICommand CreateGroupCommand { get; }
+        public bool CanExecuteCreateGroupCommandCommand(object p) => true;
+        public async void OnExecuteCreateGroupCommandCommand(object p)
+        {
+            var groupsService = ServiceLocator.Instance.GetService<GroupsServcie>();
+            var createGroupResponse = await groupsService.CreateGroup(CreateGroupChatDto);
+
+            if (createGroupResponse.Data == null)
+            {
+                MessageBox.Show(createGroupResponse.Message);
+                return;
+            }
+
+            var group = createGroupResponse.Data;
+
+            GroupViewModel groupViewModel = new GroupViewModel(group.Id, group.ChatInfo.Name,
+                group.ChatInfo.Description,
+                new ObservableCollection<User>() { group.ChatInfo.Owner },
+                new ObservableCollection<Message>());
+
+            Groups.Add(groupViewModel);
+        }
+
+        public List<ChatType> ChatTypes { get; set; } = new List<ChatType>()
+        {
+            new ChatType()
+            {
+                Type = ChatTypeEnum.personal,
+                Name = "Personal"
+            },
+            new ChatType()
+            {
+                Type = ChatTypeEnum.group,
+                Name = "Group"
+            }
+        };
+
+        private ChatType _selectedChatType;
+        public ChatType SelectedChatType
+        {
+            get => _selectedChatType;
+            set
+            {
+                Set(ref _selectedChatType, value);
+                if (value.Type == ChatTypeEnum.personal)
+                {
+                    GroupListVisibility = Visibility.Collapsed;
+                    ChatListVisibility = Visibility.Visible;
+                }
+                else if (value.Type == ChatTypeEnum.group)
+                {
+                    ChatListVisibility = Visibility.Collapsed;
+                    GroupListVisibility = Visibility.Visible;
+                }
+            }
         }
 
         public MainWindowViewModel()
         {
-            OpenFriendsWindow = new LambdaCommand(OnExecuteOpenFriendsWindowCommand, CanExecuteOpenFriendsWindowCommand);
-            OpenCreateChatWindow = new LambdaCommand(OnExecuteOpenCreateChatWindowCommand, CanExecuteOpenCreateChatWindowCommand);
-            SelectedChatCommand = new LambdaCommand(OnExecuteSelectedChatCommandCommand, CanExecuteSelectedChatCommandCommand);
 
             Chats = new ObservableCollection<ChatViewModel>();
+            Groups = new ObservableCollection<GroupViewModel>();
+
+            CreateGroupChatDto = new CreateGroupChatDto();
 
             EventBus eventBus = ServiceLocator.Instance.GetService<EventBus>();
 
@@ -202,8 +293,16 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             ServiceLocator.Instance.RegisterService(messagesService);
 
             eventBus.Subscribe<ChatDataIEventBusArgs>(EventBusDefinitions.OpenChat, OpenChat);
-            eventBus.Subscribe<ChatDataIEventBusArgs>(EventBusDefinitions.ChatCreated, AddChat);
+            eventBus.Subscribe<ChatDataIEventBusArgs>(EventBusDefinitions.OpenGroup, OpenGroup);
             eventBus.Subscribe<ChatDataIEventBusArgs>(EventBusDefinitions.TextMessageReceived, UpdateMessages);
+
+            SelectedChatType = ChatTypes.First(x => x.Type == ChatTypeEnum.personal);
+
+            OpenFriendsWindow = new LambdaCommand(OnExecuteOpenFriendsWindowCommand, CanExecuteOpenFriendsWindowCommand);
+            OpenCreateGroupWindow = new LambdaCommand(OnExecuteOpenCreateGroupWindowCommand, CanExecuteOpenCreateGroupWindowCommand);
+            SelectedChatCommand = new LambdaCommand(OnExecuteSelectedChatCommandCommand, CanExecuteSelectedChatCommandCommand);
+            CreateGroupCommand = new LambdaCommand(OnExecuteCreateGroupCommandCommand, CanExecuteCreateGroupCommandCommand);
+
         }
     }
 }

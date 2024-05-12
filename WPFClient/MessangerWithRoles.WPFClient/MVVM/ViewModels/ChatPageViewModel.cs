@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using MessengerWithRoles.WPFClient.Data;
+using MessengerWithRoles.WPFClient.Data.Requests;
 using MessengerWithRoles.WPFClient.DTOs;
 using MessengerWithRoles.WPFClient.MVVM.Infrastracture.Commands;
-using MessengerWithRoles.WPFClient.MVVM.Models;
 using MessengerWithRoles.WPFClient.MVVM.ViewModels.Base;
 using MessengerWithRoles.WPFClient.Services;
 using MessengerWithRoles.WPFClient.Services.ServiceLocatorModule;
@@ -28,12 +28,15 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             set => Set(ref _messageText, value);
         }
 
+        public event Action MessegesListChanged;
+
         public ICommand SendMessageCommand { get; }
 
-        private bool CanSendMessageExecuteCommand(object p) => true;
+        private bool CanSendMessageExecuteCommand(object p) => !string.IsNullOrEmpty(_messageText);
+
         private async void OnSendMessageExecuteCommand(object p)
         {
-            AuthService authService = ServiceLocator.Instance.GetService<AuthService>();
+            var authService = ServiceLocator.Instance.GetService<AuthService>();
 
             MessageDto messageDto = new MessageDto()
             {
@@ -43,13 +46,16 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
                 Data = MessageText
             };
 
-            HttpClient httpClient = new HttpClient();
+            var messagesService = ServiceLocator.Instance.GetService<MessagesService>();
+            var sendMessageResponse = await messagesService.SendMessage(messageDto);
 
-            var response = await httpClient.PostAsJsonAsync($"{APIEndpoints.SendMessagePOST}?accessToken={authService.AccessToken}", messageDto);
-            var responseData = await response.Content.ReadFromJsonAsync<ServiceResponse<MessageDto>>();
-
-            Chat.AddMessage(responseData.Data, false);
+            Chat.AddMessage(sendMessageResponse.Data, false);
             MessageText = "";
+        }
+
+        private void MessegesListChangedInvoked()
+        {
+            MessegesListChanged?.Invoke();
         }
 
         public ChatPageViewModel(ChatViewModel chat)
@@ -57,6 +63,8 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             Chat = chat;
 
             SendMessageCommand = new LambdaCommand(OnSendMessageExecuteCommand, CanSendMessageExecuteCommand);
+
+            chat.MessegesListChanged += MessegesListChangedInvoked;
         }
     }
 }

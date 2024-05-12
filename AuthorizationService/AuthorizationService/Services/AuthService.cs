@@ -49,7 +49,7 @@ namespace AuthorizationService.Services
                 {
                     Data = null,
                     Success = false,
-                    ErrorMessage = "Can't get response from database service!"
+                    Message = "Can't get response from database service!"
                 };
             }
 
@@ -61,7 +61,7 @@ namespace AuthorizationService.Services
                 {
                     Data = null,
                     Success = false,
-                    ErrorMessage = "Can't parse data from response!"
+                    Message = "Can't parse data from response!"
                 };
             }
 
@@ -104,7 +104,7 @@ namespace AuthorizationService.Services
                 {
                     Data = -1,
                     Success = false,
-                    ErrorMessage = "Database service not return data. Maybe bad request"
+                    Message = "Database service not return data. Maybe bad request"
                 };
             }
 
@@ -117,19 +117,19 @@ namespace AuthorizationService.Services
 
             if (response == null)
             {
-                return new ServiceResponse<AccessTokenDTO>() { Data = null, Success = false, ErrorMessage = "Request cannot execute!" };
+                return new ServiceResponse<AccessTokenDTO>() { Data = null, Success = false, Message = "Request cannot execute!" };
             }
 
             if (!response.IsSuccessStatusCode)
             {
-                return new ServiceResponse<AccessTokenDTO>() { Data = null, Success = false, ErrorMessage = response.ReasonPhrase };
+                return new ServiceResponse<AccessTokenDTO>() { Data = null, Success = false, Message = response.ReasonPhrase };
             }
 
             var responseData = await response.Content.ReadFromJsonAsync<ServiceResponse<AccessTokenDTO>>();
 
             if (responseData == null)
             {
-                return new ServiceResponse<AccessTokenDTO>() { Success = false, ErrorMessage = "Can't parse data from json" };
+                return new ServiceResponse<AccessTokenDTO>() { Success = false, Message = "Can't parse data from json" };
             }
 
             return responseData;
@@ -216,7 +216,7 @@ namespace AuthorizationService.Services
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
                 response.Success = false;
-                response.ErrorMessage = "Login data can't be empty!";
+                response.Message = "Login data can't be empty!";
                 return response;
             }
 
@@ -225,18 +225,18 @@ namespace AuthorizationService.Services
             if (account == null)
             {
                 response.Success = false;
-                response.ErrorMessage = "Account is not found!";
+                response.Message = "Account is not found!";
             }
             else if (account.Data == null)
             {
                 response.Success = false;
-                response.ErrorMessage = account.ErrorMessage;
+                response.Message = account.Message;
             }
             else if (!VerifyPasswordHash(password, Convert.FromBase64String(account.Data.PasswordHash),
                                     Convert.FromBase64String(account.Data.PasswordSalt)))
             {
                 response.Success = false;
-                response.ErrorMessage = "Wrong password!";
+                response.Message = "Wrong password!";
             }
             else
             {
@@ -263,7 +263,7 @@ namespace AuthorizationService.Services
                 return new ServiceResponse<AuthUserDataDTO>()
                 {
                     Success = false,
-                    ErrorMessage = "Token is not valid!"
+                    Message = "Token is not valid!"
                 };
             }
 

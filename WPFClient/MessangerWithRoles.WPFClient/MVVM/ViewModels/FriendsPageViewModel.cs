@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using MessengerWithRoles.WPFClient.Data;
+using MessengerWithRoles.WPFClient.Data.Requests;
 using MessengerWithRoles.WPFClient.MVVM.Infrastracture.Commands;
 using MessengerWithRoles.WPFClient.MVVM.Models;
 using MessengerWithRoles.WPFClient.MVVM.ViewModels.Base;

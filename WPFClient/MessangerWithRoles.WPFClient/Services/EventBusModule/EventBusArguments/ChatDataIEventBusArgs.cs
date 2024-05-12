@@ -9,7 +9,7 @@ using MessengerWithRoles.WPFClient.MVVM.ViewModels;
 
 namespace MessengerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments
 {
-    internal class ChatDataIEventBusArgs : IEventBusArgs
+    public class ChatDataIEventBusArgs : IEventBusArgs
     {
         public ChatViewModel Chat { get; private set; }
 

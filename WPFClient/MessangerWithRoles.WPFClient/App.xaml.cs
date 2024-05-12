@@ -12,18 +12,21 @@ namespace MessengerWithRoles.WPFClient
     /// </summary>
     public partial class App : Application
     {
-        public string MessengerName
-        {
-            get { return "Nyatter"; }
-        }
-
         public App()
         {
             InitializeComponent();
 
-            ServiceLocator.Instance.RegisterService(new AuthService());
+            RegisterServices();
         }
 
+        private void RegisterServices()
+        {
+            ServiceLocator.Instance.RegisterService(new RequestService());
+            ServiceLocator.Instance.RegisterService(new AuthService());
+            ServiceLocator.Instance.RegisterService(new ChatsService());
+            ServiceLocator.Instance.RegisterService(new GroupsServcie());
+            ServiceLocator.Instance.RegisterService(new MessagesService());
+        }
     }
 
 }

@@ -75,10 +75,13 @@
                     Background="Transparent" Foreground="White" 
                     BorderThickness="0"
                     Style="{StaticResource MessageBoxButton}"/>
-                        <Button Content="&gt;" Width="25px" FontSize="25" Height="30" 
-                    Background="Transparent" Foreground="White" 
-                    BorderThickness="0"
-                    Style="{StaticResource MessageBoxButton}"/>
+
+                        <Button Command="{Binding SendMessageCommand}"
+                                Content="&gt;" Width="25px" FontSize="25" Height="30" 
+                                Background="Transparent" Foreground="White" 
+                                BorderThickness="0"
+                                Style="{StaticResource MessageBoxButton}"/>
+                        
                     </StackPanel>
                 </Grid>
 

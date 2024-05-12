@@ -10,7 +10,6 @@ namespace DatabaseService.Services.Interfaces
         Task<ServiceResponse<ChatDto>> GetPersonalChatIfExists(List<UserDto> users);
         Task<ServiceResponse<List<ChatDto>>> GetAllPersonalChats(int userId);
         Task<ServiceResponse<ChatDto>> CreatePersonalChatIfNotExists(ChatDto chatDTO);
-        Task<ServiceResponse<ChatDto>> CreateGroupChat(ChatDto chatDTO);
         Task<ServiceResponse<bool>> DeleteChat(int id);
         Task<ServiceResponse<ChatDto>> GetChatById(int chatId);
     }

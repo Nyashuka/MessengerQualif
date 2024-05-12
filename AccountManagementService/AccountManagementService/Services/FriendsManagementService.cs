@@ -29,7 +29,7 @@ namespace AccountManagementService.Services
                 {
                     Data = false,
                     Success = false,
-                    ErrorMessage = response.ReasonPhrase
+                    Message = response.ReasonPhrase
                 };
             }
 

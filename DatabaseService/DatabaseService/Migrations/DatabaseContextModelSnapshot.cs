@@ -22,6 +22,32 @@ namespace DatabaseService.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("DatabaseService.DTOs.UserDto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("ChatId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatId");
+
+                    b.ToTable("UserDto");
+                });
+
             modelBuilder.Entity("DatabaseService.Models.DatabaseModels.AccessToken", b =>
                 {
                     b.Property<int>("Id")
@@ -199,14 +225,15 @@ namespace DatabaseService.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("OwnerUserId")
+                    b.Property<int>("OwnerId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChatId");
+                    b.HasIndex("ChatId")
+                        .IsUnique();
 
-                    b.HasIndex("OwnerUserId");
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("GroupChatInfos");
                 });
@@ -345,6 +372,13 @@ namespace DatabaseService.Migrations
                     b.ToTable("UserRoleRelations");
                 });
 
+            modelBuilder.Entity("DatabaseService.DTOs.UserDto", b =>
+                {
+                    b.HasOne("DatabaseService.Models.DatabaseModels.Chat", null)
+                        .WithMany("Members")
+                        .HasForeignKey("ChatId");
+                });
+
             modelBuilder.Entity("DatabaseService.Models.DatabaseModels.AccessToken", b =>
                 {
                     b.HasOne("DatabaseService.Models.DatabaseModels.Account", "Account")
@@ -408,20 +442,20 @@ namespace DatabaseService.Migrations
             modelBuilder.Entity("DatabaseService.Models.DatabaseModels.GroupChatInfo", b =>
                 {
                     b.HasOne("DatabaseService.Models.DatabaseModels.Chat", "Chat")
-                        .WithMany()
-                        .HasForeignKey("ChatId")
+                        .WithOne("ChatInfo")
+                        .HasForeignKey("DatabaseService.Models.DatabaseModels.GroupChatInfo", "ChatId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DatabaseService.Models.DatabaseModels.User", "OwnerUser")
+                    b.HasOne("DatabaseService.Models.DatabaseModels.User", "Owner")
                         .WithMany()
-                        .HasForeignKey("OwnerUserId")
+                        .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Chat");
 
-                    b.Navigation("OwnerUser");
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("DatabaseService.Models.DatabaseModels.Message", b =>
@@ -507,6 +541,13 @@ namespace DatabaseService.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DatabaseService.Models.DatabaseModels.Chat", b =>
+                {
+                    b.Navigation("ChatInfo");
+
+                    b.Navigation("Members");
                 });
 #pragma warning restore 612, 618
         }

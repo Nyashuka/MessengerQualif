@@ -1,4 +1,6 @@
-﻿namespace DatabaseService.Models.DatabaseModels
+﻿using DatabaseService.DTOs;
+
+namespace DatabaseService.Models.DatabaseModels
 {
     public class Chat
     {

@@ -18,7 +18,7 @@ namespace DatabaseService.Services
 
         public async Task<ServiceResponse<List<UserDto>>> GetChatMembersByChatId(int chatId)
         {
-            var chatMembers = _databaseContext.ChatMembers.Where(x => x.ChatId == chatId);
+            var chatMembers = _databaseContext.ChatMembers.Where(x => x.ChatId == chatId).ToList();
 
             List<UserDto> chatMemberUsersDto = new List<UserDto>();
             foreach (var chatMember in chatMembers)
@@ -65,7 +65,7 @@ namespace DatabaseService.Services
                 {
                     Data = false,
                     Success = false,
-                    ErrorMessage = $"Chat member with id={chatMemberDto.UserId} is not exists!"
+                    Message = $"Chat member with id={chatMemberDto.UserId} is not exists!"
                 };
             }
 

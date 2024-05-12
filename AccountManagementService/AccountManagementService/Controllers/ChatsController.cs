@@ -64,7 +64,7 @@ namespace AccountManagementService.Controllers
             return Ok(response);
         }
 
-        [HttpPost("get-personal")]
+        [HttpPost("get-personal-by-members")]
         public async Task<ActionResult<ServiceResponse<ChatDto>>> CreatePersonalChat([FromQuery] string accessToken, List<UserDto> users)
         {
             var authData = await _authService.TryGetAuthenticatedUser(accessToken);
@@ -80,23 +80,6 @@ namespace AccountManagementService.Controllers
             return Ok(response);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<ServiceResponse<ChatDto>>> CreateGroupChat([FromQuery] string accessToken, ChatDto chatDto)
-        {
-            var authData = await _authService.TryGetAuthenticatedUser(accessToken);
-
-            if (!authData.HasAccess || authData.Data == null)
-                return Unauthorized();
-
-            if (chatDto.ChatInfo == null)
-                return Unauthorized();
-
-            if(chatDto.ChatInfo.OwnerUser == null || chatDto.ChatInfo.OwnerUser.Id != authData.Data.UserId)
-                return Unauthorized();
-
-            var response = await _chatsService.CreateGroupChatIfNotExists(chatDto);
-
-            return Ok(response);
-        }
+        
     }
 }

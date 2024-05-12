@@ -28,7 +28,7 @@
                                 </Ellipse.Fill>
                             </Ellipse>
                             <StackPanel>
-                                <Label Content="{Binding Username}" 
+                                <Label Content="{Binding DisplayName}" 
                                        Foreground="White" 
                                        FontSize="15"/>
                                 <Label Content="{Binding LastMessage}" 

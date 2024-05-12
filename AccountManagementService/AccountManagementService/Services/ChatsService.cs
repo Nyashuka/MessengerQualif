@@ -47,7 +47,7 @@ namespace AccountManagementService.Services
                 return await CreateGroupChat(chatDto);
             }
 
-            return new ServiceResponse<ChatDto>() { Success = false, ErrorMessage = "Chat type is not exists!"};
+            return new ServiceResponse<ChatDto>() { Success = false, Message = "Chat type is not exists!"};
         }
 
         private async Task<ServiceResponse<ChatDto>> CreateGroupChat(ChatDto chatDto)

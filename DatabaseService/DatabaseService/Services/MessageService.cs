@@ -49,7 +49,7 @@ namespace DatabaseService.Services
                 {
                     Data = null,
                     Success = false,
-                    ErrorMessage = "Sender is not member of chat!"
+                    Message = "Sender is not member of chat!"
                 };
 
             if (!_databaseContext.ChatMembers.Any(cm => cm.ChatId == messageDto.ChatId && cm.UserId == messageDto.RecipientId))
@@ -57,7 +57,7 @@ namespace DatabaseService.Services
                 {
                     Data = null,
                     Success = false,
-                    ErrorMessage = "Recepient is not member of chat!"
+                    Message = "Recepient is not member of chat!"
                 };
 
             Message message = new Message()

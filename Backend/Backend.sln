@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MessagesService", "..\Messa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotificationService", "..\NotificationService\NotificationService\NotificationService.csproj", "{0E599BD4-1A65-485A-B733-962B81236E50}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatsService", "..\ChatsService\ChatsService\ChatsService.csproj", "{1FAF40DC-7968-4DA0-8CA2-B223DBA18A08}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{0E599BD4-1A65-485A-B733-962B81236E50}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E599BD4-1A65-485A-B733-962B81236E50}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E599BD4-1A65-485A-B733-962B81236E50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FAF40DC-7968-4DA0-8CA2-B223DBA18A08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FAF40DC-7968-4DA0-8CA2-B223DBA18A08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FAF40DC-7968-4DA0-8CA2-B223DBA18A08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FAF40DC-7968-4DA0-8CA2-B223DBA18A08}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

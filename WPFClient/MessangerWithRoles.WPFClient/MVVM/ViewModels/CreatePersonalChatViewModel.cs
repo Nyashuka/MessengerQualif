@@ -12,6 +12,7 @@ using MessengerWithRoles.WPFClient.MVVM.Models;
 using MessengerWithRoles.WPFClient.MVVM.ViewModels.Base;
 using MessengerWithRoles.WPFClient.Services.ServiceLocatorModule;
 using MessengerWithRoles.WPFClient.Services;
+using MessengerWithRoles.WPFClient.Data.Requests;
 
 namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 {

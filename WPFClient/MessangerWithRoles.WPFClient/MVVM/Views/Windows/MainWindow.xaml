@@ -45,6 +45,11 @@
 
                 <Border Grid.Column="0" 
               BorderThickness="0 0 3 0" BorderBrush="#2B3252">
+                    <Grid>
+                        <Button Content="〠" FontSize="20" VerticalContentAlignment="Top"
+                                Height="30px" Margin="5px"  
+                                VerticalAlignment="Top"></Button>
+                    </Grid>
                 </Border>
                 <Border Grid.Column="1"  
               BorderThickness="0 0 3 0" BorderBrush="#2B3252">
@@ -70,7 +75,7 @@
 
                         <Border Grid.Row="1" BorderThickness="0 0 0 3" BorderBrush="#2B3252">
                             <StackPanel  >
-                                <Button Height="20px" Content="Friends" Margin="5 5 5 0"
+                                <Button Height="22px" Content="Friends" Margin="5 5 5 0"
                                         HorizontalContentAlignment="Left"
                                         Background="#1B1A22" Foreground="White"
                                         BorderThickness="0" Command="{Binding OpenFriendsWindow}">
@@ -102,10 +107,10 @@
                                     </Button.Style>
 
                                 </Button>
-                                <Button Height="20px" Content="Create chat" Margin="5 5 5 0"
+                                <Button Height="22px" Content="Create group" Margin="5 5 5 0"
                                         HorizontalContentAlignment="Left"
                                         Background="#1B1A22" Foreground="White"
-                                        BorderThickness="0" Command="{Binding OpenCreateChatWindow}">
+                                        BorderThickness="0" Command="{Binding OpenCreateGroupWindow}">
                                    
                                     <Button.Style>
                                         <Style TargetType="Button">
@@ -134,27 +139,37 @@
                                         </Style>
                                     </Button.Style>
                                 </Button>
-                                <ComboBox  Height="20px" Margin="5"
-                                        HorizontalContentAlignment="Left"
-                                        Foreground="black"
-                                        BorderThickness="0" SelectedIndex="0"
-                                        >
+                                <ComboBox ItemsSource="{Binding Path=ChatTypes}" 
+                                  HorizontalContentAlignment="Center"
+                                  DisplayMemberPath="Name"
+                                  SelectedValuePath="Name"
+                                  SelectedItem="{Binding Path=SelectedChatType}"
+                                  Height="22px" Margin="5 5 5 5"
+                                  >
 
-                                    <ComboBoxItem Content="Personal"/>
-                                    <ComboBoxItem Content="Groups"/>
                                 </ComboBox>
                             </StackPanel>
                         </Border>
                        
 
                         <ListView Grid.Row="2" ItemsSource="{Binding Chats}"
-                                  SelectionChanged="Selector_OnSelectionChanged"
-                       HorizontalAlignment="Stretch"
-                       Background="Transparent"
-                       BorderThickness="0"
-                       ItemContainerStyle="{StaticResource ChatCard}"
-                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                       />
+                                  Visibility="{Binding ChatListVisibility}"
+                                  SelectionChanged="Chat_Selected"
+                                   HorizontalAlignment="Stretch"
+                                   Background="Transparent"
+                                   BorderThickness="0"
+                                   ItemContainerStyle="{StaticResource ChatCard}"
+                                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                   />
+                        <ListView Grid.Row="2" ItemsSource="{Binding Groups}"
+                                  Visibility="{Binding GroupListVisibility}"
+                                  SelectionChanged="Group_Selected"
+                                   HorizontalAlignment="Stretch"
+                                   Background="Transparent"
+                                   BorderThickness="0"
+                                   ItemContainerStyle="{StaticResource ChatCard}"
+                                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                   />
 
                     </Grid>
                 </Border>

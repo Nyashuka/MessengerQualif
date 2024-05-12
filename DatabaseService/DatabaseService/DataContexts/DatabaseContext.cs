@@ -1,6 +1,8 @@
-﻿using DatabaseService.Models.DatabaseModels;
+﻿using DatabaseService.Data;
+using DatabaseService.Models.DatabaseModels;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Security;
 
 namespace DatabaseService.DataContexts
 {
@@ -26,18 +28,70 @@ namespace DatabaseService.DataContexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            WriteChatTypes(modelBuilder);
+            WritePermissions(modelBuilder);
+        }
+
+        private void WritePermissions(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ChatPermission>().HasData(
+               new ChatPermission()
+               {
+                   Id = Convert.ToInt32(PermissionEnum.SendTextMessages),
+                   Name = "Send text messages",
+               },
+               new ChatPermission()
+               {
+                   Id = Convert.ToInt32(PermissionEnum.SendPhotos),
+                   Name = "Send photos"
+               },
+               new ChatPermission()
+               {
+                   Id = Convert.ToInt32(PermissionEnum.SendVideos),
+                   Name = "Send video"
+               },
+               new ChatPermission()
+               {
+                   Id = Convert.ToInt32(PermissionEnum.AddMembers),
+                   Name = "Add members"
+               },
+               new ChatPermission()
+               {
+                   Id = Convert.ToInt32(PermissionEnum.DeleteMembers),
+                   Name = "Delete members"
+               },
+               new ChatPermission()
+               {
+                   Id = Convert.ToInt32(PermissionEnum.BanMembers),
+                   Name = "Ban members"
+               },
+               new ChatPermission()
+               {
+                   Id = Convert.ToInt32(PermissionEnum.ChangeChatInfo),
+                   Name = "Change chat info"
+               },
+               new ChatPermission()
+               {
+                   Id = Convert.ToInt32(PermissionEnum.Administrator),
+                   Name = "Administrator"
+               }
+           );
+        }
+
+        private void WriteChatTypes(ModelBuilder modelBuilder)
+        {
             modelBuilder.Entity<ChatType>().HasData(
-                new ChatType()
-                {
-                    Id = 0,
-                    Name = "personal",
-                },
-                new ChatType()
-                {
-                    Id = 1,
-                    Name = "group"
-                }
-            );
+               new ChatType()
+               {
+                   Id = 0,
+                   Name = "personal",
+               },
+               new ChatType()
+               {
+                   Id = 1,
+                   Name = "group"
+               }
+           );
         }
     }
 }

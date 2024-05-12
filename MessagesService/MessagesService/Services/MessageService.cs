@@ -31,9 +31,9 @@ namespace MessagesService.Services
             var message = await saveResponse.Content.ReadFromJsonAsync<ServiceResponse<MessageDto>>();
 
             var chatMemberResponse = await _httpClient.GetAsync($"{APIEndpoints.GetChatMembersGET}?chatId={clientMessageDTO.ChatId}");
-            List<ChatMember> chatMembers = (await chatMemberResponse.Content.ReadFromJsonAsync<ServiceResponse<List<ChatMember>>>()).Data;
+            var chatMembers = (await chatMemberResponse.Content.ReadFromJsonAsync<ServiceResponse<List<UserDto>>>()).Data;
 
-            List<int> chatMemberIds = chatMembers.Where(u => u.UserId != senderId).Select(x => x.UserId).ToList();
+            List<int> chatMemberIds = chatMembers.Where(u => u.Id != senderId).Select(x => x.Id).ToList();
 
             var notifyData = new NotifyDataDto()
             {

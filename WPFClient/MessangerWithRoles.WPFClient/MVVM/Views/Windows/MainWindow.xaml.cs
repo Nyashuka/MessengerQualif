@@ -49,14 +49,21 @@ namespace MessengerWithRoles.WPFClient.MVVM.Views.Windows
         {
             var vm = (MainWindowViewModel)DataContext;
 
-            await vm.LoadPersonalChats();
+            await vm.LoadChats();
         }
 
-        private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Chat_Selected(object sender, SelectionChangedEventArgs e)
         {
             var chat = (ChatViewModel)((ListView)sender).SelectedItem;
 
-            ((MainWindowViewModel)DataContext).OpenChat(chat);
+            ((MainWindowViewModel)DataContext).OpenChatWindow(chat);
+        }
+
+        private void Group_Selected(object sender, SelectionChangedEventArgs e)
+        {
+            var group = (GroupViewModel)((ListView)sender).SelectedItem;
+
+            ((MainWindowViewModel)DataContext).OpenGroupWindow(group);
         }
     }
 }

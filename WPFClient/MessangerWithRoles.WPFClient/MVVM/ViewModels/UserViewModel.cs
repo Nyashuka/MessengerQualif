@@ -17,6 +17,7 @@ using MessengerWithRoles.WPFClient.MVVM.ViewModels.Base;
 using MessengerWithRoles.WPFClient.Services;
 using MessengerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
 using MessengerWithRoles.WPFClient.Services.ServiceLocatorModule;
+using MessengerWithRoles.WPFClient.Data.Requests;
 
 namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 {
@@ -44,63 +45,33 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 
             if (!data.Success)
             {
-                MessageBox.Show(data.ErrorMessage);
+                MessageBox.Show(data.Message);
                 return;
             }
 
             MessageBox.Show("Added to friends " + User.DisplayName);
         }
 
+
         public ICommand CreateOrOpenChat { get; }
         public bool CanExecuteCreateOrOpenChatCommand(object p) => true;
 
         public async void OnExecuteCreateOrOpenChatCommand(object p)
         {
-            var authService = ServiceLocator.Instance.GetService<AuthService>();
+            var chatsService = ServiceLocator.Instance.GetService<ChatsService>();
 
-            HttpClient httpClient = new HttpClient();
-
-            List<User> members = new List<User>()
+            try
             {
-                authService.User,
-                User
-            };
+                var chatViewModel = await chatsService.GetPersonalChatIfExistsOrCreateOne(User);
 
-            var result = await httpClient.PostAsJsonAsync($"{APIEndpoints.GetPersonalChatPOST}?accessToken={authService.AccessToken}", members);
-            var chat = await result.Content.ReadFromJsonAsync<ServiceResponse<ChatDto>>();
-
-            if (chat.Data != null)
-            {
                 ServiceLocator.Instance.GetService<EventBus>()
-                    .Raise(EventBusDefinitions.OpenChat,
-                        new ChatDataIEventBusArgs(ChatDtoToChat(chat.Data, authService.User.Id)));
+                    .Raise(EventBusDefinitions.OpenChat, new ChatDataIEventBusArgs(chatViewModel));
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
                 return;
             }
-
-            var dataForRequest = new CreateChatDto()
-            {
-                ChatTypeId = 0,
-                Members = new List<User>() { authService.User, User }
-            };
-
-
-            result = await httpClient.PostAsJsonAsync($"{APIEndpoints.CreatePersonalChatPOST}?accessToken={authService.AccessToken}", dataForRequest);
-
-            var createdChat = await result.Content.ReadFromJsonAsync<ServiceResponse<ChatDto>>();
-            if (createdChat == null)
-            {
-                MessageBox.Show(result.ReasonPhrase);
-                return;
-            }
-
-            if (!createdChat.Success)
-            {
-                MessageBox.Show(createdChat.ErrorMessage);
-                return;
-            }
-
-            ServiceLocator.Instance.GetService<EventBus>()
-                .Raise(EventBusDefinitions.ChatCreated, new ChatDataIEventBusArgs(ChatDtoToChat(createdChat.Data, authService.User.Id)));
         }
 
         private ChatViewModel ChatDtoToChat(ChatDto chatDto, int userId)

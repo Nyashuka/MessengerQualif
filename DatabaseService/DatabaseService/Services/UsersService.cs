@@ -45,7 +45,7 @@ namespace DatabaseService.Services
                 return new ServiceResponse<UserDto>()
                 {
                     Success = false,
-                    ErrorMessage = $"User with user id={userId} does not exists!"
+                    Message = $"User with user id={userId} does not exists!"
                 };
             }
 
@@ -64,7 +64,7 @@ namespace DatabaseService.Services
                 return new ServiceResponse<UserDto>()
                 {
                     Success = false,
-                    ErrorMessage = $"User with account id={accountId} does not exists!"
+                    Message = $"User with account id={accountId} does not exists!"
                 };
             }
 

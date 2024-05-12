@@ -84,7 +84,7 @@ namespace DatabaseService.Services
                 {
                     Data = null,
                     Success = false,
-                    ErrorMessage = "Chat is not exists!"
+                    Message = "Chat is not exists!"
                 });
             }
 
@@ -98,58 +98,12 @@ namespace DatabaseService.Services
             return Task.FromResult(new ServiceResponse<ChatDto>() { Data = chatData });
         }
 
-        public async Task<ServiceResponse<ChatDto>> CreateGroupChat(ChatDto chatDto)
-        {
-            var chatType = await _databaseContext.ChatTypes.FirstOrDefaultAsync(x => x.Id == chatDto.ChatTypeId);
-
-            if (chatType == null)
-            {
-                return new ServiceResponse<ChatDto>()
-                {
-                    Data = null,
-                    Success = false,
-                    ErrorMessage = $"Chat type with id={chatDto.ChatTypeId} is not exists"
-                };
-            }
-
-            var newChat = new Chat()
-            {
-                ChatTypeId = chatDto.ChatTypeId,
-                ChatType = chatType
-            };
-
-            var chatInfo = new GroupChatInfo()
-            {
-                ChatId = newChat.Id,
-                Chat = newChat,
-                OwnerId = chatDto.ChatInfo.OwnerId,
-                Owner = await _databaseContext.Users.FirstOrDefaultAsync(x => x.Id == chatDto.ChatInfo.OwnerId),
-                Name = chatDto.ChatInfo.Name,
-                Description = chatDto.ChatInfo.Description,
-                AvatarUrl = chatDto.ChatInfo.AvatarUrl
-            };
-            _databaseContext.GroupChatInfos.Add(chatInfo);
-            await _databaseContext.SaveChangesAsync();
-
-            ChatDto chatForResponse = new ChatDto()
-            {
-                Id = newChat.Id,
-                ChatTypeId = chatDto.ChatTypeId,
-                Members = chatDto.Members,
-                ChatInfo = chatInfo
-            };
-            _databaseContext.Chats.Add(newChat);
-            await _databaseContext.SaveChangesAsync();
-
-            return new ServiceResponse<ChatDto>() { Data = chatForResponse };
-        }
-
         public async Task<ServiceResponse<ChatDto>> CreatePersonalChatIfNotExists(ChatDto chatDTO)
         {
             var existsChat = await GetPersonalChatIfExists(chatDTO.Members);
 
             if (existsChat.Data != null)
-                return new ServiceResponse<ChatDto>() { Success = false, ErrorMessage = "Already exists" };
+                return new ServiceResponse<ChatDto>() { Success = false, Message = "Already exists" };
 
             var chatType = _databaseContext.ChatTypes.FirstOrDefault(x => x.Id == chatDTO.ChatTypeId);
 
@@ -159,7 +113,7 @@ namespace DatabaseService.Services
                 {
                     Data = null,
                     Success = false,
-                    ErrorMessage = $"Chat type with id={chatDTO.ChatTypeId} is not exists"
+                    Message = $"Chat type with id={chatDTO.ChatTypeId} is not exists"
                 };
             }
 
@@ -204,7 +158,7 @@ namespace DatabaseService.Services
                 {
                     Data = false,
                     Success = false,
-                    ErrorMessage = $"Chat with id={id} is not exists!"
+                    Message = $"Chat with id={id} is not exists!"
                 };
             }
 
@@ -223,7 +177,7 @@ namespace DatabaseService.Services
                 {
                     Data = null,
                     Success = false,
-                    ErrorMessage = "Chat does not exists"
+                    Message = "Chat does not exists"
                 };
 
             List<UserDto> members = _databaseContext.ChatMembers
@@ -236,12 +190,12 @@ namespace DatabaseService.Services
                      })
                      .ToList();
 
+
             ChatDto chatToResponse = new ChatDto()
             {
                 Id = chat.Id,
                 ChatTypeId = chat.ChatTypeId,
                 Members = members,
-                ChatInfo = _databaseContext.GroupChatInfos.FirstOrDefault(x => x.Id == chatId)
             };
 
             return new ServiceResponse<ChatDto>() { Data = chatToResponse };

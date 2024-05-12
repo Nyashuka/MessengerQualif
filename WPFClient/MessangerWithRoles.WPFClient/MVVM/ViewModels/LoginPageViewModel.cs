@@ -72,6 +72,9 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 
             ChangeToRegisterWindow = new LambdaCommand(OnChangeToRegisterWindowCommandExecute, CanChangeToRegisterWindowCommandExecute);
             Login = new LambdaCommand(OnLoginCommandExecute, CanLoginCommandExecute);
+
+            Email = "user@gmail.com";
+            Password = "123321";
         }
     }
 }
