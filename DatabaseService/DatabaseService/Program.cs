@@ -23,14 +23,21 @@ namespace DatabaseService
             (
                 options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
             );
-
+            //
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IFriendsService, FriendsService>();
+            //
             builder.Services.AddScoped<IUsersService, UsersService>();
+            //
             builder.Services.AddScoped<IChatService, ChatService>();
             builder.Services.AddScoped<IGroupsService, GroupsService>();
             builder.Services.AddScoped<IChatMembersService, ChatMembersService>();
+            //
             builder.Services.AddScoped<IMessageService, MessageService>();
+            //
+            builder.Services.AddScoped<IRolesService, RolesService>();
+            builder.Services.AddScoped<IRolePermissionService, RolePermissionService>();
+            builder.Services.AddScoped<IUserRoleRelationService, UserRoleRelationService>();
 
             var app = builder.Build();
 

@@ -2,7 +2,7 @@
 using ChatsService.Groups.Dto;
 using ChatsService.Groups.Models;
 
-namespace ChatsService.Groups.Interfaces
+namespace ChatsService.Groups.Services
 {
     public interface IGroupsService
     {

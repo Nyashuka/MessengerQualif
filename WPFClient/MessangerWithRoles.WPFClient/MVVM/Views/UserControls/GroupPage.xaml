@@ -42,7 +42,7 @@
 
                 <Button Width="40" 
                      Background="Transparent" Foreground="White" BorderThickness="0"
-                     Content="⋮" FontSize="25" 
+                     Content="⚙" FontSize="25" 
                      HorizontalAlignment="Right"  
                      Style="{StaticResource UserAdditionalSettingsButton}"/>
             </Grid>

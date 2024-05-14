@@ -1,7 +1,6 @@
 
 using ChatsService.Authorization;
-using ChatsService.Groups;
-using ChatsService.Groups.Interfaces;
+using ChatsService.Groups.Services;
 
 namespace ChatsService
 {

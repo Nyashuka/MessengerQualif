@@ -19,7 +19,7 @@ namespace DatabaseService.Services
         public async Task<ServiceResponse<List<UserDto>>> GetChatMembersByChatId(int chatId)
         {
             var chatMembers = _databaseContext.ChatMembers.Where(x => x.ChatId == chatId).ToList();
-
+            
             List<UserDto> chatMemberUsersDto = new List<UserDto>();
             foreach (var chatMember in chatMembers)
             {
@@ -41,6 +41,14 @@ namespace DatabaseService.Services
 
         public async Task<ServiceResponse<ChatMember>> AddMember(ChatMemberDTO chatMemberDto)
         {
+            var alreadyMember = await _databaseContext.ChatMembers
+                .AnyAsync(x => x.ChatId == chatMemberDto.ChatId && x.UserId == chatMemberDto.UserId);
+
+            if (alreadyMember)
+            {
+                return new ServiceResponse<ChatMember>() { Success = false, Message = "User already member" };
+            }
+
             var chatMember = new ChatMember()
             {
                 ChatId = chatMemberDto.ChatId,
@@ -57,7 +65,7 @@ namespace DatabaseService.Services
         {
             var chatMember = _databaseContext.ChatMembers
                             .FirstOrDefault(x => x.ChatId == chatMemberDto.ChatId && 
-                                                           x.UserId == chatMemberDto.UserId);
+                                                 x.UserId == chatMemberDto.UserId);
 
             if (chatMember == null)
             {

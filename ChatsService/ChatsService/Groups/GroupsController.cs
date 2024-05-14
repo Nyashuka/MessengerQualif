@@ -1,7 +1,7 @@
 ﻿using ChatsService.Authorization;
 using ChatsService.Groups.Dto;
-using ChatsService.Groups.Interfaces;
 using ChatsService.Groups.Models;
+using ChatsService.Groups.Services;
 using ChatsService.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

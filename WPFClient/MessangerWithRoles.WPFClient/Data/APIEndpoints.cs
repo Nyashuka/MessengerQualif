@@ -10,6 +10,7 @@ namespace MessengerWithRoles.WPFClient.Data
             AccountManagement = 5293,
             Chats = 5294,
             Messages = 5295,
+            Roles = 5296,
             Notification = 6999
         };
 
@@ -46,6 +47,11 @@ namespace MessengerWithRoles.WPFClient.Data
         public static string GetChatById { get => $"http://{IPAddress}:{Ports.AccountManagement}/api/Chats/get-chat-by-id"; }
         public static string CreateGroupPOST { get => $"http://{IPAddress}:{Ports.Chats}/api/Groups"; }
         public static string GetAllGroupsGET { get => $"http://{IPAddress}:{Ports.Chats}/api/Groups"; }
+
+        // Chat members
+        public static string GetChatMembersGET { get => $"http://{IPAddress}:{Ports.Chats}/api/ChatMembers"; }
+        public static string AddChatMemberPOST { get => $"http://{IPAddress}:{Ports.Chats}/api/ChatMembers"; }
+        public static string DeleteChatMembersDELETE { get => $"http://{IPAddress}:{Ports.Chats}/api/ChatMembers"; }
 
         // messages service
         public static string GetChatMessagesByChatIdGET { get => $"http://{IPAddress}:{Ports.Messages}/api/Messages"; }

@@ -26,14 +26,6 @@ namespace DatabaseService.Controllers
             return Ok(response);
         }
 
-        [HttpGet("get-chat-members")]
-        public async Task<ActionResult<ServiceResponse<ChatDto>>> GetChatMembers(int chatId)
-        {
-            var response = await _chatMembersService.GetChatMembersByChatId(chatId);
-
-            return Ok(response);
-        }
-
         [HttpGet("get-personal")]
         public async Task<ActionResult<ServiceResponse<List<ChatDto>>>> GetAllPersonalChats(int userId)
         {
@@ -66,21 +58,6 @@ namespace DatabaseService.Controllers
             return Ok(response);
         }
 
-        [HttpPost("add-member")]
-        public async Task<ActionResult> AddChatMember(ChatMemberDTO chatMemberDto)
-        {
-            var response = await _chatMembersService.AddMember(chatMemberDto);
-
-            return Ok(response);
-        }
-
-
-        [HttpPost("delete-member")]
-        public async Task<ActionResult> DeleteChatMember(ChatMemberDTO chatMemberDto)
-        {
-            var response = await _chatMembersService.DeleteMember(chatMemberDto);
-
-            return Ok(response);
-        }
+        
     }
 }

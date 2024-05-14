@@ -1,9 +1,8 @@
 ﻿using ChatsService.Groups.Dto;
-using ChatsService.Groups.Interfaces;
 using ChatsService.Groups.Models;
 using ChatsService.Models;
 
-namespace ChatsService.Groups
+namespace ChatsService.Groups.Services
 {
     public class GroupsService : IGroupsService
     {
@@ -47,9 +46,9 @@ namespace ChatsService.Groups
 
             var data = await databaseResponse.Content.ReadFromJsonAsync<ServiceResponse<List<Chat>>>();
 
-            if(data == null)
+            if (data == null)
             {
-                return new ServiceResponse<List<Chat>>() 
+                return new ServiceResponse<List<Chat>>()
                 {
                     Success = false,
                     Message = "Chat's service can't parse data got from database service"

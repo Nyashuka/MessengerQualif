@@ -45,6 +45,8 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             set => Set(ref _messages, value);
         }
 
+        public string ImageSource { get; set; }
+
         public event Action MessegesListChanged;
 
         public GroupViewModel(int id, string displayName, string description, 
@@ -57,6 +59,8 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 
             _members = members;
             _messages = messages;
+
+            ImageSource = "https://i.pinimg.com/originals/e7/da/8d/e7da8d8b6a269d073efa11108041928d.jpg";
         }
 
         public void AddMessage(MessageDto message, bool isReceived)

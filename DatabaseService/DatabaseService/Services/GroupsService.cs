@@ -124,5 +124,6 @@ namespace DatabaseService.Services
 
             return new ServiceResponse<List<ChatDto>>() { Data = responseData };
         }
+
     }
 }

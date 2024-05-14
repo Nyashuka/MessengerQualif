@@ -1,4 +1,4 @@
-﻿namespace ChatsService
+﻿namespace RolesService
 {
     public static class APIEndpoints
     {
@@ -7,9 +7,7 @@
         public const string CreateGroupPOST = $"{DatabaseService}/api/Groups";
         public const string GetAllGroupsByUserIdGET = $"{DatabaseService}/api/Groups";
         // chat members
-        public const string AddMemberToChatPOST = $"{DatabaseService}/api/ChatMembers";
-        public const string DeleteMemberDELETE = $"{DatabaseService}/api/ChatMembers";
-        public const string GetChatMembersGET = $"{DatabaseService}/api/ChatMembers";
+        public const string RolesController = $"{DatabaseService}/api/Roles";
 
         // Auth service
         public const string AuthorizationServiceIP = "http://127.0.0.1:5292";
