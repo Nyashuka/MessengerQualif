@@ -26,7 +26,7 @@ namespace MessengerWithRoles.WPFClient.Data
 
         public static string LexyServer = "91.201.235.100";
 
-        public static string IPAddress = LocalAddress; // ;
+        public static string IPAddress = LexyServer; // ;
         public static PortList Ports = DefaultPorts;
 
         // auth service
