@@ -1,4 +1,5 @@
-﻿using DatabaseService.DataContexts;
+﻿using DatabaseService.Data;
+using DatabaseService.DataContexts;
 using DatabaseService.DTOs;
 using DatabaseService.Models;
 using DatabaseService.Models.DatabaseModels;
@@ -10,10 +11,12 @@ namespace DatabaseService.Services
     public class ChatService : IChatService
     {
         private readonly DatabaseContext _databaseContext;
+        private readonly IChatMembersService _chatMembersService;
 
-        public ChatService(DatabaseContext databaseContext)
+        public ChatService(DatabaseContext databaseContext, IChatMembersService chatMembersService)
         {
             _databaseContext = databaseContext;
+            _chatMembersService = chatMembersService;
         }
 
         public Task<ServiceResponse<List<ChatDto>>> GetAllPersonalChats(int userId)
@@ -170,35 +173,46 @@ namespace DatabaseService.Services
 
         public async Task<ServiceResponse<ChatDto>> GetChatById(int chatId)
         {
-            Chat chat = await _databaseContext.Chats.FirstOrDefaultAsync(x => x.Id == chatId);
+            var chat = await _databaseContext.Chats.FirstOrDefaultAsync(x => x.Id == chatId);
 
             if (chat == null)
+            {
                 return new ServiceResponse<ChatDto>()
                 {
                     Data = null,
                     Success = false,
                     Message = "Chat does not exists"
                 };
+            }          
 
-            List<UserDto> members = _databaseContext.ChatMembers
-                     .Where(cm => cm.ChatId == chatId)
-                     .Select(cm => new UserDto
-                     {
-                         Id = cm.User.Id,
-                         Username = cm.User.Username,
-                         DisplayName = cm.User.DisplayName
-                     })
-                     .ToList();
-
-
-            ChatDto chatToResponse = new ChatDto()
+            var chatToResponse = new ChatDto()
             {
                 Id = chat.Id,
                 ChatTypeId = chat.ChatTypeId,
-                Members = members,
+                Members = (await _chatMembersService.GetChatMembersByChatId(chatId)).Data,
+                ChatInfo = chat.ChatTypeId == Convert.ToInt32(ChatTypeEnum.group) ? await GetChatInfoDto(chatId) : null
             };
 
             return new ServiceResponse<ChatDto>() { Data = chatToResponse };
+        }
+
+        private async Task<GroupChatInfoDto> GetChatInfoDto(int chatId)
+        {
+            var groupChatInfo = await _databaseContext.GroupChatInfos.FirstOrDefaultAsync();
+            var owner = await _databaseContext.Users.FirstAsync(x => x.Id == groupChatInfo.OwnerId);
+
+            return new GroupChatInfoDto()
+            {
+                Owner = new UserDto()
+                {
+                    Id = owner.Id,
+                    DisplayName = owner.DisplayName,
+                    Username = owner.Username
+                },
+                Name = groupChatInfo.Name,
+                Description = groupChatInfo.Description,
+                AvatarUrl = groupChatInfo.AvatarUrl,
+            };
         }
     }
 }

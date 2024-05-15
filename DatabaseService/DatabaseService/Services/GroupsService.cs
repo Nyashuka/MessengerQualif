@@ -16,6 +16,59 @@ namespace DatabaseService.Services
             _databaseContext = databaseContext;
         }
 
+        public async Task<ServiceResponse<ChatDto>> GetChatById(int chatId)
+        {
+            Chat chat = await _databaseContext.Chats.FirstOrDefaultAsync(x => x.Id == chatId);
+
+            if (chat == null)
+            {
+                return new ServiceResponse<ChatDto>()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Chat does not exists"
+                };
+            }
+
+            List<UserDto> members = _databaseContext.ChatMembers
+                                    .Where(cm => cm.ChatId == chatId)
+                                    .Select(cm => new UserDto
+                                    {
+                                        Id = cm.User.Id,
+                                        Username = cm.User.Username,
+                                        DisplayName = cm.User.DisplayName
+                                    })
+                                    .ToList();
+
+            var chatInfo = await _databaseContext.GroupChatInfos.FirstOrDefaultAsync(x => x.ChatId == chatId);
+
+            var owner = await _databaseContext.Users.FirstOrDefaultAsync(x => x.Id == chatInfo.OwnerId);
+            var ownerDto = new UserDto()
+            {
+                Id = owner.Id,
+                DisplayName = owner.DisplayName,
+                Username = owner.Username,
+            };
+
+            var chatInfoDto = new GroupChatInfoDto()
+            {
+                Name = chatInfo.Name,
+                Description = chatInfo.Description,
+                AvatarUrl = chatInfo.AvatarUrl,
+                Owner = ownerDto
+            };
+
+            ChatDto chatToResponse = new ChatDto()
+            {
+                Id = chat.Id,
+                ChatTypeId = chat.ChatTypeId,
+                Members = members,
+                ChatInfo = chatInfoDto
+            };
+
+            return new ServiceResponse<ChatDto>() { Data = chatToResponse };
+        }
+
         public async Task<ServiceResponse<ChatDto>> CreateGroup(ChatDto chatDto)
         {
             var chatType = await _databaseContext.ChatTypes.FirstOrDefaultAsync(x => x.Id == chatDto.ChatTypeId);
@@ -72,11 +125,7 @@ namespace DatabaseService.Services
         {
             var groupInfo = _databaseContext.GroupChatInfos.First(x => x.ChatId == chat.Id);
 
-            return new ChatDto()
-            {
-                Id = chat.Id,
-                ChatTypeId = chat.ChatTypeId,
-                Members = _databaseContext.ChatMembers
+            var members = _databaseContext.ChatMembers
                                  .Where(cm => cm.ChatId == chat.Id)
                                  .Select(cm => new UserDto
                                  {
@@ -84,15 +133,24 @@ namespace DatabaseService.Services
                                      Username = cm.User.Username,
                                      DisplayName = cm.User.DisplayName
                                  })
-                                 .ToList(),
+                                 .ToList();
+            var owner = _databaseContext.Users.Select(x => new UserDto()
+            {
+                Id = x.Id,
+                DisplayName = x.DisplayName,
+                Username = x.Username
+            }).First(x => x.Id == groupInfo.OwnerId);
+
+            members.Add(owner);
+
+            return new ChatDto()
+            {
+                Id = chat.Id,
+                ChatTypeId = chat.ChatTypeId,
+                Members = members,
                 ChatInfo = new GroupChatInfoDto()
                 {
-                    Owner = _databaseContext.Users.Select(x => new UserDto()
-                    {
-                        Id = x.Id,
-                        DisplayName = x.DisplayName,
-                        Username = x.Username
-                    }).First(x => x.Id == groupInfo.OwnerId),
+                    Owner = owner,
                     Name = groupInfo.Name,
                     Description = groupInfo.Description,
                     AvatarUrl = groupInfo.AvatarUrl,

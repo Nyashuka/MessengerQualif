@@ -17,12 +17,12 @@ using MessengerWithRoles.WPFClient.Common;
 
 namespace MessengerWithRoles.WPFClient.Services
 {
-    public class ChatsService : IService
+    public class PersonalChatsService : IService
     {
         private readonly HttpClient _httpClient;
         private readonly AuthService _authService;
 
-        public ChatsService()
+        public PersonalChatsService()
         {
             _httpClient = new HttpClient();
             _authService = ServiceLocator.Instance.GetService<AuthService>();
@@ -55,7 +55,7 @@ namespace MessengerWithRoles.WPFClient.Services
 
         public async Task<ChatViewModel> GetExistsPersonalChat(int chatId)
         {
-            var chatDto = await TryGetPersonalChatIfExists(chatId);
+            var chatDto = await TryGetChatIfExists(chatId);
             var chat = chatDto.Data;
 
             var messages = await GetChatMessages(chatId);
@@ -69,7 +69,7 @@ namespace MessengerWithRoles.WPFClient.Services
         {
             var dataForRequest = new CreateChatDto()
             {
-                ChatTypeId = 0,
+                ChatTypeId = Convert.ToInt32(ChatTypeEnum.personal),
                 Members = new List<User>() { _authService.User, parcipient }
             };
 
@@ -93,7 +93,7 @@ namespace MessengerWithRoles.WPFClient.Services
             return new ChatViewModel(chat.Id, parcipient.Username, "", new ObservableCollection<Message>(), parcipient);
         }
 
-        public async Task<ServiceResponse<ChatDto>> TryGetPersonalChatIfExists(int chatId)
+        public async Task<ServiceResponse<ChatDto>> TryGetChatIfExists(int chatId)
         {
             var response = await _httpClient
                 .GetAsync($"{APIEndpoints.GetChatById}?accessToken={_authService.AccessToken}&chatId={chatId}");

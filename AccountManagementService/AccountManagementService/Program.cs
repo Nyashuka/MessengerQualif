@@ -16,7 +16,6 @@ namespace AccountManagementService
             builder.Services.AddScoped<IFriendsManagementService, FriendsManagementService>();
             builder.Services.AddScoped<IUsersService, UsersService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
-            builder.Services.AddScoped<IChatsService, ChatsService>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

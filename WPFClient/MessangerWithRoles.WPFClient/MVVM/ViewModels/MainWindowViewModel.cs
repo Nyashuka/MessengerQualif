@@ -102,7 +102,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
         private async Task LoadPersonalChats()
         {
             AuthService authService = ServiceLocator.Instance.GetService<AuthService>();
-            var chatsService = ServiceLocator.Instance.GetService<ChatsService>();
+            var chatsService = ServiceLocator.Instance.GetService<PersonalChatsService>();
             HttpClient httpClient = new HttpClient();
 
             var result = await httpClient.GetAsync($"{APIEndpoints.GetAllChatsGET}?accessToken={authService.AccessToken}");
@@ -194,10 +194,24 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
         {
             var messageArgs = (TextMessageEventBusArgs)args;
             var message = messageArgs.Message;
-            var chatsService = ServiceLocator.Instance.GetService<ChatsService>();
+            var chatsService = ServiceLocator.Instance.GetService<PersonalChatsService>();
 
-            var chat = Chats.FirstOrDefault(c => c.Id == message.ChatId);
-            var chatFromDB = await chatsService.GetExistsPersonalChat(message.ChatId);
+            var chatFromDB = await chatsService.TryGetChatIfExists(message.ChatId);
+
+            if(Convert.ToInt32(ChatTypeEnum.personal) == chatFromDB.Data.ChatTypeId)
+            {
+                UpdatePersonalMessages(chatsService, message);
+            }
+            else if (Convert.ToInt32(ChatTypeEnum.group) == chatFromDB.Data.ChatTypeId)
+            {
+                UpdateGroupMessages(chatsService, message);
+            }
+        }
+
+        private async Task UpdatePersonalMessages(PersonalChatsService personalChatsService, MessageDto messageDto)
+        {
+            var chat = Chats.FirstOrDefault(c => c.Id == messageDto.ChatId);
+            var chatFromDB = await personalChatsService.GetExistsPersonalChat(messageDto.ChatId);
 
             if (chat == null)
             {
@@ -210,6 +224,30 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             System.Windows.Application.Current.Dispatcher.Invoke(delegate
             {
                 chat.UpdateMessages(chatFromDB.Messages);
+            });
+        }
+
+        private async Task UpdateGroupMessages(PersonalChatsService personalChatsService, MessageDto messageDto)
+        {
+            var chat = Groups.FirstOrDefault(c => c.Id == messageDto.ChatId);
+            var chatFromDB = await personalChatsService.TryGetChatIfExists(messageDto.ChatId);
+            var messages = await personalChatsService.GetChatMessages(messageDto.ChatId);     
+
+            if (chat == null)
+            {
+                var newChat = new GroupViewModel(chatFromDB.Data.Id, chatFromDB.Data.ChatInfo.Name,
+                    chatFromDB.Data.ChatInfo.Description, 
+                    new ObservableCollection<User>(chatFromDB.Data.Members), messages);
+
+                System.Windows.Application.Current.Dispatcher.Invoke(delegate
+                {
+                    Groups.Add(newChat);
+                });
+                return;
+            }
+            System.Windows.Application.Current.Dispatcher.Invoke(delegate
+            {
+                chat.UpdateMessages(messages);
             });
         }
 

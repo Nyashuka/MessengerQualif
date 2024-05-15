@@ -47,6 +47,8 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 
         public string ImageSource { get; set; }
 
+        public string Status { get; set; }
+
         public event Action MessegesListChanged;
 
         public GroupViewModel(int id, string displayName, string description, 
@@ -59,6 +61,11 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 
             _members = members;
             _messages = messages;
+
+            Status = _members.Count() > 1 ? _members.Count()+ " Members" : _members.Count() + " Member";
+
+            if(messages != null && messages.Count > 0)
+                LastMessage = messages.Last().Text;
 
             ImageSource = "https://i.pinimg.com/originals/e7/da/8d/e7da8d8b6a269d073efa11108041928d.jpg";
         }

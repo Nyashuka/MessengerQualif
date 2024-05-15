@@ -8,5 +8,6 @@ namespace DatabaseService.Services.Interfaces
     {
         Task<ServiceResponse<ChatDto>> CreateGroup(ChatDto chatDTO);
         Task<ServiceResponse<List<ChatDto>>> GetAllGroups(int userId);
+        Task<ServiceResponse<ChatDto>> GetChatById(int chatId);
     }
 }

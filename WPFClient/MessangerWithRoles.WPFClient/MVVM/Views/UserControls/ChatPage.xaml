@@ -25,7 +25,7 @@
                         </Ellipse.Fill>
                     </Ellipse>
                     <StackPanel>
-                        <Label Content="{Binding Chat.Username}"
+                        <Label Content="{Binding Chat.DisplayName}"
                                 Foreground="White"
                                 VerticalAlignment="Center"
                                 FontWeight="SemiBold"

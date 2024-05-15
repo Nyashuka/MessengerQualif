@@ -2,7 +2,7 @@
 {
     public enum ChatTypeEnum
     {
-        personal = 1,
-        group = 2,
+        personal = 0,
+        group = 1,
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using MessengerWithRoles.WPFClient.MVVM.Models;
@@ -54,16 +55,28 @@ namespace MessengerWithRoles.WPFClient.MVVM.Views.Windows
 
         private void Chat_Selected(object sender, SelectionChangedEventArgs e)
         {
-            var chat = (ChatViewModel)((ListView)sender).SelectedItem;
+            var chatList = (ListView)sender;
+            var chat = (ChatViewModel)chatList.SelectedItem;
 
-            ((MainWindowViewModel)DataContext).OpenChatWindow(chat);
+            if(chat != null)
+            {
+                ((MainWindowViewModel)DataContext).OpenChatWindow(chat);
+            }
+            
+            chatList.SelectedItem = null;
         }
 
         private void Group_Selected(object sender, SelectionChangedEventArgs e)
         {
+            var chatList = (ListView)sender;
             var group = (GroupViewModel)((ListView)sender).SelectedItem;
 
-            ((MainWindowViewModel)DataContext).OpenGroupWindow(group);
+            if (group != null)
+            {
+                ((MainWindowViewModel)DataContext).OpenGroupWindow(group);
+            }
+
+            chatList.SelectedItem = null;
         }
     }
 }

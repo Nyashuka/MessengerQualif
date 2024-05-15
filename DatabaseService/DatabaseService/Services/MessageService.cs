@@ -44,22 +44,6 @@ namespace DatabaseService.Services
 
         public async Task<ServiceResponse<MessageDto>> SaveMessage(MessageDto messageDto)
         {
-            if (!_databaseContext.ChatMembers.Any(cm => cm.ChatId == messageDto.ChatId && cm.UserId == messageDto.SenderId))
-                return new ServiceResponse<MessageDto>()
-                {
-                    Data = null,
-                    Success = false,
-                    Message = "Sender is not member of chat!"
-                };
-
-            if (!_databaseContext.ChatMembers.Any(cm => cm.ChatId == messageDto.ChatId && cm.UserId == messageDto.RecipientId))
-                return new ServiceResponse<MessageDto>()
-                {
-                    Data = null,
-                    Success = false,
-                    Message = "Recepient is not member of chat!"
-                };
-
             Message message = new Message()
             {
                 Id = messageDto.Id,

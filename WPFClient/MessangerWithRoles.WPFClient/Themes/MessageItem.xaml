@@ -23,7 +23,7 @@
                                         Margin="12 4 12 4"
                                         HorizontalAlignment="Left">
 
-                                    <StackPanel Orientation="Horizontal" Margin="10 0 0 0">
+                                    <StackPanel Orientation="Horizontal" Margin="10 0 10 0">
 
                                         <StackPanel>
                                             <Label Content="{Binding Sender}" 

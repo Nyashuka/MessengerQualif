@@ -1,6 +1,8 @@
 
 using ChatsService.Authorization;
+using ChatsService.Chats.Services;
 using ChatsService.Groups.Services;
+using ChatsService.PersonalChats.Services;
 
 namespace ChatsService
 {
@@ -20,6 +22,8 @@ namespace ChatsService
             builder.Services.AddScoped(sp => new HttpClient { });
 
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IChatsService, Chats.Services.ChatsService>();
+            builder.Services.AddScoped<IPersonalChatsService, PersonalChatsService>();
             builder.Services.AddScoped<IGroupsService, GroupsService>();
 
             var app = builder.Build();

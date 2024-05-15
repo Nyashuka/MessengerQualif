@@ -33,16 +33,22 @@ namespace MessagesService.Services
             var chatMemberResponse = await _httpClient.GetAsync($"{APIEndpoints.GetChatMembersGET}?chatId={clientMessageDTO.ChatId}");
             var chatMembers = (await chatMemberResponse.Content.ReadFromJsonAsync<ServiceResponse<List<UserDto>>>()).Data;
 
-            List<int> chatMemberIds = chatMembers.Where(u => u.Id != senderId).Select(x => x.Id).ToList();
-
-            var notifyData = new NotifyDataDto()
+            if (chatMembers != null && chatMembers.Count > 0)
             {
-                Message = message.Data,
-                Recipients = chatMemberIds
-            };
+                List<int> chatMemberIds = chatMembers.Where(u => u.Id != senderId).Select(x => x.Id).ToList();
 
-            var notifyResponse = await _httpClient
+                if (chatMembers.Count == 0)
+                    return message;
+
+                var notifyData = new NotifyDataDto()
+                {
+                    Message = message.Data,
+                    Recipients = chatMemberIds
+                };
+
+                var notifyResponse = await _httpClient
                 .PostAsJsonAsync($"{APIEndpoints.NotifyUsersSendingMessagePOST}?accessToken={accessToken}", notifyData);
+            }
 
             return message;
         }

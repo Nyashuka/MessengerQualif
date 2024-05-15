@@ -1,6 +1,5 @@
 ﻿using AccountManagementService.Models;
 using AccountManagementService.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccountManagementService.Controllers

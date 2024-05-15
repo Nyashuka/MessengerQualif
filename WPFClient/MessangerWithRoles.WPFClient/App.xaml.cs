@@ -23,7 +23,7 @@ namespace MessengerWithRoles.WPFClient
         {
             ServiceLocator.Instance.RegisterService(new RequestService());
             ServiceLocator.Instance.RegisterService(new AuthService());
-            ServiceLocator.Instance.RegisterService(new ChatsService());
+            ServiceLocator.Instance.RegisterService(new PersonalChatsService());
             ServiceLocator.Instance.RegisterService(new GroupsServcie());
             ServiceLocator.Instance.RegisterService(new MessagesService());
         }

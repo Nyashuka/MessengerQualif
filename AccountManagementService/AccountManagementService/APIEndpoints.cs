@@ -13,12 +13,7 @@ namespace AccountManagementService
         public const string GetOtherUsersForUserGET = $"{DatabaseServiceIP}/api/Users";
         public const string GetUsersGET = $"{DatabaseServiceIP}/api/Users";
         public const string GetUserDataGET = $"{DatabaseServiceIP}/api/Users/get-user";
-        // [chats]
-        public const string CreatePersonalChat_POST = $"{DatabaseServiceIP}/api/Chats/create-personal";
-        public const string CreateGroupChat_POST = $"{DatabaseServiceIP}/api/Chats/create-group";
-        public const string GetAllPersonalChats_GET = $"{DatabaseServiceIP}/api/Chats/get-personal";
-        public const string GetPersonalChat_POST = $"{DatabaseServiceIP}/api/Chats/get-personal";
-        public const string GetChatByIdGET = $"{DatabaseServiceIP}/api/Chats/get-chat-by-id";
+        
 
         // Auth service
         public const string AuthorizationServiceIP = "http://127.0.0.1:5292";

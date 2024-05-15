@@ -10,12 +10,10 @@ namespace DatabaseService.Controllers
     public class ChatsController : ControllerBase
     {
         private readonly IChatService _chatService;
-        private readonly IChatMembersService _chatMembersService;
 
-        public ChatsController(IChatService chatService, IChatMembersService chatMembersService)
+        public ChatsController(IChatService chatService)
         {
             _chatService = chatService;
-            _chatMembersService = chatMembersService;
         }
 
         [HttpGet("get-chat-by-id")]

@@ -28,9 +28,9 @@ namespace DatabaseService.Controllers
 
 
         [HttpDelete]
-        public async Task<ActionResult<ServiceResponse<bool>>> DeleteChatMember(ChatMemberDTO chatMemberDto)
+        public async Task<ActionResult<ServiceResponse<bool>>> DeleteChatMember(int chatId, int userId)
         {
-            var response = await _chatMembersService.DeleteMember(chatMemberDto);
+            var response = await _chatMembersService.DeleteMember(chatId, userId);
 
             return Ok(response);
         }

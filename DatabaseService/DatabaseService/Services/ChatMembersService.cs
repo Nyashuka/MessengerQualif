@@ -1,4 +1,5 @@
-﻿using DatabaseService.DataContexts;
+﻿using DatabaseService.Data;
+using DatabaseService.DataContexts;
 using DatabaseService.DTOs;
 using DatabaseService.Models;
 using DatabaseService.Models.DatabaseModels;
@@ -18,8 +19,11 @@ namespace DatabaseService.Services
 
         public async Task<ServiceResponse<List<UserDto>>> GetChatMembersByChatId(int chatId)
         {
+            var chat = await _databaseContext.Chats.FirstOrDefaultAsync(x => x.Id == chatId);
+            var chatInfo = await _databaseContext.GroupChatInfos.FirstOrDefaultAsync(x => x.ChatId == chatId);
+
             var chatMembers = _databaseContext.ChatMembers.Where(x => x.ChatId == chatId).ToList();
-            
+
             List<UserDto> chatMemberUsersDto = new List<UserDto>();
             foreach (var chatMember in chatMembers)
             {
@@ -28,11 +32,32 @@ namespace DatabaseService.Services
                 if (user == null)
                     continue;
 
-                chatMemberUsersDto.Add(new UserDto() 
+                chatMemberUsersDto.Add(new UserDto()
                 {
                     Id = user.Id,
                     Username = user.Username,
                     DisplayName = user.DisplayName,
+                });
+            }
+            // just analog
+            //List<UserDto> members = _databaseContext.ChatMembers
+            //         .Where(cm => cm.ChatId == chatId)
+            //         .Select(cm => new UserDto
+            //         {
+            //             Id = cm.User.Id,
+            //             Username = cm.User.Username,
+            //             DisplayName = cm.User.DisplayName
+            //         })
+            //         .ToList();
+
+            if (chat.ChatTypeId == Convert.ToInt32(ChatTypeEnum.group))
+            {
+                var owner = await _databaseContext.Users.FirstOrDefaultAsync(x => x.Id == chatInfo.OwnerId);
+                chatMemberUsersDto.Add(new UserDto()
+                {
+                    Id = owner.Id,
+                    DisplayName = owner.DisplayName,
+                    Username = owner.Username,
                 });
             }
 
@@ -61,11 +86,11 @@ namespace DatabaseService.Services
             return new ServiceResponse<ChatMember> { Data = chatMember };
         }
 
-        public async Task<ServiceResponse<bool>> DeleteMember(ChatMemberDTO chatMemberDto)
+        public async Task<ServiceResponse<bool>> DeleteMember(int chatId, int userId)
         {
             var chatMember = _databaseContext.ChatMembers
-                            .FirstOrDefault(x => x.ChatId == chatMemberDto.ChatId && 
-                                                 x.UserId == chatMemberDto.UserId);
+                            .FirstOrDefault(x => x.ChatId == chatId &&
+                                                 x.UserId == userId);
 
             if (chatMember == null)
             {
@@ -73,14 +98,14 @@ namespace DatabaseService.Services
                 {
                     Data = false,
                     Success = false,
-                    Message = $"Chat member with id={chatMemberDto.UserId} is not exists!"
+                    Message = $"Chat member with id={userId} is not exists!"
                 };
             }
 
             _databaseContext.ChatMembers.Remove(chatMember);
             await _databaseContext.SaveChangesAsync();
 
-            return new ServiceResponse<bool> {  Data = true };
+            return new ServiceResponse<bool> { Data = true };
         }
     }
 }

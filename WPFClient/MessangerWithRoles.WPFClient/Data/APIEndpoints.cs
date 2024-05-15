@@ -41,10 +41,10 @@ namespace MessengerWithRoles.WPFClient.Data
         public static string GetAllFriendsGET { get => $"http://{IPAddress}:{Ports.AccountManagement}/api/FriendsManagement"; }
 
         // chats
-        public static string CreatePersonalChatPOST { get => $"http://{IPAddress}:{Ports.AccountManagement}/api/Chats/create-personal"; }
-        public static string GetPersonalChatByMembersPOST { get => $"http://{IPAddress}:{Ports.AccountManagement}/api/Chats/get-personal-by-members"; }
-        public static string GetAllChatsGET { get => $"http://{IPAddress}:{Ports.AccountManagement}/api/Chats/get-personal"; }
-        public static string GetChatById { get => $"http://{IPAddress}:{Ports.AccountManagement}/api/Chats/get-chat-by-id"; }
+        public static string CreatePersonalChatPOST { get => $"http://{IPAddress}:{Ports.Chats}/api/PersonalChats/create-personal"; }
+        public static string GetPersonalChatByMembersPOST { get => $"http://{IPAddress}:{Ports.Chats}/api/PersonalChats/get-personal-by-members"; }
+        public static string GetAllChatsGET { get => $"http://{IPAddress}:{Ports.Chats}/api/PersonalChats"; }
+        public static string GetChatById { get => $"http://{IPAddress}:{Ports.Chats}/api/Chats/get-by-id"; }
         public static string CreateGroupPOST { get => $"http://{IPAddress}:{Ports.Chats}/api/Groups"; }
         public static string GetAllGroupsGET { get => $"http://{IPAddress}:{Ports.Chats}/api/Groups"; }
 

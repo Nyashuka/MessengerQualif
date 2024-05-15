@@ -27,9 +27,17 @@ namespace DatabaseService.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<ChatDto>>> GetAllGroupsByUserId(int userId)
+        public async Task<ActionResult<ServiceResponse<List<ChatDto>>>> GetAllGroupsByUserId(int userId)
         {
             var response = await _groupsService.GetAllGroups(userId);
+
+            return Ok(response);
+        }
+
+        [HttpGet("group-by-id")]
+        public async Task<ActionResult<ServiceResponse<ChatDto>>> GetGroupById(int chatId)
+        {
+            var response = await _groupsService.GetChatById(chatId);
 
             return Ok(response);
         }

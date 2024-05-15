@@ -5,7 +5,7 @@
         public const string GetAuthenticatedUserGET = "http://127.0.0.1:5292/api/Auth/is-user-authenticated";
 
         public const string DatabaseService = "http://127.0.0.1:5291";
-        public const string GetChatMembersGET = $"{DatabaseService}/api/Chats/get-chat-members";
+        public const string GetChatMembersGET = $"{DatabaseService}/api/ChatMembers";
 
         public const string SaveMessagePOST = $"{DatabaseService}/api/Messages/save";
         public const string GetMessagesByChatIdGET = $"{DatabaseService}/api/Messages";

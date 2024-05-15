@@ -67,7 +67,7 @@ namespace MessengerWithRoles.WPFClient.Services
 
         public async Task<GroupViewModel> GroupModelToViewModel(ChatDto group)
         {
-            var chatsService = ServiceLocator.Instance.GetService<ChatsService>();
+            var chatsService = ServiceLocator.Instance.GetService<PersonalChatsService>();
 
             var messages = await chatsService.GetChatMessages(group.Id);
 

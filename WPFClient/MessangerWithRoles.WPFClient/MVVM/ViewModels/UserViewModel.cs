@@ -58,20 +58,14 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 
         public async void OnExecuteCreateOrOpenChatCommand(object p)
         {
-            var chatsService = ServiceLocator.Instance.GetService<ChatsService>();
+            var chatsService = ServiceLocator.Instance.GetService<PersonalChatsService>();
 
-            try
-            {
-                var chatViewModel = await chatsService.GetPersonalChatIfExistsOrCreateOne(User);
 
-                ServiceLocator.Instance.GetService<EventBus>()
-                    .Raise(EventBusDefinitions.OpenChat, new ChatDataIEventBusArgs(chatViewModel));
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-                return;
-            }
+            var chatViewModel = await chatsService.GetPersonalChatIfExistsOrCreateOne(User);
+
+            ServiceLocator.Instance.GetService<EventBus>()
+                .Raise(EventBusDefinitions.OpenChat, new ChatDataIEventBusArgs(chatViewModel));
+
         }
 
         private ChatViewModel ChatDtoToChat(ChatDto chatDto, int userId)
