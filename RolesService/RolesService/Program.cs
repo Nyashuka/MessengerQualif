@@ -1,4 +1,8 @@
 
+using RolesService.Authorization;
+using RolesService.Permissions.Services;
+using RolesService.Roles.Services;
+
 namespace RolesService
 {
     public class Program
@@ -13,6 +17,11 @@ namespace RolesService
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddScoped(sp => new HttpClient { });
+            builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IRolesService, Roles.Services.RolesService>();
+            builder.Services.AddScoped<IPermissionsService, PermissionsService>();
 
             var app = builder.Build();
 

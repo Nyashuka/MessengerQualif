@@ -30,19 +30,47 @@ namespace ChatsService.ChatMembers
         {
             var authData = await _authService.TryGetAuthenticatedUser(accessToken);
 
-            if(authData.Data == null || !authData.HasAccess)
+            if (authData.Data == null || !authData.HasAccess)
                 return Unauthorized();
 
-            if(!(await _actionAccessService.HasAccess(new GetChatMembersActionAccess(), chatId, authData.Data.UserId)))
-            {
+            if (!(await _actionAccessService.HasAccess(new GetChatMembersChatAction(), chatId, authData.Data.UserId)))
                 return Unauthorized();
-            }
 
-            var response = _chatMembersService.GetChatMembersByChatId(chatId);
+            var response = await _chatMembersService.GetChatMembersByChatId(chatId);
 
             return Ok(response);
         }
 
+        [HttpPost("username")]
+        public async Task<ActionResult<ServiceResponse<UserDto>>> AddMemberByUsername(string accessToken, ChatMemberByUsernameDto chatMemberDto)
+        {
+            var authData = await _authService.TryGetAuthenticatedUser(accessToken);
 
+            if (authData.Data == null || !authData.HasAccess)
+                return Unauthorized();
+
+            if (!(await _actionAccessService.HasAccess(new AddChatMemberChatAction(), chatMemberDto.ChatId, authData.Data.UserId)))
+                return Ok(new ServiceResponse<UserDto>() { Success = false, Message = "No access to add users" });
+
+            var response = await _chatMembersService.AddMemberByUsername(chatMemberDto);
+
+            return Ok(response);
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult<ServiceResponse<bool>>> AddMemberByUsername(string accessToken, int chatId, int userId)
+        {
+            var authData = await _authService.TryGetAuthenticatedUser(accessToken);
+
+            if (authData.Data == null || !authData.HasAccess)
+                return Unauthorized();
+
+            if (!(await _actionAccessService.HasAccess(new AddChatMemberChatAction(), chatId, authData.Data.UserId)))
+                return Unauthorized();
+
+            var response = await _chatMembersService.DeleteMember(chatId, userId);
+
+            return Ok(response);
+        }
     }
 }

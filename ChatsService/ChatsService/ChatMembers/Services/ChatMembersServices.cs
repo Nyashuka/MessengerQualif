@@ -23,6 +23,16 @@ namespace ChatsService.ChatMembers.Services
             return data;
         }
 
+        public async Task<ServiceResponse<ChatMember>> AddMemberByUsername(ChatMemberByUsernameDto chatMemberDto)
+        {
+            var databaseResponse = await _httpClient
+                .PostAsJsonAsync($"{APIEndpoints.AddMemberByUsernameToChatPOST}", chatMemberDto);
+
+            var data = await databaseResponse.Content.ReadFromJsonAsync<ServiceResponse<ChatMember>>();
+
+            return data;
+        }
+
         public async Task<ServiceResponse<bool>> DeleteMember(int chatId, int userId)
         {
             var databaseResponse = await _httpClient
@@ -35,7 +45,7 @@ namespace ChatsService.ChatMembers.Services
 
         public async Task<ServiceResponse<List<UserDto>>> GetChatMembersByChatId(int chatId)
         {
-            var databaseResponse = await _httpClient.GetAsync($"{APIEndpoints.GetChatMembersGET}");
+            var databaseResponse = await _httpClient.GetAsync($"{APIEndpoints.GetChatMembersGET}?chatId={chatId}");
 
             var data = await databaseResponse.Content.ReadFromJsonAsync<ServiceResponse<List<UserDto>>>();
 

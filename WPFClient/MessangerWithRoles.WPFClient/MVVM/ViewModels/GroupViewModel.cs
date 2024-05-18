@@ -47,11 +47,16 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 
         public string ImageSource { get; set; }
 
-        public string Status { get; set; }
+        private string _status;
+        public string Status
+        {
+            get => _status;
+            set => Set(ref _status, _status);
+        }
 
         public event Action MessegesListChanged;
 
-        public GroupViewModel(int id, string displayName, string description, 
+        public GroupViewModel(int id, string displayName, string description,
                               ObservableCollection<User> members,
                               ObservableCollection<Message> messages)
         {
@@ -62,9 +67,9 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             _members = members;
             _messages = messages;
 
-            Status = _members.Count() > 1 ? _members.Count()+ " Members" : _members.Count() + " Member";
+            _status = GetChatMembersStatus();
 
-            if(messages != null && messages.Count > 0)
+            if (messages != null && messages.Count > 0)
                 LastMessage = messages.Last().Text;
 
             ImageSource = "https://i.pinimg.com/originals/e7/da/8d/e7da8d8b6a269d073efa11108041928d.jpg";
@@ -81,11 +86,26 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             MessegesListChanged?.Invoke();
         }
 
+        public string GetChatMembersStatus()
+            => Members.Count() > 1 ? Members.Count() + " Members" : Members.Count() + " Member";
+
         public void UpdateMessages(ObservableCollection<Message> messages)
         {
             Messages = messages;
             LastMessage = messages.Last().Text;
             MessegesListChanged?.Invoke();
+        }
+
+        public void AddMember(User user)
+        {
+            Members.Add(user);
+            Status = GetChatMembersStatus();
+        }
+
+        public void DeleteMember(User user)
+        {
+            Members.Remove(user);
+            Status = GetChatMembersStatus();
         }
     }
 }

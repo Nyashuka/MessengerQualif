@@ -7,6 +7,7 @@ namespace ChatsService.ChatMembers.Services
     public interface IChatMembersService
     {
         Task<ServiceResponse<ChatMember>> AddMember(ChatMemberDto chatMemberDto);
+        Task<ServiceResponse<ChatMember>> AddMemberByUsername(ChatMemberByUsernameDto chatMemberDto);
         Task<ServiceResponse<bool>> DeleteMember(int chatId, int userId);
         Task<ServiceResponse<List<UserDto>>> GetChatMembersByChatId(int chatId);
     }

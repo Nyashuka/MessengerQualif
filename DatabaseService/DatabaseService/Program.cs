@@ -36,6 +36,7 @@ namespace DatabaseService
             builder.Services.AddScoped<IMessageService, MessageService>();
             //
             builder.Services.AddScoped<IRolesService, RolesService>();
+            builder.Services.AddScoped<IPermissionsService, PermissionsService>();
             builder.Services.AddScoped<IRolePermissionService, RolePermissionService>();
             builder.Services.AddScoped<IUserRoleRelationService, UserRoleRelationService>();
 

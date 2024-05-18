@@ -26,7 +26,7 @@ namespace MessengerWithRoles.WPFClient.Services
             _authService = ServiceLocator.Instance.GetService<AuthService>();
         }
 
-        public async Task<ServiceResponse<ChatDto>> CreateGroup(CreateGroupChatDto chatDto)
+        public async Task<ServiceResponse<Chat>> CreateGroup(CreateGroupChatDto chatDto)
         {
             chatDto.ChatTypeId = Convert.ToInt32(ChatTypeEnum.group);
             chatDto.ChatInfo.Owner = _authService.User;
@@ -36,42 +36,75 @@ namespace MessengerWithRoles.WPFClient.Services
             
             if(!response.IsSuccessStatusCode)
             {
-                return new ServiceResponse<ChatDto> { Success = false, Message = response.ReasonPhrase };
+                return new ServiceResponse<Chat> { Success = false, Message = response.ReasonPhrase };
             }
 
-            var data = await response.Content.ReadFromJsonAsync<ServiceResponse<ChatDto>>();
+            var data = await response.Content.ReadFromJsonAsync<ServiceResponse<Chat>>();
 
             if(data == null)
-                data = new ServiceResponse<ChatDto> { Success = false };
+                data = new ServiceResponse<Chat> { Success = false };
 
             return data;
         }
 
-        public async Task<ServiceResponse<List<ChatDto>>> GetGroups()
+        public async Task<ServiceResponse<List<Chat>>> GetGroups()
         {
             var response = await _httpClient.GetAsync($"{APIEndpoints.GetAllGroupsGET}?accessToken={_authService.AccessToken}");
             
             if(!response.IsSuccessStatusCode)
             {
-                return new ServiceResponse<List<ChatDto>>()
+                return new ServiceResponse<List<Chat>>()
                 {
                     Success = false,
                     Message = response.ReasonPhrase
                 };
             }
 
-            var chatListResponse = await response.Content.ReadFromJsonAsync<ServiceResponse<List<ChatDto>>>();
+            var chatListResponse = await response.Content.ReadFromJsonAsync<ServiceResponse<List<Chat>>>();
 
             return chatListResponse;
         }
 
-        public async Task<GroupViewModel> GroupModelToViewModel(ChatDto group)
+        public async Task<GroupViewModel> GroupModelToViewModel(Chat group)
         {
             var chatsService = ServiceLocator.Instance.GetService<PersonalChatsService>();
 
             var messages = await chatsService.GetChatMessages(group.Id);
 
-            return new GroupViewModel(group.Id ,group.ChatInfo.Name, group.ChatInfo.Description, new ObservableCollection<User>(group.Members), messages);
+            return new GroupViewModel(group.Id, 
+                    group.ChatInfo.Name, 
+                    group.ChatInfo.Description, 
+                    new ObservableCollection<User>(group.Members), 
+                    messages);
+        }
+
+        public async Task<ServiceResponse<bool>> DeleteMember(int chatId, int userId)
+        {
+            var response = await _httpClient
+                .DeleteAsync($"{APIEndpoints.DeleteChatMemberDELETE}?accessToken={_authService.AccessToken}&chatId={chatId}&userId={userId}");
+
+            var data = await response.Content.ReadFromJsonAsync<ServiceResponse<bool>>();
+
+            return data;
+        }
+
+        public async Task<ServiceResponse<ChatMember>> AddMemberByUsername(int chatId, string username)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"{APIEndpoints.AddChatMemberByUsernamePOST}?accessToken={_authService.AccessToken}",
+                new AddChatMemberByUsernameDto() { ChatId = chatId, Username = username});
+
+            var data = await response.Content.ReadFromJsonAsync<ServiceResponse<ChatMember>>();
+
+            return data;
+        }
+
+        public async Task<ServiceResponse<List<ChatPermission>>> GetAllPermissions()
+        {
+            var response = await _httpClient.GetAsync($"{APIEndpoints.GetAllPermissionsGET}?accessToken={_authService.AccessToken}");
+
+            var data = await response.Content.ReadFromJsonAsync<ServiceResponse<List<ChatPermission>>>();
+
+            return data;
         }
     }
 }

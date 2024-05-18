@@ -25,6 +25,7 @@ namespace DatabaseService.DataContexts
         public DbSet<UserRoleRelation> UserRoleRelations { get; set; }
         public DbSet<AccessToken> AccessTokens { get; set; }
         public DbSet<FriendRelation> FriendRelations { get; set; }
+        public DbSet<DefaultRoles> DefaultRoles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -69,6 +70,26 @@ namespace DatabaseService.DataContexts
                {
                    Id = Convert.ToInt32(PermissionEnum.ChangeChatInfo),
                    Name = "Change chat info"
+               },
+               new ChatPermission()
+               {
+                   Id = Convert.ToInt32(PermissionEnum.CreateRoles),
+                   Name = "Create roles"
+               },
+               new ChatPermission()
+               {
+                   Id = Convert.ToInt32(PermissionEnum.GiveRoles),
+                   Name = "Give roles"
+               },
+               new ChatPermission()
+               {
+                   Id = Convert.ToInt32(PermissionEnum.EditRoles),
+                   Name = "Edit roles"
+               },
+               new ChatPermission()
+               {
+                   Id = Convert.ToInt32(PermissionEnum.DeleteRoles),
+                   Name = "Delete roles"
                },
                new ChatPermission()
                {

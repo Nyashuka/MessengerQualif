@@ -1,9 +1,9 @@
-﻿using MessengerWithRoles.WPFClient.MVVM.Models;
+﻿using MessengerWithRoles.WPFClient.DTOs;
 using System.Collections.Generic;
 
-namespace MessengerWithRoles.WPFClient.DTOs
+namespace MessengerWithRoles.WPFClient.MVVM.Models
 {
-    public class ChatDto
+    public class Chat
     {
         public int Id { get; set; }
         public int ChatTypeId { get; set; }

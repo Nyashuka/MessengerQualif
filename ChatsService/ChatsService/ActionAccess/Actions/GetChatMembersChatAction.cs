@@ -1,10 +1,10 @@
 ﻿namespace ChatsService.ActionAccess.Actions
 {
-    public class GetMemberListActionAccess : IActionAccess
+    public class GetChatMembersChatAction : IChatAction
     {
         public Task<bool> HasAccess(HttpClient httpClient, int chatId, int userId)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(true);
         }
     }
 }

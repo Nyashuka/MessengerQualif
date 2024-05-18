@@ -15,6 +15,7 @@
         public const string GetChatByIdGET = $"{DatabaseService}/api/Chats/get-chat-by-id";
         // [chat members]
         public const string AddMemberToChatPOST = $"{DatabaseService}/api/ChatMembers";
+        public const string AddMemberByUsernameToChatPOST = $"{DatabaseService}/api/ChatMembers/username";
         public const string DeleteMemberDELETE = $"{DatabaseService}/api/ChatMembers";
         public const string GetChatMembersGET = $"{DatabaseService}/api/ChatMembers";
 

@@ -26,7 +26,7 @@ namespace MessengerWithRoles.WPFClient.Data
 
         public static string LexyServer = "91.201.235.100";
 
-        public static string IPAddress = LexyServer; // ;
+        public static string IPAddress = LocalAddress; 
         public static PortList Ports = DefaultPorts;
 
         // auth service
@@ -51,7 +51,11 @@ namespace MessengerWithRoles.WPFClient.Data
         // Chat members
         public static string GetChatMembersGET { get => $"http://{IPAddress}:{Ports.Chats}/api/ChatMembers"; }
         public static string AddChatMemberPOST { get => $"http://{IPAddress}:{Ports.Chats}/api/ChatMembers"; }
-        public static string DeleteChatMembersDELETE { get => $"http://{IPAddress}:{Ports.Chats}/api/ChatMembers"; }
+        public static string AddChatMemberByUsernamePOST { get => $"http://{IPAddress}:{Ports.Chats}/api/ChatMembers/username"; }
+        public static string DeleteChatMemberDELETE { get => $"http://{IPAddress}:{Ports.Chats}/api/ChatMembers"; }
+
+        // Permissions
+        public static string GetAllPermissionsGET { get => $"http://{IPAddress}:{Ports.Chats}/api/Permissions"; }
 
         // messages service
         public static string GetChatMessagesByChatIdGET { get => $"http://{IPAddress}:{Ports.Messages}/api/Messages"; }

@@ -40,7 +40,7 @@ namespace MessengerWithRoles.WPFClient.Services
             return await GetExistsPersonalChat(chatResponse.Data.Id);
         }
 
-        private async Task<ServiceResponse<ChatDto>> GetPersonalChatByMembers(User parcipient)
+        private async Task<ServiceResponse<Chat>> GetPersonalChatByMembers(User parcipient)
         {
             List<User> members = new List<User> { _authService.User, parcipient };
 
@@ -48,7 +48,7 @@ namespace MessengerWithRoles.WPFClient.Services
                 .PostAsJsonAsync($"{APIEndpoints.GetPersonalChatByMembersPOST}?accessToken={_authService.AccessToken}", 
                                  members);
 
-            var chat = await result.Content.ReadFromJsonAsync<ServiceResponse<ChatDto>>();
+            var chat = await result.Content.ReadFromJsonAsync<ServiceResponse<Chat>>();
 
             return chat;
         }
@@ -77,7 +77,7 @@ namespace MessengerWithRoles.WPFClient.Services
                 .PostAsJsonAsync($"{APIEndpoints.CreatePersonalChatPOST}?accessToken={_authService.AccessToken}", 
                                                                                     dataForRequest);
 
-            var createdChat = await result.Content.ReadFromJsonAsync<ServiceResponse<ChatDto>>();
+            var createdChat = await result.Content.ReadFromJsonAsync<ServiceResponse<Chat>>();
             if (createdChat == null)
             {
                 MessageBox.Show(result.ReasonPhrase);
@@ -93,12 +93,12 @@ namespace MessengerWithRoles.WPFClient.Services
             return new ChatViewModel(chat.Id, parcipient.Username, "", new ObservableCollection<Message>(), parcipient);
         }
 
-        public async Task<ServiceResponse<ChatDto>> TryGetChatIfExists(int chatId)
+        public async Task<ServiceResponse<Chat>> TryGetChatIfExists(int chatId)
         {
             var response = await _httpClient
                 .GetAsync($"{APIEndpoints.GetChatById}?accessToken={_authService.AccessToken}&chatId={chatId}");
 
-            var chatData = await response.Content.ReadFromJsonAsync<ServiceResponse<ChatDto>>();
+            var chatData = await response.Content.ReadFromJsonAsync<ServiceResponse<Chat>>();
 
             return chatData;
         }

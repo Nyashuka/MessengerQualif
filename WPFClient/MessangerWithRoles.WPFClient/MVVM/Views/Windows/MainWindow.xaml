@@ -61,15 +61,16 @@
                         </Grid.RowDefinitions>
 
                         <Border Grid.Row="0" 
-                     Background="#1B1A22" 
-                     BorderBrush="#2B3252" BorderThickness="0 0 0 3">
-                            <Border MinWidth="170px" Width="170" MaxWidth="190" Height="40px"
-                         Background="#1B1A22" 
-                         BorderBrush="#2B3252" BorderThickness="3" CornerRadius="10">
+                                 Background="#1B1A22" 
+                                 BorderBrush="#2B3252" BorderThickness="0 0 0 3">
+                            <Border Width="230" MaxWidth="230" Height="40px"
+                             Background="#1B1A22" 
+                             BorderBrush="#2B3252" BorderThickness="3" CornerRadius="10">
                                 <TextBox Grid.Column="0"
                                          Background="Transparent"
                                          Height="20"
-                                         Style="{StaticResource SearchBox}"/>
+                                         Style="{StaticResource SearchBox}"
+                                         />
                             </Border>
                         </Border>
 
@@ -88,7 +89,7 @@
                                                     <ControlTemplate TargetType="{x:Type Button}">
                                                         <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="#2B3252"
                                                                     BorderThickness="3" CornerRadius="2">
-                                                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                         </Border>
                                                         <ControlTemplate.Triggers>
                                                             <Trigger Property="IsMouseOver" Value="True">
@@ -121,7 +122,7 @@
                                                     <ControlTemplate TargetType="{x:Type Button}">
                                                         <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="#2B3252"
                                                                 BorderThickness="3" CornerRadius="2">
-                                                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" />
+                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                                                         </Border>
                                                         <ControlTemplate.Triggers>
                                                             <Trigger Property="IsMouseOver" Value="True">
@@ -139,7 +140,77 @@
                                         </Style>
                                     </Button.Style>
                                 </Button>
-                                <ComboBox ItemsSource="{Binding Path=ChatTypes}" 
+                                <Grid Margin="5 5 5 5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Button Grid.Column="0" Command="{Binding OpenPersonalChatsListCommand}"
+                                            HorizontalAlignment="Stretch" 
+                                            Content="Personal" Margin="0 0 2 0">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Background" Value="#1B1A22"/>
+                                                <Setter Property="Foreground" Value="White"/>
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="{x:Type Button}">
+                                                            <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="#2B3252"
+                                BorderThickness="3" CornerRadius="2">
+                                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                            </Border>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter TargetName="border" Property="Background" Value="#2B3252" />
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                            
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Cursor" Value="Hand" />
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+
+                                    </Button>
+                                    <Button Grid.Column="1" Command="{Binding OpenGroupListCommand}"
+                                            HorizontalAlignment="Stretch" 
+                                            Content="Groups" Margin="2 0 0 0">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Background" Value="#1B1A22"/>
+                                                <Setter Property="Foreground" Value="White"/>
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="{x:Type Button}">
+                                                            <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="#2B3252"
+                                BorderThickness="3" CornerRadius="2">
+                                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                            </Border>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter TargetName="border" Property="Background" Value="#2B3252" />
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Cursor" Value="Hand" />
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+
+                                    </Button>
+                                </Grid>
+                                <!--<ComboBox ItemsSource="{Binding Path=ChatTypes}" 
                                   HorizontalContentAlignment="Center"
                                   DisplayMemberPath="Name"
                                   SelectedValuePath="Name"
@@ -147,7 +218,7 @@
                                   Height="22px" Margin="5 5 5 5"
                                   >
 
-                                </ComboBox>
+                                </ComboBox>-->
                             </StackPanel>
                         </Border>
                        

@@ -1,5 +1,7 @@
 
+using ChatsService.ActionAccess.Services;
 using ChatsService.Authorization;
+using ChatsService.ChatMembers.Services;
 using ChatsService.Chats.Services;
 using ChatsService.Groups.Services;
 using ChatsService.PersonalChats.Services;
@@ -25,6 +27,8 @@ namespace ChatsService
             builder.Services.AddScoped<IChatsService, Chats.Services.ChatsService>();
             builder.Services.AddScoped<IPersonalChatsService, PersonalChatsService>();
             builder.Services.AddScoped<IGroupsService, GroupsService>();
+            builder.Services.AddScoped<IChatMembersService, ChatMembersServices>();
+            builder.Services.AddScoped<IActionAccessService, ActionAccessService>();
 
             var app = builder.Build();
 

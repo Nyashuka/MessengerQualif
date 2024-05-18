@@ -7,8 +7,10 @@ namespace DatabaseService.Services.Interfaces
     public interface IRolesService
     {
         Task<ServiceResponse<Role>> CreateRole(RoleDto roleDto);
-        Task<ServiceResponse<List<Role>>> GetChatRoles(int chatId);
-        Task<ServiceResponse<Role>> UpdateRole(Role role);
+        Task<ServiceResponse<List<RoleWithPermissions>>> GetChatRoles(int chatId);
+        Task<ServiceResponse<RoleWithPermissions>> UpdateRole(RoleWithPermissions role);
         Task<ServiceResponse<bool>> DeleteRole(int roleId);
+        Task<ServiceResponse<List<RoleWithPermissions>>> GetAllUserRoles(int chatId, int userId);
+        Task<ServiceResponse<RoleWithPermissions>> CreateDefaultRole(int chatId);
     }
 }

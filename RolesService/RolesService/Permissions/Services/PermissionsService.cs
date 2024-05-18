@@ -14,7 +14,11 @@ namespace RolesService.Permissions.Services
 
         public async Task<ServiceResponse<List<Permission>>> GetAllPermissions()
         {
-            throw new NotImplementedException();
+            var databaseResponse = await _httpClient.GetAsync(APIEndpoints.GetAllPermissionsGET);
+
+            var data = await databaseResponse.Content.ReadFromJsonAsync<ServiceResponse<List<Permission>>>();
+
+            return data;
         }
     }
 }

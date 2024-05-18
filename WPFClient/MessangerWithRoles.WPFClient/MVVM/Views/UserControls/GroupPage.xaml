@@ -7,86 +7,96 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="70px"/>
-            <RowDefinition/>
-            <RowDefinition Height="70px"/>
-        </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" 
+        <Grid Visibility="{Binding SettingsVisibility}">
+            <ContentControl Grid.Row="1" 
+                HorizontalAlignment="Stretch" 
+                VerticalAlignment="Stretch" 
+                Content="{Binding SettingsPage}" />
+        </Grid>
+
+        <Grid Visibility="{Binding ChatVisibility}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="70px"/>
+                <RowDefinition/>
+                <RowDefinition Height="70px"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" 
          Background="#1B1A22" 
          BorderBrush="#2B3252" BorderThickness="0 0 0 3">
-            <Grid >
-                <StackPanel Orientation="Horizontal" Margin="20 0 0 0">
-                    <Ellipse Width="55" Height="55">
-                        <Ellipse.Fill>
-                            <ImageBrush ImageSource="https://i.pinimg.com/originals/e7/da/8d/e7da8d8b6a269d073efa11108041928d.jpg"
+                <Grid >
+                    <StackPanel Orientation="Horizontal" Margin="20 0 0 0">
+                        <Ellipse Width="55" Height="55">
+                            <Ellipse.Fill>
+                                <ImageBrush ImageSource="https://i.pinimg.com/originals/e7/da/8d/e7da8d8b6a269d073efa11108041928d.jpg"
              RenderOptions.BitmapScalingMode="Fant"/>
-                        </Ellipse.Fill>
-                    </Ellipse>
-                    <StackPanel>
-                        <Label Content="{Binding Group.DisplayName}"
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <StackPanel>
+                            <Label Content="{Binding Group.DisplayName}"
                             Foreground="White"
                             VerticalAlignment="Center"
                             FontWeight="SemiBold"
                             FontSize="14"
                             Margin="10 0 0 0"/>
-                        <Label Content="{Binding Group.Status}"
+                            <Label Content="{Binding Group.Status}"
                             Foreground="DarkGray"
                             VerticalAlignment="Center"
                             FontWeight="SemiBold"
                             FontSize="12"
                             Margin="10 0 0 0"/>
+                        </StackPanel>
                     </StackPanel>
-                </StackPanel>
 
-                <Button Width="40" 
+                    <Button Width="40" Height="40" Command="{Binding OpenSettingsCommand}"
                      Background="Transparent" Foreground="White" BorderThickness="0"
                      Content="⚙" FontSize="25" 
-                     HorizontalAlignment="Right"  
+                     HorizontalAlignment="Right" Margin="0 0 20 0"
                      Style="{StaticResource UserAdditionalSettingsButton}"/>
-            </Grid>
-        </Border>
+                </Grid>
+            </Border>
 
-        <ListView Grid.Row="1" x:Name="messagesListView" Loaded="messagesListView_Loaded"
+            <ListView Grid.Row="1" x:Name="messagesListView" Loaded="messagesListView_Loaded"
               ItemsSource="{Binding Group.Messages}" 
                ItemContainerStyle="{StaticResource MessageItem}"
                Background="Transparent" BorderThickness="0"
                VerticalAlignment="Bottom"
                />
 
-        <Grid Grid.Row="2">
-            <Border CornerRadius="8"
+            <Grid Grid.Row="2">
+                <Border CornerRadius="8"
     Background="#1B1A22" Margin="5">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Column="0"
+                        <TextBox Grid.Column="0"
             Background="Transparent"
             Height="40"
             Style="{StaticResource MessageBox}"/>
 
-                    <StackPanel Grid.Column="1" 
+                        <StackPanel Grid.Column="1" 
                 Orientation="Horizontal" Height="50px" VerticalAlignment="Stretch">
-                        <Button Content="&#128193;" Width="25px" FontSize="15" Height="30"
+                            <Button Content="&#128193;" Width="25px" FontSize="15" Height="30"
                 Background="Transparent" Foreground="White" 
                 BorderThickness="0"
                 Style="{StaticResource MessageBoxButton}"/>
 
-                        <Button Command="{Binding SendMessageCommand}"
+                            <Button Command="{Binding SendMessageCommand}"
                                 Content="&gt;" Width="25px" FontSize="25" Height="30" 
                                 Background="Transparent" Foreground="White" 
                                 BorderThickness="0"
                                 Style="{StaticResource MessageBoxButton}"/>
-                        
-                    </StackPanel>
-                </Grid>
 
-            </Border>
+                        </StackPanel>
+                    </Grid>
 
+                </Border>
+
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

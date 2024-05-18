@@ -10,7 +10,6 @@ using MessengerWithRoles.WPFClient.Services.EventBusModule;
 using System.Net.Http;
 using System.Net.Http.Json;
 using MessengerWithRoles.WPFClient.Data;
-using MessengerWithRoles.WPFClient.DTOs;
 using MessengerWithRoles.WPFClient.MVVM.Infrastracture.Commands;
 using MessengerWithRoles.WPFClient.MVVM.Models;
 using MessengerWithRoles.WPFClient.MVVM.ViewModels.Base;
@@ -60,7 +59,6 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
         {
             var chatsService = ServiceLocator.Instance.GetService<PersonalChatsService>();
 
-
             var chatViewModel = await chatsService.GetPersonalChatIfExistsOrCreateOne(User);
 
             ServiceLocator.Instance.GetService<EventBus>()
@@ -68,7 +66,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 
         }
 
-        private ChatViewModel ChatDtoToChat(ChatDto chatDto, int userId)
+        private ChatViewModel ChatDtoToChat(Chat chatDto, int userId)
         {
             AuthService authService = ServiceLocator.Instance.GetService<AuthService>();
 

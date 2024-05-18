@@ -13,7 +13,7 @@ namespace ChatsService.ActionAccess.Services
             _httpClient = httpClient;
         }
 
-        public async Task<bool> HasAccess<T>(T actionAccess, int chatId, int userId) where T : class, IActionAccess
+        public async Task<bool> HasAccess<T>(T actionAccess, int chatId, int userId) where T : class, IChatAction
         {
             if (await IsOwner(chatId, userId))
                 return true;

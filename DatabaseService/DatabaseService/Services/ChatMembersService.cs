@@ -86,6 +86,20 @@ namespace DatabaseService.Services
             return new ServiceResponse<ChatMember> { Data = chatMember };
         }
 
+        public async Task<ServiceResponse<ChatMember>> AddMemberByUsername(ChatMemberByUsernameDto chatMemberDto)
+        {
+            var username = chatMemberDto.Username.Trim().ToLower();
+
+            var userToAdd = await _databaseContext.Users.FirstOrDefaultAsync(x => x.Username.Equals(username));
+            
+            if (userToAdd == null) 
+            {
+                return new ServiceResponse<ChatMember>() { Success = false, Message = "This username is not exists" };
+            }
+
+            return await AddMember(new ChatMemberDTO() { ChatId = chatMemberDto.ChatId, UserId = userToAdd.Id });
+        }
+
         public async Task<ServiceResponse<bool>> DeleteMember(int chatId, int userId)
         {
             var chatMember = _databaseContext.ChatMembers
@@ -107,5 +121,7 @@ namespace DatabaseService.Services
 
             return new ServiceResponse<bool> { Data = true };
         }
+
+        
     }
 }

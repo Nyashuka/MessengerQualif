@@ -8,7 +8,7 @@ namespace MessengerWithRoles.WPFClient.DTOs
         public int Id { get; set; }
 
         public int ChatId { get; set; }
-        public ChatDto? Chat { get; set; }
+        public Chat? Chat { get; set; }
 
         public int SenderId { get; set; }
         public User? Sender { get; set; }

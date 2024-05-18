@@ -112,7 +112,8 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
                 return;
             }
 
-            var data = (await result.Content.ReadFromJsonAsync<ServiceResponse<List<ChatDto>>>()).Data;
+            var data = (await result.Content.ReadFromJsonAsync<ServiceResponse<List<Chat>>>()).Data;
+            Chats = new ObservableCollection<ChatViewModel>();
 
             foreach (var chatDto in data)
             {
@@ -131,9 +132,10 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 
             var groupsResposne = await groupsService.GetGroups();
 
+            Groups = new ObservableCollection<GroupViewModel>();
+
             if (groupsResposne.Data == null)
             {
-                Groups = new ObservableCollection<GroupViewModel>();
                 return;
             }
 
@@ -165,7 +167,9 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
         {
             var chatArgs = (ChatDataIEventBusArgs)args;
 
-            if (Chats.Any(x => x.Id != chatArgs.Chat.Id))
+            var chat = Chats.FirstOrDefault(x => x.Id == chatArgs.Chat.Id);
+
+            if (chat == null)
             {
                 Chats.Add(chatArgs.Chat);
             }
@@ -281,38 +285,24 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             Groups.Add(groupViewModel);
         }
 
-        public List<ChatType> ChatTypes { get; set; } = new List<ChatType>()
+        public ICommand OpenGroupListCommand { get; }
+        public bool CanOpenGroupListCommand(object p) => true;
+        public async void OnExecuteOpenGroupListCommand(object p)
         {
-            new ChatType()
-            {
-                Type = ChatTypeEnum.personal,
-                Name = "Personal"
-            },
-            new ChatType()
-            {
-                Type = ChatTypeEnum.group,
-                Name = "Group"
-            }
-        };
+            ChatListVisibility = Visibility.Collapsed;
+            GroupListVisibility = Visibility.Visible;
 
-        private ChatType _selectedChatType;
-        public ChatType SelectedChatType
+            await LoadGroups();
+        }
+
+        public ICommand OpenPersonalChatsListCommand { get; }
+        public bool CanOpenPersonalChatsListCommand(object p) => true;
+        public async void OnExecuteOpenPersonalChatsListCommand(object p)
         {
-            get => _selectedChatType;
-            set
-            {
-                Set(ref _selectedChatType, value);
-                if (value.Type == ChatTypeEnum.personal)
-                {
-                    GroupListVisibility = Visibility.Collapsed;
-                    ChatListVisibility = Visibility.Visible;
-                }
-                else if (value.Type == ChatTypeEnum.group)
-                {
-                    ChatListVisibility = Visibility.Collapsed;
-                    GroupListVisibility = Visibility.Visible;
-                }
-            }
+            GroupListVisibility = Visibility.Collapsed;
+            ChatListVisibility = Visibility.Visible;
+
+            await LoadPersonalChats();
         }
 
         public MainWindowViewModel()
@@ -334,7 +324,8 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             eventBus.Subscribe<ChatDataIEventBusArgs>(EventBusDefinitions.OpenGroup, OpenGroup);
             eventBus.Subscribe<ChatDataIEventBusArgs>(EventBusDefinitions.TextMessageReceived, UpdateMessages);
 
-            SelectedChatType = ChatTypes.First(x => x.Type == ChatTypeEnum.personal);
+            OpenPersonalChatsListCommand = new LambdaCommand(OnExecuteOpenPersonalChatsListCommand, CanOpenPersonalChatsListCommand);
+            OpenGroupListCommand = new LambdaCommand(OnExecuteOpenGroupListCommand, CanOpenGroupListCommand);
 
             OpenFriendsWindow = new LambdaCommand(OnExecuteOpenFriendsWindowCommand, CanExecuteOpenFriendsWindowCommand);
             OpenCreateGroupWindow = new LambdaCommand(OnExecuteOpenCreateGroupWindowCommand, CanExecuteOpenCreateGroupWindowCommand);

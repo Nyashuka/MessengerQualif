@@ -26,6 +26,14 @@ namespace DatabaseService.Controllers
             return Ok(response);
         }
 
+        [HttpPost("username")]
+        public async Task<ActionResult<ServiceResponse<ChatMember>>> AddChatMemberByUsername(ChatMemberByUsernameDto chatMemberDto)
+        {
+            var response = await _chatMembersService.AddMemberByUsername(chatMemberDto);
+
+            return Ok(response);
+        }
+
 
         [HttpDelete]
         public async Task<ActionResult<ServiceResponse<bool>>> DeleteChatMember(int chatId, int userId)

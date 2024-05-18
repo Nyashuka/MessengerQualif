@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <Folder Include="ActionAccess\Data\" />
-    <Folder Include="RoleAccessValidation\Services\" />
   </ItemGroup>
 
 </Project>
