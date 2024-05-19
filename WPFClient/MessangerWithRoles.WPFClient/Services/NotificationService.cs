@@ -17,7 +17,7 @@ namespace MessengerWithRoles.WPFClient.Services
     public class NotificationService : IService
     {
         private ClientWebSocket _webSocket;
-        private readonly CancellationTokenSource _cancellationToken;
+        private CancellationTokenSource _cancellationToken;
         private EventBus _eventBus;
         private Task _notificationReceiviengTask;
 
@@ -29,25 +29,32 @@ namespace MessengerWithRoles.WPFClient.Services
 
         public void Start(string accessToken)
         {
-            _notificationReceiviengTask = Task.Run(async () => await ConnectAndReceiveAsync(accessToken));
+            if(_cancellationToken != null)
+                _cancellationToken.Cancel();
+
+            if(_notificationReceiviengTask != null)
+                _notificationReceiviengTask.Wait();
+
+            _webSocket = new ClientWebSocket();
+            _cancellationToken = new CancellationTokenSource();
+            _notificationReceiviengTask = Task.Run(async () => await ConnectAndReceiveAsync(accessToken, _cancellationToken.Token));
         }
 
-        public async Task ConnectAndReceiveAsync(string accessToken)
+        public async Task ConnectAndReceiveAsync(string accessToken, CancellationToken cancellationToken)
         {
-            while (!_cancellationToken.IsCancellationRequested)
+            while (!cancellationToken.IsCancellationRequested)
             {
                 try
                 {
-                    _webSocket = new ClientWebSocket();
                     _webSocket.Options.SetRequestHeader("accessToken", accessToken);
 
                     await _webSocket.ConnectAsync(new Uri(APIEndpoints.NotificationsWS), CancellationToken.None);
 
                     byte[] buffer = new byte[1024];
 
-                    while (_webSocket.State == WebSocketState.Open || !_cancellationToken.IsCancellationRequested)
+                    while (_webSocket.State == WebSocketState.Open || !cancellationToken.IsCancellationRequested)
                     {
-                        WebSocketReceiveResult result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                        WebSocketReceiveResult result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationToken);
 
                         string receivedData = Encoding.UTF8.GetString(buffer, 0, result.Count);
 
@@ -59,16 +66,24 @@ namespace MessengerWithRoles.WPFClient.Services
                         }
                     }
 
-                    await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Connection closed.", CancellationToken.None);
-                    MessageBox.Show("Disconnected from notification server.");
+                    if (_webSocket.State == WebSocketState.Open && cancellationToken.IsCancellationRequested)
+                    {
+                        await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Connection closed.", CancellationToken.None);
+                        MessageBox.Show("Disconnected from notification server.");
+                    }
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("Notification service error!(reconnect after 5 seconds)\n" + e.Message);
+                    if(!cancellationToken.IsCancellationRequested)
+                        MessageBox.Show("Notification service error!(reconnect after 5 seconds)\n" + e.Message);
                 }
 
-                await Task.Delay(5000);
+                if (!cancellationToken.IsCancellationRequested)
+                {
+                    await Task.Delay(5000, cancellationToken);
+                }
             }
+            
         }
 
         private void NotifyClient_MessageReceived(SocketResponse response)
@@ -82,9 +97,22 @@ namespace MessengerWithRoles.WPFClient.Services
             }
         }
 
-        public void StopReceiving()
+        public async Task StopReceiving()
         {
-            _cancellationToken.Cancel(false);
+            _cancellationToken.Cancel();
+            if (_notificationReceiviengTask != null)
+                _notificationReceiviengTask.Wait();
+            try
+            {
+                if (_webSocket.State == WebSocketState.Open)
+                {
+                    await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Connection closed.", CancellationToken.None);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error while closing the WebSocket connection: " + ex.Message);
+            }
         }
     }
 }

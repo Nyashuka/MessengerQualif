@@ -74,12 +74,23 @@ namespace MessengerWithRoles.WPFClient.Services
             AccessToken = dataFromResponse.Data;
 
             var userDataRequest = await httpClient.GetAsync($"{APIEndpoints.GetUserGET}?accessToken={AccessToken}");
-            User = (await userDataRequest.Content.ReadFromJsonAsync<ServiceResponse<User>>()).Data;
+            User = (await userDataRequest.Content.ReadFromJsonAsync<ServiceResponse<User>>()).Data;   
 
             EventBus eventBus = ServiceLocator.Instance.GetService<EventBus>();
             eventBus.Raise(EventBusDefinitions.LoginedInAccount, new EventBusArgs());
 
+            InitServices(email);
+
             return IsAuthenticated;
+        }
+
+        private void InitServices(string email)
+        {
+            NotificationService notificationService = new NotificationService();
+            notificationService.Start(AccessToken);
+            ServiceLocator.Instance.RegisterService(notificationService);
+
+            ServiceLocator.Instance.RegisterService(new AccountService(User, email));
         }
 
         public async Task<bool> Register(CreationAccount accountData)
@@ -117,6 +128,18 @@ namespace MessengerWithRoles.WPFClient.Services
             IsAuthenticated = await Login(accountData.Email, accountData.Password);
 
             return IsAuthenticated;
+        }
+
+        public async Task Logout()
+        {
+            User = null;
+            AccessToken = string.Empty;
+            IsAuthenticated = false;
+
+            await ServiceLocator.Instance.GetService<NotificationService>().StopReceiving();
+            ServiceLocator.Instance.UnregisterService<NotificationService>();
+
+            ServiceLocator.Instance.UnregisterService<AccountService>();
         }
     }
 }

@@ -35,7 +35,7 @@ namespace RolesService.Roles
         }
 
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<List<Role>>>> CreateRole(string accessToken, RoleDto roleDto)
+        public async Task<ActionResult<ServiceResponse<Role>>> CreateRole(string accessToken, RoleDto roleDto)
         {
             var authData = await _authService.TryGetAuthenticatedUser(accessToken);
 
@@ -43,6 +43,58 @@ namespace RolesService.Roles
                 return Unauthorized();
 
             var response = await _rolesService.CreateRole(roleDto);
+
+            return Ok(response);
+        }
+
+        [HttpPost("assignes")]
+        public async Task<ActionResult<ServiceResponse<bool>>> AssignRole(string accessToken, UserRoleRelationDto relation)
+        {
+            var authData = await _authService.TryGetAuthenticatedUser(accessToken);
+
+            if (authData.Data == null || !authData.HasAccess)
+                return Unauthorized();
+
+            var response = await _rolesService.AssignRole(relation);
+
+            return Ok(response);
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<ServiceResponse<bool>>> UpdateRole(string accessToken, RoleWithPermissions role)
+        {
+            var authData = await _authService.TryGetAuthenticatedUser(accessToken);
+
+            if (authData.Data == null || !authData.HasAccess)
+                return Unauthorized();
+
+            var response = await _rolesService.UpdateRole(role);
+
+            return Ok(response);
+        }
+
+        [HttpDelete("assignes")]
+        public async Task<ActionResult<ServiceResponse<bool>>> UnAssignRole(string accessToken, int roleId, int userId)
+        {
+            var authData = await _authService.TryGetAuthenticatedUser(accessToken);
+
+            if (authData.Data == null || !authData.HasAccess)
+                return Unauthorized();
+
+            var response = await _rolesService.UnAssingRole(roleId, userId);
+
+            return Ok(response);
+        }
+
+        [HttpGet("assignes")]
+        public async Task<ActionResult<ServiceResponse<Role>>> GetAllAssinges(string accessToken, int roleId)
+        {
+            var authData = await _authService.TryGetAuthenticatedUser(accessToken);
+
+            if (authData.Data == null || !authData.HasAccess)
+                return Unauthorized();
+
+            var response = await _rolesService.GetAllAssinges(roleId);
 
             return Ok(response);
         }

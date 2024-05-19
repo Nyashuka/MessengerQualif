@@ -18,7 +18,7 @@ namespace DatabaseService.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<Role>>>> GetAllChatRoles(int chatId)
+        public async Task<ActionResult<ServiceResponse<List<RoleWithPermissions>>>> GetAllChatRoles(int chatId)
         {
             var response = await _rolesService.GetChatRoles(chatId);
 
@@ -26,7 +26,7 @@ namespace DatabaseService.Controllers
         }
 
         [HttpGet("user")]
-        public async Task<ActionResult<ServiceResponse<List<Role>>>> GetAllUserRoles(int chatId, int userId)
+        public async Task<ActionResult<ServiceResponse<List<RoleWithPermissions>>>> GetAllUserRoles(int chatId, int userId)
         {
             var response = await _rolesService.GetAllUserRoles(chatId, userId);
 

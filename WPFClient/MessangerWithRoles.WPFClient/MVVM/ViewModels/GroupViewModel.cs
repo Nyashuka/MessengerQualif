@@ -45,6 +45,13 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             set => Set(ref _messages, value);
         }
 
+        private ObservableCollection<RoleWithPermissions> _roles;
+        public ObservableCollection<RoleWithPermissions> Roles
+        {
+            get => _roles;
+            set => Set(ref _roles, value);
+        }
+
         public string ImageSource { get; set; }
 
         private string _status;
@@ -58,7 +65,8 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 
         public GroupViewModel(int id, string displayName, string description,
                               ObservableCollection<User> members,
-                              ObservableCollection<Message> messages)
+                              ObservableCollection<Message> messages,
+                              ObservableCollection<RoleWithPermissions> roles)
         {
             Id = id;
             _displayName = displayName;
@@ -66,6 +74,8 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 
             _members = members;
             _messages = messages;
+
+            _roles = roles;
 
             _status = GetChatMembersStatus();
 
@@ -106,6 +116,25 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
         {
             Members.Remove(user);
             Status = GetChatMembersStatus();
+        }
+
+        public void AddRole(RoleWithPermissions role)
+        {
+            Roles.Add(role);
+        }
+
+        public void UpdateRole(RoleWithPermissions role)
+        {
+            var roleToUpdate = Roles.FirstOrDefault(x => x.Id == role.Id);
+
+            if (roleToUpdate != null)
+            {
+                Roles.Remove(roleToUpdate);
+                Roles.Add(role);
+                var roleList = new List<RoleWithPermissions>(Roles);
+                roleList.Sort((x, y) => x.Id.CompareTo(y.Id));
+                Roles = new ObservableCollection<RoleWithPermissions>(roleList);
+            }
         }
     }
 }

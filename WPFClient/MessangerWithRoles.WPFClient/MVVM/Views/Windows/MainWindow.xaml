@@ -46,7 +46,8 @@
                 <Border Grid.Column="0" 
               BorderThickness="0 0 3 0" BorderBrush="#2B3252">
                     <Grid>
-                        <Button Content="〠" FontSize="20" VerticalContentAlignment="Top"
+                        <Button Command="{Binding OpenAccountSettingsCommand}"
+                                Content="〠" FontSize="20" VerticalContentAlignment="Top"
                                 Height="30px" Margin="5px"  
                                 VerticalAlignment="Top"></Button>
                     </Grid>

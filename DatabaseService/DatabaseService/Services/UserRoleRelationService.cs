@@ -16,19 +16,7 @@ namespace DatabaseService.Services
             _databaseContext = databaseContext;
         }
 
-        public Task<ServiceResponse<List<Role>>> GetUserRolesInChat(int chatId, int userId)
-        {
-            var userRoles =  _databaseContext.UserRoleRelations.Where(urr => urr.UserId == userId)
-                             .Join(_databaseContext.Roles,
-                                  urr => urr.RoleId,
-                                  role => role.Id,
-                                  (urr, role) => role)
-                             .ToList();
-
-            return Task.FromResult(new ServiceResponse<List<Role>>() { Data = userRoles });
-        }
-
-        public async Task<ServiceResponse<bool>> GiveRole(UserRoleRelationDto userRoleRelationDto)
+        public async Task<ServiceResponse<bool>> AsignRole(UserRoleRelationDto userRoleRelationDto)
         {
             if (_databaseContext.UserRoleRelations.Any(x => x.RoleId == userRoleRelationDto.RoleId && x.UserId == userRoleRelationDto.UserId))
             {
@@ -47,11 +35,29 @@ namespace DatabaseService.Services
             return new ServiceResponse<bool>() { Data = true };
         }
 
-        public async Task<ServiceResponse<bool>> RemoveRole(UserRoleRelationDto userRoleRelationDto)
+        public async Task<ServiceResponse<List<UserDto>>> GetAllRoleAssinges(int roleId)
+        {
+            if (!await _databaseContext.Roles.AnyAsync(x => x.Id == roleId))
+            {
+                return new ServiceResponse<List<UserDto>>() { Success = false, Message = "This role is not exists" };
+            }
+
+            var assignes = _databaseContext.UserRoleRelations.Where(x => x.RoleId == roleId)
+                                           .Select(x => new UserDto()
+                                           {
+                                               Id = x.User.Id,
+                                               DisplayName = x.User.DisplayName,
+                                               Username = x.User.Username
+                                           }).ToList();
+
+            return new ServiceResponse<List<UserDto>>() { Data = assignes };
+        }
+
+        public async Task<ServiceResponse<bool>> RemoveRole(int roleId, int userId)
         {
             var userRoleRelation = await _databaseContext.UserRoleRelations
-                .FirstOrDefaultAsync(x => x.RoleId == userRoleRelationDto.RoleId &&
-                                     x.UserId == userRoleRelationDto.UserId);
+                .FirstOrDefaultAsync(x => x.RoleId == roleId &&
+                                     x.UserId == userId);
 
             if (userRoleRelation == null)
             {

@@ -68,14 +68,18 @@ namespace MessengerWithRoles.WPFClient.Services
         public async Task<GroupViewModel> GroupModelToViewModel(Chat group)
         {
             var chatsService = ServiceLocator.Instance.GetService<PersonalChatsService>();
+            var rolesService = ServiceLocator.Instance.GetService<RolesService>();
+
 
             var messages = await chatsService.GetChatMessages(group.Id);
+            var roles = await rolesService.GetChatRoles(group.Id);
 
             return new GroupViewModel(group.Id, 
                     group.ChatInfo.Name, 
                     group.ChatInfo.Description, 
                     new ObservableCollection<User>(group.Members), 
-                    messages);
+                    messages,
+                    new ObservableCollection<RoleWithPermissions>(roles.Data));
         }
 
         public async Task<ServiceResponse<bool>> DeleteMember(int chatId, int userId)

@@ -8,9 +8,10 @@ using System;
 using MessengerWithRoles.WPFClient.MVVM.Models;
 using System.Collections.ObjectModel;
 using System.Windows.Controls;
-using MessengerWithRoles.WPFClient.MVVM.Views.UserControls;
 using System.Windows;
 using System.Windows.Controls.Ribbon.Primitives;
+using MessengerWithRoles.WPFClient.MVVM.Views.UserControls.ChatSettingsPages;
+using System.Collections.Generic;
 
 namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 {
@@ -77,17 +78,152 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             set => Set(ref _settingsVisibility, value);
         }
 
+        private string _settingsDisplayName;
+        public string SettingsDisplayName
+        {
+            get => _settingsDisplayName;
+            set => Set(ref _settingsDisplayName, value);
+        }
+
+        private string _settingsDescription;
+        public string SettingsDescription
+        {
+            get => _settingsDescription;
+            set => Set(ref _settingsDescription, value);
+        }
+
         public ICommand OpenSettingsCommand { get; }
 
         private bool CanExecuteOpenSettingsCommand(object p) => true;
 
         private void OnExecuteOpenSettingsCommand(object p)
         {
+            SettingsDescription = Group.Description;
+            SettingsDisplayName = Group.DisplayName;
+
+            CurrentRolePage = new RoleListSettings();
+            CurrentRolePage.DataContext = this;
+
             SettingsPage = new ChatSettings();
             SettingsPage.DataContext = this;
 
             ChatVisibility = Visibility.Collapsed;
             SettingsVisibility = Visibility.Visible;
+
+
+        }
+
+        private string _roleNameToCreate;
+        public string RoleNameToCreate
+        {
+            get => _roleNameToCreate;
+            set => Set(ref _roleNameToCreate, value);
+        }
+
+        public ICommand CreateRoleCommand { get; }
+
+        private bool CanExecuteCreateRoleCommand(object p) => true;
+
+        private async void OnExecuteCreateRoleCommand(object p)
+        {
+            var rolesService = ServiceLocator.Instance.GetService<RolesService>();
+
+            var response = await rolesService.CreateRole(new RoleDto()
+            {
+                Name = RoleNameToCreate,
+                ChatId = Group.Id
+            });
+
+            if (response.Data == null)
+            {
+                MessageBox.Show("Error with creating role:\n" + response.Message);
+                return;
+            }
+
+            Group.AddRole(new RoleWithPermissions()
+            {
+                Id = response.Data.Id,
+                Name = RoleNameToCreate,
+                Permissions = new List<ChatPermission>()
+            });
+        }
+
+        private ContentControl _currentRolePage;
+        public ContentControl CurrentRolePage
+        {
+            get => _currentRolePage;
+            set => Set(ref _currentRolePage, value);
+        }
+
+        private RoleToConfigureViewModel _roleToConfigure;
+        public RoleToConfigureViewModel RoleToConfigure
+        {
+            get => _roleToConfigure;
+            set => Set(ref _roleToConfigure, value);
+        }
+
+        public ICommand EditRoleCommand { get; }
+
+        private bool CanExecuteEditRoleCommand(object p) => true;
+
+        private async void OnExecuteEditRoleCommand(object p)
+        {
+            var roleToEdit = p as RoleWithPermissions;
+
+            var rolesService = ServiceLocator.Instance.GetService<RolesService>();
+            var permissions = await rolesService.GetAllPermissions();
+            var assignes = await rolesService.GetAllAssignes(roleToEdit.Id);
+
+            if (roleToEdit.Permissions == null)
+            {
+                roleToEdit.Permissions = new List<ChatPermission>();
+            }
+            RoleToConfigure = new RoleToConfigureViewModel(roleToEdit, permissions.Data, 
+                new List<User>(Group.Members), 
+                assignes.Data == null ? new List<User>() : assignes.Data);
+
+            CurrentRolePage = new RoleEditSettings();
+            CurrentRolePage.DataContext = this;
+        }
+
+        public ICommand SaveRoleEditChangesCommand { get; }
+
+        private bool CanExecuteSaveRoleEditChangesCommand(object p) => true;
+
+        private async void OnExecuteSaveRoleEditChangesCommand(object p)
+        {
+            var rolesService = ServiceLocator.Instance.GetService<RolesService>();
+
+            var updatedRole = new RoleWithPermissions()
+            {
+                Id = RoleToConfigure.Role.Id,
+                Name = RoleToConfigure.Name,
+                Permissions = RoleToConfigure.GetChatPermissions(),
+            };
+
+            var response = await rolesService.UpdateRole(updatedRole);
+
+            if (response.Data == null)
+            {
+                MessageBox.Show("Error saving role:\n" + response.Message);
+            }
+            else
+            {
+                Group.UpdateRole(response.Data);
+            }  
+
+            CurrentRolePage = new RoleListSettings();
+            CurrentRolePage.DataContext = this;
+        }
+
+        public ICommand CancelEditRoleCommand { get; }
+
+        private bool CanExecuteCancelEditRoleCommand(object p) => true;
+
+        private async void OnExecuteCancelEditRoleCommand(object p)
+        {
+            CurrentRolePage = new RoleListSettings();
+            CurrentRolePage.DataContext = this;
         }
 
         public ICommand CloseSettingsCommand { get; }
@@ -140,7 +276,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             var userToDelete = p as User;
             var resposne = await groupService.DeleteMember(Group.Id, userToDelete.Id);
 
-            if (resposne.Data == null)
+            if (resposne.Data != true)
             {
                 MessageBox.Show(resposne.Message);
                 return;
@@ -166,8 +302,10 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             CloseSettingsCommand = new LambdaCommand(OnExecuteCloseSettingsCommand, CanExecuteCloseSettingsCommand);
             AddMemberCommand = new LambdaCommand(OnExecuteAddMemberCommand, CanExecuteAddMemberCommand);
             DeleteMemberCommand = new LambdaCommand(OnExecuteDeleteMemberCommand, CanExecuteDeleteMemberCommand);
+            EditRoleCommand = new LambdaCommand(OnExecuteEditRoleCommand, CanExecuteEditRoleCommand);
+            CreateRoleCommand = new LambdaCommand(OnExecuteCreateRoleCommand, CanExecuteCreateRoleCommand);
+            SaveRoleEditChangesCommand = new LambdaCommand(OnExecuteSaveRoleEditChangesCommand, CanExecuteSaveRoleEditChangesCommand);
+            CancelEditRoleCommand = new LambdaCommand(OnExecuteCancelEditRoleCommand, CanExecuteCancelEditRoleCommand);
         }
-
-
     }
 }

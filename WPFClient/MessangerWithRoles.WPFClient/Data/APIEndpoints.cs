@@ -55,7 +55,15 @@ namespace MessengerWithRoles.WPFClient.Data
         public static string DeleteChatMemberDELETE { get => $"http://{IPAddress}:{Ports.Chats}/api/ChatMembers"; }
 
         // Permissions
-        public static string GetAllPermissionsGET { get => $"http://{IPAddress}:{Ports.Chats}/api/Permissions"; }
+        public static string GetAllPermissionsGET { get => $"http://{IPAddress}:{Ports.Roles}/api/Permissions"; }
+
+        // Roles
+        public static string CreateRolePOST { get => $"http://{IPAddress}:{Ports.Roles}/api/Roles"; }
+        public static string GetAllChatRolesGET { get => $"http://{IPAddress}:{Ports.Roles}/api/Roles"; }
+        public static string AssignRolePOST { get => $"http://{IPAddress}:{Ports.Roles}/api/Roles/assignes"; }
+        public static string UnAssignRoleDELETE{ get => $"http://{IPAddress}:{Ports.Roles}/api/Roles/assignes"; }
+        public static string GetAllRoleAssignesGET { get => $"http://{IPAddress}:{Ports.Roles}/api/Roles/assignes"; }
+        public static string UpdateRolePATCH { get => $"http://{IPAddress}:{Ports.Roles}/api/Roles"; }
 
         // messages service
         public static string GetChatMessagesByChatIdGET { get => $"http://{IPAddress}:{Ports.Messages}/api/Messages"; }

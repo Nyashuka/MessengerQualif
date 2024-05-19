@@ -40,10 +40,12 @@ namespace MessengerWithRoles.WPFClient.MVVM.Views.Windows
         private void OnLoggedInAccount(IEventBusArgs eventBusArgs)
         {
             var mainWindow = new MainWindow();
-            Application.Current.MainWindow = mainWindow;
+            var current = Application.Current.MainWindow;
+
             mainWindow.Show();
 
-            Close();
+            Application.Current.MainWindow = mainWindow;
+            current.Close();
         }
     }
 }

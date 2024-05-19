@@ -102,6 +102,18 @@ namespace DatabaseService.Services
 
         public async Task<ServiceResponse<bool>> DeleteMember(int chatId, int userId)
         {
+            var chatInfo = await _databaseContext.GroupChatInfos.FirstOrDefaultAsync(x => x.ChatId == chatId);
+
+            if(chatInfo != null && chatInfo.OwnerId == userId)
+            {
+                return new ServiceResponse<bool>()
+                {
+                    Data = false,
+                    Success = false,
+                    Message = $"Ahah, nice try, but Owner can not be deleted from chat! :D"
+                };
+            }    
+
             var chatMember = _databaseContext.ChatMembers
                             .FirstOrDefault(x => x.ChatId == chatId &&
                                                  x.UserId == userId);

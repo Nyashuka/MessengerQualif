@@ -58,14 +58,14 @@ namespace ChatsService.ChatMembers
         }
 
         [HttpDelete]
-        public async Task<ActionResult<ServiceResponse<bool>>> AddMemberByUsername(string accessToken, int chatId, int userId)
+        public async Task<ActionResult<ServiceResponse<bool>>> DeleteMember(string accessToken, int chatId, int userId)
         {
             var authData = await _authService.TryGetAuthenticatedUser(accessToken);
 
             if (authData.Data == null || !authData.HasAccess)
                 return Unauthorized();
 
-            if (!(await _actionAccessService.HasAccess(new AddChatMemberChatAction(), chatId, authData.Data.UserId)))
+            if (!(await _actionAccessService.HasAccess(new DeleteChatMemberChatAction(), chatId, authData.Data.UserId)))
                 return Unauthorized();
 
             var response = await _chatMembersService.DeleteMember(chatId, userId);

@@ -19,25 +19,25 @@ namespace DatabaseService.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<Role>>> GetUserRoles(int chatId, int userId)
+        public async Task<ActionResult<ServiceResponse<bool>>> GetAllRoleAssignes(int roleId)
         {
-            var resposne = await _userRoleRelationService.GetUserRolesInChat(chatId, userId);
+            var response = await _userRoleRelationService.GetAllRoleAssinges(roleId);
 
-            return Ok(resposne);
+            return Ok(response);
         }
 
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<bool>>> GiveRole(UserRoleRelationDto userRoleRelationDto)
+        public async Task<ActionResult<ServiceResponse<bool>>> AsignRole(UserRoleRelationDto userRoleRelationDto)
         {
-            var response = await _userRoleRelationService.GiveRole(userRoleRelationDto);
+            var response = await _userRoleRelationService.AsignRole(userRoleRelationDto);
 
             return Ok(response);
         }
 
         [HttpDelete]
-        public async Task<ActionResult<ServiceResponse<bool>>> RemoveRole(UserRoleRelationDto userRoleRelationDto)
+        public async Task<ActionResult<ServiceResponse<bool>>> UnAsignRole(int roleId, int userId)
         {
-            var response = await _userRoleRelationService.RemoveRole(userRoleRelationDto);
+            var response = await _userRoleRelationService.RemoveRole(roleId, userId);
 
             return Ok(response);
         }

@@ -241,7 +241,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             {
                 var newChat = new GroupViewModel(chatFromDB.Data.Id, chatFromDB.Data.ChatInfo.Name,
                     chatFromDB.Data.ChatInfo.Description, 
-                    new ObservableCollection<User>(chatFromDB.Data.Members), messages);
+                    new ObservableCollection<User>(chatFromDB.Data.Members), messages, chat.Roles);
 
                 System.Windows.Application.Current.Dispatcher.Invoke(delegate
                 {
@@ -267,6 +267,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
         public async void OnExecuteCreateGroupCommandCommand(object p)
         {
             var groupsService = ServiceLocator.Instance.GetService<GroupsServcie>();
+            var rolesService = ServiceLocator.Instance.GetService<RolesService>();
             var createGroupResponse = await groupsService.CreateGroup(CreateGroupChatDto);
 
             if (createGroupResponse.Data == null)
@@ -277,10 +278,13 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 
             var group = createGroupResponse.Data;
 
+            var roles = await rolesService.GetChatRoles(group.Id);
+
             GroupViewModel groupViewModel = new GroupViewModel(group.Id, group.ChatInfo.Name,
                 group.ChatInfo.Description,
                 new ObservableCollection<User>() { group.ChatInfo.Owner },
-                new ObservableCollection<Message>());
+                new ObservableCollection<Message>(),
+                new ObservableCollection<RoleWithPermissions>(roles.Data));
 
             Groups.Add(groupViewModel);
         }
@@ -305,6 +309,16 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             await LoadPersonalChats();
         }
 
+        public ICommand OpenAccountSettingsCommand { get; }
+
+        public bool CanExecuteOpenAccountSettingsCommand(object p) => true;
+
+        public void OnExecuteOpenAccountSettingsCommand(object p)
+        {
+            CurrentContent = new AccountSettings();
+            CurrentContent.DataContext = new AccountSettingsViewModel();
+        }
+
         public MainWindowViewModel()
         {
 
@@ -316,9 +330,6 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             EventBus eventBus = ServiceLocator.Instance.GetService<EventBus>();
 
             AuthService authService = ServiceLocator.Instance.GetService<AuthService>();
-            NotificationService messagesService = new NotificationService();
-            messagesService.Start(authService.AccessToken);
-            ServiceLocator.Instance.RegisterService(messagesService);
 
             eventBus.Subscribe<ChatDataIEventBusArgs>(EventBusDefinitions.OpenChat, OpenChat);
             eventBus.Subscribe<ChatDataIEventBusArgs>(EventBusDefinitions.OpenGroup, OpenGroup);
@@ -331,6 +342,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             OpenCreateGroupWindow = new LambdaCommand(OnExecuteOpenCreateGroupWindowCommand, CanExecuteOpenCreateGroupWindowCommand);
             SelectedChatCommand = new LambdaCommand(OnExecuteSelectedChatCommandCommand, CanExecuteSelectedChatCommandCommand);
             CreateGroupCommand = new LambdaCommand(OnExecuteCreateGroupCommandCommand, CanExecuteCreateGroupCommandCommand);
+            OpenAccountSettingsCommand = new LambdaCommand(OnExecuteOpenAccountSettingsCommand, CanExecuteOpenAccountSettingsCommand);
 
         }
     }
