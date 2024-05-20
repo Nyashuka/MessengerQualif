@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ActionAccess\Data\" />
     <Folder Include="ActionAccess\Check\" />
   </ItemGroup>
 

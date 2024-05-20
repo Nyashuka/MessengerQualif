@@ -30,6 +30,19 @@ namespace AccountManagementService.Controllers
             return Ok(response);
         }
 
+        [HttpPut]
+        public async Task<ActionResult<ServiceResponse<List<User>>>> UpdateUser(string accessToken, User user)
+        {
+            var authenticatedUser = await _authService.TryGetAuthenticatedUser(accessToken);
+
+            if (!authenticatedUser.HasAccess || authenticatedUser.Data == null || authenticatedUser.Data.UserId != user.Id)
+                return Unauthorized();
+
+            var response = await _userService.UpdateUser(user);
+
+            return Ok(response);
+        }
+
         [HttpGet("get-user")]
         public async Task<ActionResult<ServiceResponse<List<User>>>> GetUserData(string accessToken)
         {

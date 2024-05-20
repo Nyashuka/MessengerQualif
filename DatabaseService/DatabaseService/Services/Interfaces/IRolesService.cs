@@ -12,5 +12,6 @@ namespace DatabaseService.Services.Interfaces
         Task<ServiceResponse<bool>> DeleteRole(int roleId);
         Task<ServiceResponse<List<RoleWithPermissions>>> GetAllUserRoles(int chatId, int userId);
         Task<ServiceResponse<RoleWithPermissions>> CreateDefaultRole(int chatId);
+        Task<ServiceResponse<List<ChatPermission>>> GetAllPermissions(int chatId, int userId);
     }
 }

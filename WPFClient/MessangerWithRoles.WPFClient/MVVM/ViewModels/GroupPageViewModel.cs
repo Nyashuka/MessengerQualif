@@ -12,10 +12,12 @@ using System.Windows;
 using System.Windows.Controls.Ribbon.Primitives;
 using MessengerWithRoles.WPFClient.MVVM.Views.UserControls.ChatSettingsPages;
 using System.Collections.Generic;
+using GongSolutions.Wpf.DragDrop;
+using System.Data;
 
 namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 {
-    public class GroupPageViewModel : BaseViewModel
+    public class GroupPageViewModel : BaseViewModel, IDropTarget
     {
         public GroupViewModel _group;
         public GroupViewModel Group
@@ -51,6 +53,12 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 
             var messagesService = ServiceLocator.Instance.GetService<MessagesService>();
             var sendMessageResponse = await messagesService.SendMessage(messageDto);
+
+            if(sendMessageResponse.Data == null)
+            {
+                MessageBox.Show("Send message Error:\n" + sendMessageResponse.Message);
+                return;
+            }
 
             Group.AddMessage(sendMessageResponse.Data, false);
             MessageText = "";
@@ -288,6 +296,58 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
         private void MessegesListChangedInvoked()
         {
             MessegesListChanged?.Invoke();
+        }
+
+        public void DragOver(IDropInfo dropInfo)
+        {
+            if (dropInfo.Data is RoleWithPermissions && dropInfo.TargetItem is RoleWithPermissions)
+            {
+                dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
+                dropInfo.Effects = DragDropEffects.Move;
+            }
+        }
+
+        public void Drop(IDropInfo dropInfo)
+        {
+            var source = (RoleWithPermissions)dropInfo.Data;
+            var target = (RoleWithPermissions)dropInfo.TargetItem;
+
+            if (source != null && target != null && source != target)
+            {
+                var sourceIndex = Group.Roles.IndexOf(source);
+                var targetIndex = Group.Roles.IndexOf(target);
+
+                if (sourceIndex < targetIndex)
+                {
+                    Group.Roles.Move(sourceIndex, targetIndex);
+                }
+                else
+                {
+                    Group.Roles.Move(sourceIndex, targetIndex);
+                }
+
+                // Перенумерація пріоритетів
+                for (int i = 0; i < Group.Roles.Count; i++)
+                {
+                    Group.Roles[i].Priority = i + 1;
+                }
+            }
+            else if (source != null && target == null) // Для переміщення на самий верх або низ
+            {
+                var sourceIndex = Group.Roles.IndexOf(source);
+                var targetIndex = dropInfo.InsertIndex;
+
+                if (targetIndex >= 0 && targetIndex <= Group.Roles.Count)
+                {
+                    Group.Roles.Move(sourceIndex, targetIndex);
+                }
+
+                // Перенумерація пріоритетів
+                for (int i = 0; i < Group.Roles.Count; i++)
+                {
+                    Group.Roles[i].Priority = i + 1;
+                }
+            }
         }
 
         public GroupPageViewModel(GroupViewModel group)

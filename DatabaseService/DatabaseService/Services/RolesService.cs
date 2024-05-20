@@ -6,6 +6,7 @@ using DatabaseService.Models.DatabaseModels;
 using DatabaseService.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
+using System.Runtime.CompilerServices;
 
 namespace DatabaseService.Services
 {
@@ -14,7 +15,7 @@ namespace DatabaseService.Services
         private readonly DatabaseContext _databaseContext;
 
         private const string DefaultRoleName = "Member";
-        
+
         private readonly List<int> DefaultPermissions = new List<int>()
         {
             Convert.ToInt32(PermissionEnum.SendTextMessages),
@@ -107,7 +108,7 @@ namespace DatabaseService.Services
                             .Where(x => x.UserId == userId)
                             .Select(r => new Role()
                             {
-                                Id = r.Id,
+                                Id = r.RoleId,
                                 ChatId = r.Role.ChatId,
                                 Name = r.Role.Name,
                             })
@@ -136,19 +137,22 @@ namespace DatabaseService.Services
 
         private RoleWithPermissions GetRoleWithPermissions(Role role)
         {
+            var rolePermissionRelations = _databaseContext.RolePermissionRelations
+                .Where(x => x.RoleId == role.Id && x.IsAllowed == true)
+                .ToList();
+
+            var permissions = new List<ChatPermission>();
+            foreach (var permissionRelation in rolePermissionRelations)
+            {
+                permissions.Add(_databaseContext.ChatPermissions.First(x => x.Id == permissionRelation.ChatPermissionId));
+            }
 
             var roleWithPermission = new RoleWithPermissions()
             {
                 Id = role.Id,
                 Name = role.Name,
                 ChatId = role.ChatId,
-                Permissions = _databaseContext.RolePermissionRelations
-                                .Where(x => x.RoleId == role.Id && x.IsAllowed == true)
-                                .Select(p => new ChatPermission()
-                                {
-                                    Id = p.ChatPermissionId,
-                                    Name = p.ChatPermission.Name
-                                }).ToList()
+                Permissions = permissions
             };
 
             return roleWithPermission;
@@ -190,6 +194,38 @@ namespace DatabaseService.Services
             return new ServiceResponse<RoleWithPermissions> { Data = role };
         }
 
-        
+        private class ChatPermissionEqualityComparer : IEqualityComparer<ChatPermission>
+        {
+            public bool Equals(ChatPermission? cp1, ChatPermission? cp2)
+            {
+                if (ReferenceEquals(cp1, cp2))
+                    return true;
+
+                if (cp1 is null || cp2 is null)
+                    return false;
+
+                return cp1.Id == cp2.Id;
+            }
+
+            public int GetHashCode(ChatPermission cp) => cp.Id;
+        }
+
+        public async Task<ServiceResponse<List<ChatPermission>>> GetAllPermissions(int chatId, int userId)
+        {
+            var userRoles = (await GetAllUserRoles(chatId, userId)).Data;
+
+            ChatPermissionEqualityComparer comparer = new();
+            HashSet<ChatPermission> uniqePermissions = new HashSet<ChatPermission>(comparer);
+
+            foreach (var userRole in userRoles)
+            {
+                if (userRole.Permissions != null && userRole.Permissions.Count > 0)
+                {
+                    uniqePermissions.UnionWith(userRole.Permissions);
+                }
+            }
+
+            return new ServiceResponse<List<ChatPermission>> { Data = new List<ChatPermission>(uniqePermissions) };
+        }
     }
 }

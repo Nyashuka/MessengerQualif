@@ -20,7 +20,8 @@
         // roles
         public const string AssignRolePOST = $"{DatabaseService}/api/UserRoleRelations";
         public const string UnAssignRoleDELETE = $"{DatabaseService}/api/UserRoleRelations";
-        public const string GetAllRoleAssignesGET = $"{DatabaseService}/api/UserRoleRelations";
+        public const string GetAllRoleAssignersGET = $"{DatabaseService}/api/UserRoleRelations";
+        public const string GetAllUserPermissionsGET = $"{DatabaseService}/api/Roles/permissions";
         
         // Auth service
         public const string AuthorizationServiceIP = "http://127.0.0.1:5292";

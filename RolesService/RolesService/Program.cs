@@ -1,4 +1,5 @@
 
+using RolesService.ActionAccess.Services;
 using RolesService.Authorization;
 using RolesService.Permissions.Services;
 using RolesService.Roles.Services;
@@ -22,6 +23,7 @@ namespace RolesService
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IRolesService, Roles.Services.RolesService>();
             builder.Services.AddScoped<IPermissionsService, PermissionsService>();
+            builder.Services.AddScoped<IActionAccessService, ActionAccessService>();
 
             var app = builder.Build();
 

@@ -30,5 +30,14 @@ namespace AccountManagementService.Services
 
             return data;
         }
+
+        public async Task<ServiceResponse<UserDto>> UpdateUser(User user)
+        {
+            var databaseResponse = await _httpClient.PatchAsJsonAsync($"{APIEndpoints.GetUserDataGET}", user);
+
+            var data = await databaseResponse.Content.ReadFromJsonAsync<ServiceResponse<UserDto>>();
+
+            return data;
+        }
     }
 }

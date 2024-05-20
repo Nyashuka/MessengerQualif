@@ -23,6 +23,9 @@
         public const string AuthorizationServiceIP = "http://127.0.0.1:5292";
         public const string IsUserAuthenticatedGET = $"{AuthorizationServiceIP}/api/Auth/is-user-authenticated";
 
-
+        // CAN DO IT????
+        public const string RolesService = "http://127.0.0.1:5296";
+        public const string CanDeleteMemberPOST = $"{RolesService}/api/ActionAccess/can-delete-member";
+        public const string CanAddMemberPOST = $"{RolesService}/api/ActionAccess/can-add-member";
     }
 }

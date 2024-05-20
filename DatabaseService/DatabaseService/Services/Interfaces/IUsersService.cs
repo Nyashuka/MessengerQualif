@@ -10,6 +10,6 @@ namespace DatabaseService.Services.Interfaces
         Task<ServiceResponse<UserDto>> GetUserByUserId(int userId);
         Task<ServiceResponse<UserDto>> GetUserByAccountId(int accountId);
         Task<ServiceResponse<User>> CreateUser(UserDto userDto);
-        Task<ServiceResponse<User>> UpdateUser(int userId, UserDto newUserData);
+        Task<ServiceResponse<User>> UpdateUser(UserDto newUserData);
     }
 }

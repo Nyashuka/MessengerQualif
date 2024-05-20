@@ -1,5 +1,6 @@
 ﻿using DatabaseService.DTOs;
 using DatabaseService.Models;
+using DatabaseService.Models.DatabaseModels;
 using DatabaseService.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +21,14 @@ namespace DatabaseService.Controllers
         public async Task<ActionResult<ServiceResponse<List<UserDto>>>> GetOtherUsersForUser(int userId)
         {
             var response = await _userService.GetOtherUsersForUser(userId);
+
+            return Ok(response);
+        }
+
+        [HttpPatch]
+        public async Task<ActionResult<ServiceResponse<User>>> UpdateUser(UserDto userDto)
+        {
+            var response = await _userService.UpdateUser(userDto);
 
             return Ok(response);
         }

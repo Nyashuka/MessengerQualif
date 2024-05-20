@@ -2,6 +2,6 @@
 {
     public interface IChatAction
     {
-        Task<bool> HasAccess(HttpClient httpClient, int chatId, int userId);
+        Task<bool> HasAccess(HttpClient httpClient);
     }
 }

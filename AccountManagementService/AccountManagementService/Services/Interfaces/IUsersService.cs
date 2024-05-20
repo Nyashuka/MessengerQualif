@@ -8,5 +8,6 @@ namespace AccountManagementService.Services.Interfaces
         Task<ServiceResponse<List<User>>> GetOtherUsersForUser(int userId);
 
         Task<ServiceResponse<UserDto>> GetUserData(int userId);
+        Task<ServiceResponse<UserDto>> UpdateUser(User user);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using RolesService.Models;
+using RolesService.Permissions.Models;
 using RolesService.Roles.Dto;
 using RolesService.Roles.Models;
 using RolesService.Users;
@@ -42,20 +43,20 @@ namespace RolesService.Roles.Services
             return data;
         }
 
-        public async Task<ServiceResponse<List<User>>> GetAllAssinges(int roleId)
+        public async Task<ServiceResponse<List<User>>> GetAllAssingners(int roleId)
         {
-            var databaseResponse = await _httpClient.GetAsync($"{APIEndpoints.GetAllRoleAssignesGET}?roleId={roleId}");
+            var databaseResponse = await _httpClient.GetAsync($"{APIEndpoints.GetAllRoleAssignersGET}?roleId={roleId}");
 
             var data = await databaseResponse.Content.ReadFromJsonAsync<ServiceResponse<List<User>>>();
 
             return data;
         }
 
-        public async Task<ServiceResponse<List<Role>>> GetAllChatRoles(int chatId)
+        public async Task<ServiceResponse<List<RoleWithPermissions>>> GetAllChatRoles(int chatId)
         {
             var databaseResponse = await _httpClient.GetAsync($"{APIEndpoints.GetAllGroupRolesGET}?chatId={chatId}");
 
-            var data = await databaseResponse.Content.ReadFromJsonAsync<ServiceResponse<List<Role>>>();
+            var data = await databaseResponse.Content.ReadFromJsonAsync<ServiceResponse<List<RoleWithPermissions>>>();
 
             return data;
         }
@@ -65,6 +66,15 @@ namespace RolesService.Roles.Services
             var databaseResponse = await _httpClient.PatchAsJsonAsync(APIEndpoints.UpdateRolePATCH, role);
            
             var data = await databaseResponse.Content.ReadFromJsonAsync<ServiceResponse<RoleWithPermissions>>();
+
+            return data;
+        }
+
+        public async Task<ServiceResponse<List<Permission>>> GetAllUserPermissions(int chatId, int userId)
+        {
+            var databaseResponse = await _httpClient.GetAsync($"{APIEndpoints.GetAllUserPermissionsGET}?chatId={chatId}&userId={userId}");
+
+            var data = await databaseResponse.Content.ReadFromJsonAsync<ServiceResponse<List<Permission>>>();
 
             return data;
         }

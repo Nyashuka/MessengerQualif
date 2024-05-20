@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
              xmlns:local="clr-namespace:MessengerWithRoles.WPFClient.MVVM.Views.UserControls.ChatSettingsPages"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -19,41 +20,62 @@
                 <TextBox Text="{Binding RoleNameToCreate}" Width="150" Margin="5"/>
                 <Button Command="{Binding CreateRoleCommand}" Content="Crete role" Margin="5"/>
             </StackPanel>
+            <TabControl Grid.Row="1">
+                <TabItem Header="Roles list">
+                    <DataGrid  AutoGenerateColumns="False"
+            ItemsSource="{Binding Group.Roles}"
+            ScrollViewer.CanContentScroll="True"
+            VerticalScrollBarVisibility="Visible"
+            HorizontalScrollBarVisibility="Visible"
+            CanUserAddRows="false">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn IsReadOnly="True" Width="4*" Header="Role Name" 
+        Binding="{Binding Name}" />
 
-            <DataGrid Grid.Row="1" AutoGenerateColumns="False"
-                      ItemsSource="{Binding Group.Roles}"
-                      ScrollViewer.CanContentScroll="True"
-                      VerticalScrollBarVisibility="Visible"
-                      HorizontalScrollBarVisibility="Visible"
-                      CanUserAddRows="false">
-                <DataGrid.Columns>
-                    <DataGridTextColumn IsReadOnly="True" Width="1*" Header="Role Name" 
-                  Binding="{Binding Name}" />
+                            <DataGridTemplateColumn Width="1*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="Edit" 
+Command="{Binding Path=DataContext.EditRoleCommand, 
+                RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" 
+CommandParameter="{Binding}" />
+                                    </DataTemplate>
 
-                    <DataGridTemplateColumn>
-                        <DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Width="1*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="Delete" 
+                    Command="{Binding Path=DataContext.DeleteRoleCommand, 
+                                    RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" 
+                    CommandParameter="{Binding}" />
+                                    </DataTemplate>
+
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+
+                <TabItem Header="Priority" Visibility="Hidden">
+                    <ListBox x:Name="RoleListBox" ItemsSource="{Binding Group.Roles}" 
+                 
+                 dd:DragDrop.IsDragSource="True"
+                 dd:DragDrop.IsDropTarget="True"
+                 dd:DragDrop.DropHandler="{Binding}">
+                        <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <Button Content="Edit" 
-          Command="{Binding Path=DataContext.EditRoleCommand, 
-                          RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" 
-          CommandParameter="{Binding}" />
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Priority}" Width="30"/>
+                                    <TextBlock Text="{Binding Name}" />
+                                </StackPanel>
                             </DataTemplate>
-
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn>
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Content="Delete" 
-                              Command="{Binding Path=DataContext.DeleteRoleCommand, 
-                                              RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" 
-                              CommandParameter="{Binding}" />
-                            </DataTemplate>
-
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </TabItem>
+            </TabControl>
+            
         </Grid>
     </Grid>
 </UserControl>

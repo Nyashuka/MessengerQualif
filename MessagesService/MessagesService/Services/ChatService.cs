@@ -1,4 +1,5 @@
-﻿using MessagesService.Models.Requests;
+﻿using MessagesService.Chat.Dto;
+using MessagesService.Models.Requests;
 using MessagesService.Services.Interfaces;
 
 namespace MessagesService.Services
@@ -17,5 +18,13 @@ namespace MessagesService.Services
             throw new NotImplementedException();
         }
 
+        public async Task<ServiceResponse<ChatDto>> GetChat(int chatId)
+        {
+            var databaseResponse = await _httpClient.GetAsync($"{APIEndpoints.GetGroupByIdGET}?chatId={chatId}");
+
+            var data = await databaseResponse.Content.ReadFromJsonAsync<ServiceResponse<ChatDto>>();
+
+            return data;
+        }
     }
 }

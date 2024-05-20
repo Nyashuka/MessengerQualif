@@ -33,6 +33,14 @@ namespace DatabaseService.Controllers
             return Ok(response);
         }
 
+        [HttpGet("permissions")]
+        public async Task<ActionResult<ServiceResponse<List<ChatPermission>>>> GetAllPermissions(int chatId, int userId)
+        {
+            var response = await _rolesService.GetAllPermissions(chatId, userId);
+
+            return Ok(response);
+        }
+
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<Role>>> CreateRole(RoleDto roleDto)
         {

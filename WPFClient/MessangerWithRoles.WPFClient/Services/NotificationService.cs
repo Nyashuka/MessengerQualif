@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Shapes;
 using MessengerWithRoles.WPFClient.Data;
 using MessengerWithRoles.WPFClient.Data.Requests;
 using MessengerWithRoles.WPFClient.DTOs;
@@ -29,10 +30,10 @@ namespace MessengerWithRoles.WPFClient.Services
 
         public void Start(string accessToken)
         {
-            if(_cancellationToken != null)
+            if (_cancellationToken != null)
                 _cancellationToken.Cancel();
 
-            if(_notificationReceiviengTask != null)
+            if (_notificationReceiviengTask != null)
                 _notificationReceiviengTask.Wait();
 
             _webSocket = new ClientWebSocket();
@@ -52,7 +53,7 @@ namespace MessengerWithRoles.WPFClient.Services
 
                     byte[] buffer = new byte[1024];
 
-                    while (_webSocket.State == WebSocketState.Open || !cancellationToken.IsCancellationRequested)
+                    while (_webSocket.State == WebSocketState.Open && !cancellationToken.IsCancellationRequested)
                     {
                         WebSocketReceiveResult result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationToken);
 
@@ -74,7 +75,18 @@ namespace MessengerWithRoles.WPFClient.Services
                 }
                 catch (Exception e)
                 {
-                    if(!cancellationToken.IsCancellationRequested)
+                    //if (e.Message.Contains("The websocket has already been started"))
+                    //{
+                        
+                    //}
+                    if (_webSocket.State == WebSocketState.Open)
+                    {
+                        await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Connection closed.", CancellationToken.None);
+                        MessageBox.Show("Disconnected from notification server.");
+                    }
+
+                    //at System.Net.WebSockets.ClientWebSocketOptions.ThrowIfReadOnly() at System.Net.WebSockets.ClientWebSocketOptions.SetRequestHeader(String headerName, String headerValue) at MessengerWithRoles.WPFClient.Services.NotificationService.d__6.MoveNext() in E:\QualifWork\WPFClient\MessangerWithRoles.WPFClient\Services\NotificationService.cs:line 49
+                    if (!cancellationToken.IsCancellationRequested)
                         MessageBox.Show("Notification service error!(reconnect after 5 seconds)\n" + e.Message);
                 }
 
@@ -83,7 +95,7 @@ namespace MessengerWithRoles.WPFClient.Services
                     await Task.Delay(5000, cancellationToken);
                 }
             }
-            
+
         }
 
         private void NotifyClient_MessageReceived(SocketResponse response)
@@ -92,7 +104,7 @@ namespace MessengerWithRoles.WPFClient.Services
             {
                 MessageDto message = JsonSerializer.Deserialize<MessageDto>(response.JsonData);
 
-                ServiceLocator.Instance.GetService<EventBus>().Raise(EventBusDefinitions.TextMessageReceived, 
+                ServiceLocator.Instance.GetService<EventBus>().Raise(EventBusDefinitions.TextMessageReceived,
                     new TextMessageEventBusArgs(message));
             }
         }

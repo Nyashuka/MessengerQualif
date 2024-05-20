@@ -22,7 +22,7 @@ namespace RolesService.Roles
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<Role>>>> GetAllGroupRoles(string accessToken, int chatId)
+        public async Task<ActionResult<ServiceResponse<List<RoleWithPermissions>>>> GetAllGroupRoles(string accessToken, int chatId)
         {
             var authData = await _authService.TryGetAuthenticatedUser(accessToken);
 
@@ -94,7 +94,7 @@ namespace RolesService.Roles
             if (authData.Data == null || !authData.HasAccess)
                 return Unauthorized();
 
-            var response = await _rolesService.GetAllAssinges(roleId);
+            var response = await _rolesService.GetAllAssingners(roleId);
 
             return Ok(response);
         }

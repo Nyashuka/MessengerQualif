@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <Folder Include="ActionAccess\Check\" />
-    <Folder Include="ActionAccess\Data\" />
   </ItemGroup>
 
 </Project>

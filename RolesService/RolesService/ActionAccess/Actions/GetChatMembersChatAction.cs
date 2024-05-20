@@ -2,7 +2,7 @@
 {
     public class GetChatMembersChatAction : IChatAction
     {
-        public Task<bool> HasAccess(HttpClient httpClient, int chatId, int userId)
+        public Task<bool> HasAccess(HttpClient httpClient)
         {
             return Task.FromResult(true);
         }

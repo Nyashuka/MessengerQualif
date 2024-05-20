@@ -28,6 +28,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="LightImage.DragDrop" Version="0.5.5" />
+    <PackageReference Include="LightImage.DragDrop.Wpf" Version="0.5.5" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Images\Icons\donsenger.jpg" />
     <Resource Include="Images\Icons\email-icon.png" />
     <Resource Include="Images\Icons\key-icon.png" />

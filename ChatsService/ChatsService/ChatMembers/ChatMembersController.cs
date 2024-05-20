@@ -1,4 +1,5 @@
 ﻿using ChatsService.ActionAccess.Actions;
+using ChatsService.ActionAccess.Data;
 using ChatsService.ActionAccess.Services;
 using ChatsService.Authorization;
 using ChatsService.ChatMembers.Dto;
@@ -49,8 +50,15 @@ namespace ChatsService.ChatMembers
             if (authData.Data == null || !authData.HasAccess)
                 return Unauthorized();
 
-            if (!(await _actionAccessService.HasAccess(new AddChatMemberChatAction(), chatMemberDto.ChatId, authData.Data.UserId)))
-                return Ok(new ServiceResponse<UserDto>() { Success = false, Message = "No access to add users" });
+            var dataToValidateAccess = new AddChatMemberChatActionData()
+            {
+                ChatId = chatMemberDto.ChatId,
+                RequesterId = authData.Data.UserId,
+                UsernameToAdd = chatMemberDto.Username,
+            };
+
+            if (!(await _actionAccessService.HasAccess(new AddChatMemberChatAction(dataToValidateAccess), chatMemberDto.ChatId, authData.Data.UserId)))
+                return Ok(new ServiceResponse<UserDto>() { Success = false, Message = "You dont have access to add users" });
 
             var response = await _chatMembersService.AddMemberByUsername(chatMemberDto);
 
@@ -65,8 +73,15 @@ namespace ChatsService.ChatMembers
             if (authData.Data == null || !authData.HasAccess)
                 return Unauthorized();
 
-            if (!(await _actionAccessService.HasAccess(new DeleteChatMemberChatAction(), chatId, authData.Data.UserId)))
-                return Unauthorized();
+            var dataToValidateAccess = new DeleteChatMemberChatActionData()
+            {
+                ChatId = chatId,
+                RequesterId = authData.Data.UserId,
+                UserIdToDelete = userId,
+            };
+
+            if (!(await _actionAccessService.HasAccess(new DeleteChatMemberChatAction(dataToValidateAccess), chatId, authData.Data.UserId)))
+                return Ok(new ServiceResponse<bool>() { Data = false, Success = false, Message = "You do not have access to delete this user" });
 
             var response = await _chatMembersService.DeleteMember(chatId, userId);
 

@@ -1,4 +1,5 @@
 
+using MessagesService.ActionAccess.Services;
 using MessagesService.Services;
 using MessagesService.Services.Interfaces;
 
@@ -15,9 +16,9 @@ namespace MessagesService
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IChatService, ChatService>();
             builder.Services.AddScoped<IMessageService, MessageService>();
+            builder.Services.AddScoped<IActionAccessService, ActionAccessService>();
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 

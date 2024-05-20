@@ -1,4 +1,5 @@
-﻿using MessagesService.DTOs;
+﻿using MessagesService.Chat.Dto;
+using MessagesService.DTOs;
 
 namespace MessagesService.Models
 {

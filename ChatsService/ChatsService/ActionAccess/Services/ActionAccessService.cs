@@ -18,7 +18,7 @@ namespace ChatsService.ActionAccess.Services
             if (await IsOwner(chatId, userId))
                 return true;
 
-            return await actionAccess.HasAccess(_httpClient, chatId, userId);
+            return await actionAccess.HasAccess(_httpClient);
         }
 
         public async Task<bool> IsOwner(int chatId, int userId)

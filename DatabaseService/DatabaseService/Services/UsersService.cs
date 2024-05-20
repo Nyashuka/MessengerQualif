@@ -74,9 +74,28 @@ namespace DatabaseService.Services
             };
         }
 
-        public Task<ServiceResponse<User>> UpdateUser(int userId, UserDto newUserData)
+        public async Task<ServiceResponse<User>> UpdateUser(UserDto newUserData)
         {
-            throw new NotImplementedException();
+            var user = await _databaseContext.Users.FirstOrDefaultAsync(x => x.Id == newUserData.Id);
+
+            if (user == null) 
+            {
+                return new ServiceResponse<User> { Success = false, Message = "User to update not found" };
+            }
+
+            if(await _databaseContext.Users
+                .AnyAsync(x => x.Username.ToLower().Equals(newUserData.Username.ToLower()) && 
+                x.Id != newUserData.Id))
+            {
+                return new ServiceResponse<User> { Success = false, Message = "Username already taken" };
+            }
+
+            user.Username = newUserData.Username;
+            user.DisplayName = newUserData.DisplayName;
+
+            await _databaseContext.SaveChangesAsync();
+
+            return new ServiceResponse<User> { Data = user };
         }
     }
 }

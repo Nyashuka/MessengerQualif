@@ -30,7 +30,14 @@ namespace MessagesService.Services
             var saveResponse = await _httpClient.PostAsJsonAsync(APIEndpoints.SaveMessagePOST, clientMessageDTO);
             var message = await saveResponse.Content.ReadFromJsonAsync<ServiceResponse<MessageDto>>();
 
-            var chatMemberResponse = await _httpClient.GetAsync($"{APIEndpoints.GetChatMembersGET}?chatId={clientMessageDTO.ChatId}");
+            await SendNotify(senderId, accessToken, clientMessageDTO.ChatId, message.Data);
+
+            return message;
+        }
+
+        private async Task SendNotify(int senderId, string accessToken, int chatId, MessageDto message)
+        {
+            var chatMemberResponse = await _httpClient.GetAsync($"{APIEndpoints.GetChatMembersGET}?chatId={chatId}");
             var chatMembers = (await chatMemberResponse.Content.ReadFromJsonAsync<ServiceResponse<List<UserDto>>>()).Data;
 
             if (chatMembers != null && chatMembers.Count > 0)
@@ -38,19 +45,17 @@ namespace MessagesService.Services
                 List<int> chatMemberIds = chatMembers.Where(u => u.Id != senderId).Select(x => x.Id).ToList();
 
                 if (chatMembers.Count == 0)
-                    return message;
+                    return;
 
                 var notifyData = new NotifyDataDto()
                 {
-                    Message = message.Data,
+                    Message = message,
                     Recipients = chatMemberIds
                 };
 
                 var notifyResponse = await _httpClient
                 .PostAsJsonAsync($"{APIEndpoints.NotifyUsersSendingMessagePOST}?accessToken={accessToken}", notifyData);
             }
-
-            return message;
         }
     }
 }

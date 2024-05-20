@@ -1,4 +1,6 @@
-﻿namespace MessagesService.DTOs
+﻿using MessagesService.Chat.Dto;
+
+namespace MessagesService.DTOs
 {
     public class MessageDto
     {
