@@ -78,5 +78,14 @@ namespace RolesService.Roles.Services
 
             return data;
         }
+
+        public async Task<ServiceResponse<bool>> DeleteRole(int roleId)
+        {
+            var databaseResponse = await _httpClient.DeleteAsync($"{APIEndpoints.DeleteRoleDELETE}?roleId={roleId}");
+
+            var data = await databaseResponse.Content.ReadFromJsonAsync<ServiceResponse<bool>>();
+
+            return data;
+        }
     }
 }

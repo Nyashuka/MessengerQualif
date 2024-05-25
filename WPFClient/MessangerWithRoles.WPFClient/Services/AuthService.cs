@@ -74,12 +74,12 @@ namespace MessengerWithRoles.WPFClient.Services
             AccessToken = dataFromResponse.Data;
 
             var userDataRequest = await httpClient.GetAsync($"{APIEndpoints.GetUserGET}?accessToken={AccessToken}");
-            User = (await userDataRequest.Content.ReadFromJsonAsync<ServiceResponse<User>>()).Data;   
+            User = (await userDataRequest.Content.ReadFromJsonAsync<ServiceResponse<User>>()).Data;
+
+            InitServices(email);
 
             EventBus eventBus = ServiceLocator.Instance.GetService<EventBus>();
             eventBus.Raise(EventBusDefinitions.LoginedInAccount, new EventBusArgs());
-
-            InitServices(email);
 
             return IsAuthenticated;
         }

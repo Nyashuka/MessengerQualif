@@ -1,0 +1,40 @@
+@startuml
+class MainWindowViewModel {
+    + SearchText : string <<get>> <<set>>
+    + CanExecuteOpenFriendsWindowCommand(p:object) : bool
+    + OnExecuteOpenFriendsWindowCommand(p:object) : void
+    + CanExecuteOpenCreateGroupWindowCommand(p:object) : bool
+    + OnExecuteOpenCreateGroupWindowCommand(p:object) : void
+    + CanExecuteSelectedChatCommandCommand(p:object) : bool
+    + OnExecuteSelectedChatCommandCommand(p:object) : void
+    + <<async>> LoadChats() : Task
+    + OpenChatWindow(chat:ChatViewModel) : void
+    + OpenGroupWindow(chat:GroupViewModel) : void
+    + CanExecuteCreateGroupCommandCommand(p:object) : bool
+    + <<async>> OnExecuteCreateGroupCommandCommand(p:object) : void
+    + CanOpenGroupListCommand(p:object) : bool
+    + <<async>> OnExecuteOpenGroupListCommand(p:object) : void
+    + CanOpenPersonalChatsListCommand(p:object) : bool
+    + <<async>> OnExecuteOpenPersonalChatsListCommand(p:object) : void
+    + CanExecuteOpenAccountSettingsCommand(p:object) : bool
+    + OnExecuteOpenAccountSettingsCommand(p:object) : void
+    + MainWindowViewModel()
+}
+class "ObservableCollection`1"<T> {
+}
+BaseViewModel <|-- MainWindowViewModel
+MainWindowViewModel --> "CurrentContent" UserControl
+MainWindowViewModel --> "SelectedChat" ChatViewModel
+MainWindowViewModel --> "ChatListVisibility" Visibility
+MainWindowViewModel --> "GroupListVisibility" Visibility
+MainWindowViewModel --> "Chats<ChatViewModel>" "ObservableCollection`1"
+MainWindowViewModel --> "Groups<GroupViewModel>" "ObservableCollection`1"
+MainWindowViewModel --> "OpenFriendsWindow" ICommand
+MainWindowViewModel --> "OpenCreateGroupWindow" ICommand
+MainWindowViewModel --> "SelectedChatCommand" ICommand
+MainWindowViewModel --> "CreateGroupChatDto" CreateGroupChatDto
+MainWindowViewModel --> "CreateGroupCommand" ICommand
+MainWindowViewModel --> "OpenGroupListCommand" ICommand
+MainWindowViewModel --> "OpenPersonalChatsListCommand" ICommand
+MainWindowViewModel --> "OpenAccountSettingsCommand" ICommand
+@enduml

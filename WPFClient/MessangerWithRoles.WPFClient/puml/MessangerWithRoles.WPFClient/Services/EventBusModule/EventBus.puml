@@ -1,0 +1,9 @@
+@startuml
+class EventBus {
+    + EventBus()
+    + Subscribe(eventName:string, action:EventBusHandler) : void
+    + Unsubscribe(eventName:string, action:EventBusHandler) : void
+    + Raise(eventName:string, arguments:IEventBusArgs) : void
+}
+IService <|-- EventBus
+@enduml

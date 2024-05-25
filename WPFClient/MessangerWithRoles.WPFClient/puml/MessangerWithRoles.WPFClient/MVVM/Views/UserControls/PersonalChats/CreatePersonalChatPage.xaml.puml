@@ -1,0 +1,6 @@
+@startuml
+class CreatePersonalChatPage <<partial>> {
+    + CreatePersonalChatPage()
+}
+UserControl <|-- CreatePersonalChatPage
+@enduml

@@ -1,0 +1,10 @@
+@startuml
+class Message {
+    + Sender : string <<get>>
+    + ImageSource : string? <<get>>
+    + Text : string? <<get>>
+    + IsReceived : bool <<get>>
+    + Message(sender:string, text:string, isReceived:bool)
+}
+Message --> "Time" DateTime
+@enduml

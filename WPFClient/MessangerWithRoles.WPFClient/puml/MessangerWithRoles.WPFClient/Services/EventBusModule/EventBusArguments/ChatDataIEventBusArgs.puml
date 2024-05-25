@@ -1,0 +1,7 @@
+@startuml
+class ChatDataIEventBusArgs {
+    + ChatDataIEventBusArgs(chat:ChatViewModel)
+}
+IEventBusArgs <|-- ChatDataIEventBusArgs
+ChatDataIEventBusArgs --> "Chat" ChatViewModel
+@enduml

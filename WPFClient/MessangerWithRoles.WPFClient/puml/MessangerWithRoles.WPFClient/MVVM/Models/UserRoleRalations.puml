@@ -1,0 +1,8 @@
+@startuml
+class UserRoleRalations {
+    + UserId : int <<get>> <<set>>
+    + User : User? <<get>> <<set>>
+    + RoleId : int <<get>> <<set>>
+    + Role : RoleDto? <<get>> <<set>>
+}
+@enduml

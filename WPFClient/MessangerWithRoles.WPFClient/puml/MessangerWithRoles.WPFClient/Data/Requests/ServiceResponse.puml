@@ -1,0 +1,10 @@
+@startuml
+class "ServiceResponse`1"<T> {
+    + Data : T? <<get>> <<set>>
+    + Success : bool <<get>> <<set>> = true
+    + Message : string <<get>> <<set>>
+    + ServiceResponse()
+    + ServiceResponse(message:string)
+    + ServiceResponse(data:T?, success:bool, message:string)
+}
+@enduml

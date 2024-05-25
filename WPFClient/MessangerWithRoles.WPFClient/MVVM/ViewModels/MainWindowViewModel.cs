@@ -293,20 +293,20 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
         public bool CanOpenGroupListCommand(object p) => true;
         public async void OnExecuteOpenGroupListCommand(object p)
         {
-            ChatListVisibility = Visibility.Collapsed;
-            GroupListVisibility = Visibility.Visible;
-
             await LoadGroups();
+
+            ChatListVisibility = Visibility.Collapsed;
+            GroupListVisibility = Visibility.Visible;  
         }
 
         public ICommand OpenPersonalChatsListCommand { get; }
         public bool CanOpenPersonalChatsListCommand(object p) => true;
         public async void OnExecuteOpenPersonalChatsListCommand(object p)
         {
+            await LoadPersonalChats();
+
             GroupListVisibility = Visibility.Collapsed;
             ChatListVisibility = Visibility.Visible;
-
-            await LoadPersonalChats();
         }
 
         public ICommand OpenAccountSettingsCommand { get; }
@@ -319,6 +319,19 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             CurrentContent.DataContext = new AccountSettingsViewModel();
         }
 
+        private string _currentDisplayName;
+        public string CurrentDisplayName { get => _currentDisplayName; set => Set(ref _currentDisplayName, value); }
+
+        private string _currentUsername;
+        public string CurrentUsername { get => _currentUsername; set => Set(ref _currentUsername, value); }
+
+        public void UpdateProfile()
+        {
+            var authService = ServiceLocator.Instance.GetService<AccountService>();
+            CurrentDisplayName = authService.User.DisplayName;
+            CurrentUsername = '@' + authService.User.Username;
+        }
+
         public MainWindowViewModel()
         {
 
@@ -328,8 +341,6 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             CreateGroupChatDto = new CreateGroupChatDto();
 
             EventBus eventBus = ServiceLocator.Instance.GetService<EventBus>();
-
-            AuthService authService = ServiceLocator.Instance.GetService<AuthService>();
 
             eventBus.Subscribe<ChatDataIEventBusArgs>(EventBusDefinitions.OpenChat, OpenChat);
             eventBus.Subscribe<ChatDataIEventBusArgs>(EventBusDefinitions.OpenGroup, OpenGroup);
@@ -344,6 +355,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             CreateGroupCommand = new LambdaCommand(OnExecuteCreateGroupCommandCommand, CanExecuteCreateGroupCommandCommand);
             OpenAccountSettingsCommand = new LambdaCommand(OnExecuteOpenAccountSettingsCommand, CanExecuteOpenAccountSettingsCommand);
 
+            UpdateProfile();
         }
     }
 }

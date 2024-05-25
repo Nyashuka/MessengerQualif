@@ -1,7 +1,9 @@
-﻿using MessengerWithRoles.WPFClient.Services.EventBusModule;
+﻿using MessengerWithRoles.WPFClient.Data;
+using MessengerWithRoles.WPFClient.Services.EventBusModule;
 using MessengerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
 using MessengerWithRoles.WPFClient.Services.ServiceLocatorModule;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace MessengerWithRoles.WPFClient.MVVM.Views.Windows
@@ -11,6 +13,8 @@ namespace MessengerWithRoles.WPFClient.MVVM.Views.Windows
     /// </summary>
     public partial class AuthorizationWindow : Window
     {
+        private bool _isChangingIpState;
+
         public AuthorizationWindow()
         {
             EventBus eventBus = new EventBus();
@@ -18,6 +22,9 @@ namespace MessengerWithRoles.WPFClient.MVVM.Views.Windows
             ServiceLocator.Instance.RegisterService(eventBus);
 
             InitializeComponent();
+
+            _isChangingIpState = false;
+            ipTextBox.Text = APIEndpoints.IPAddress.ToString();
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
@@ -46,6 +53,25 @@ namespace MessengerWithRoles.WPFClient.MVVM.Views.Windows
 
             Application.Current.MainWindow = mainWindow;
             current.Close();
+        }
+
+        private void ChangeSaveIPButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_isChangingIpState)
+            {
+                APIEndpoints.IPAddress = ipTextBox.Text;
+                changeSaveIp_Button.Content = "Change";
+                ipTextBox.IsReadOnly = true;
+                _isChangingIpState = false;
+            }
+            else
+            {
+                changeSaveIp_Button.Content = "Save";
+                ipTextBox.IsReadOnly = false;
+                ipTextBox.Focus();
+                ipTextBox.SelectionStart = ipTextBox.Text.Length;
+                _isChangingIpState = true;
+            }
         }
     }
 }

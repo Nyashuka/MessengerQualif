@@ -1,0 +1,5 @@
+@startuml
+class GlobalVariables <<static>> {
+    + {static} MessengerName : string <<get>>
+}
+@enduml

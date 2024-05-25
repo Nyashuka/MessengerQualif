@@ -1,0 +1,10 @@
+@startuml
+class RoleWithPermissions {
+    + Id : int <<get>> <<set>>
+    + Name : string <<get>> <<set>>
+    + Priority : int <<get>> <<set>>
+    + Permissions : List<ChatPermission>? <<get>> <<set>>
+    +  <<event>> PropertyChanged : PropertyChangedEventHandler 
+}
+INotifyPropertyChanged <|-- RoleWithPermissions
+@enduml

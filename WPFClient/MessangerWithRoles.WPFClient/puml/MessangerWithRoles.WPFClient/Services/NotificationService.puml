@@ -1,0 +1,9 @@
+@startuml
+class NotificationService {
+    + NotificationService()
+    + Start(accessToken:string) : void
+    + <<async>> ConnectAndReceiveAsync(accessToken:string, cancellationToken:CancellationToken) : Task
+    + <<async>> StopReceiving() : Task
+}
+IService <|-- NotificationService
+@enduml

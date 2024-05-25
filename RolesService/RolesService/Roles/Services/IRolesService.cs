@@ -11,6 +11,7 @@ namespace RolesService.Roles.Services
         Task<ServiceResponse<List<RoleWithPermissions>>> GetAllChatRoles(int chatId);
         Task<ServiceResponse<Role>> CreateRole(RoleDto role);
         Task<ServiceResponse<RoleWithPermissions>> UpdateRole(RoleWithPermissions role);
+        Task<ServiceResponse<bool>> DeleteRole(int roleId);
         Task<ServiceResponse<bool>> AssignRole(UserRoleRelationDto relation);
         Task<ServiceResponse<bool>> UnAssingRole(int roleId, int userId);
         Task<ServiceResponse<List<User>>> GetAllAssingners(int roleId);

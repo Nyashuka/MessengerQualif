@@ -1,0 +1,8 @@
+@startuml
+class BaseViewModel {
+    +  <<event>> NeedChangePage : Action<UserControl> 
+    +  <<event>> PropertyChanged : PropertyChangedEventHandler? 
+    + InvokeNeedChangePage(userControl:UserControl) : void
+}
+INotifyPropertyChanged <|-- BaseViewModel
+@enduml

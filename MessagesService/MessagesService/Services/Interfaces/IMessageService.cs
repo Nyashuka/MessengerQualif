@@ -5,7 +5,7 @@ namespace MessagesService.Services.Interfaces
 {
     public interface IMessageService
     {
-        Task<ServiceResponse<MessageDto>> HandleMessage(int senderId, string accessToken, ClientMessageDTO clientMessageDTO);
+        Task<ServiceResponse<MessageDto>> HandleMessage(int senderId, string accessToken, string clientGuid, ClientMessageDTO clientMessageDTO);
         Task<ServiceResponse<List<MessageDto>>> GetAllChatMessages(int chatId);
     }
 }

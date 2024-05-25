@@ -41,8 +41,8 @@ namespace MessengerWithRoles.WPFClient.Services
 
             var data = await response.Content.ReadFromJsonAsync<ServiceResponse<Chat>>();
 
-            if(data == null)
-                data = new ServiceResponse<Chat> { Success = false };
+            if(data.Data == null)
+                data = new ServiceResponse<Chat> { Success = false , Message="Can't parse data from create group response"};
 
             return data;
         }

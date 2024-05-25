@@ -22,7 +22,7 @@ namespace MessagesService.Services
             return messages;
         }
 
-        public async Task<ServiceResponse<MessageDto>> HandleMessage(int senderId, string accessToken, ClientMessageDTO clientMessageDTO)
+        public async Task<ServiceResponse<MessageDto>> HandleMessage(int senderId, string accessToken, string clientGuid, ClientMessageDTO clientMessageDTO)
         {
             clientMessageDTO.SenderId = senderId;
             clientMessageDTO.Timestamp = DateTime.UtcNow;
@@ -30,12 +30,12 @@ namespace MessagesService.Services
             var saveResponse = await _httpClient.PostAsJsonAsync(APIEndpoints.SaveMessagePOST, clientMessageDTO);
             var message = await saveResponse.Content.ReadFromJsonAsync<ServiceResponse<MessageDto>>();
 
-            await SendNotify(senderId, accessToken, clientMessageDTO.ChatId, message.Data);
+            await SendNotify(senderId, accessToken, clientGuid, clientMessageDTO.ChatId, message.Data);
 
             return message;
         }
 
-        private async Task SendNotify(int senderId, string accessToken, int chatId, MessageDto message)
+        private async Task SendNotify(int senderId, string accessToken, string clientGuid, int chatId, MessageDto message)
         {
             var chatMemberResponse = await _httpClient.GetAsync($"{APIEndpoints.GetChatMembersGET}?chatId={chatId}");
             var chatMembers = (await chatMemberResponse.Content.ReadFromJsonAsync<ServiceResponse<List<UserDto>>>()).Data;
@@ -54,7 +54,7 @@ namespace MessagesService.Services
                 };
 
                 var notifyResponse = await _httpClient
-                .PostAsJsonAsync($"{APIEndpoints.NotifyUsersSendingMessagePOST}?accessToken={accessToken}", notifyData);
+                .PostAsJsonAsync($"{APIEndpoints.NotifyUsersSendingMessagePOST}?accessToken={accessToken}&clientGuid={clientGuid}", notifyData);
             }
         }
     }

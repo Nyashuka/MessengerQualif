@@ -1,0 +1,8 @@
+@startuml
+class LambdaCommand {
+    + LambdaCommand(execute:Action<object>, canExecute:Func<object, bool>)
+    + <<override>> CanExecute(parameter:object?) : bool
+    + <<override>> Execute(parameter:object?) : void
+}
+Command <|-- LambdaCommand
+@enduml

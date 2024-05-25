@@ -1,0 +1,13 @@
+@startuml
+class RolesService {
+    + RolesService()
+    + <<async>> CreateRole(role:RoleDto) : Task<ServiceResponse<Role>>
+    + <<async>> GetChatRoles(chatId:int) : Task<ServiceResponse<List<RoleWithPermissions>>>
+    + <<async>> GetAllPermissions() : Task<ServiceResponse<List<ChatPermission>>>
+    + <<async>> AssignRole(userRoleRelation:UserRoleRalations) : Task<ServiceResponse<bool>>
+    + <<async>> UnAssignRole(userRoleRelation:UserRoleRalations) : Task<ServiceResponse<bool>>
+    + <<async>> GetAllAssignes(roleId:int) : Task<ServiceResponse<List<User>>>
+    + <<async>> UpdateRole(roleWithPermissions:RoleWithPermissions) : Task<ServiceResponse<RoleWithPermissions>>
+}
+IService <|-- RolesService
+@enduml

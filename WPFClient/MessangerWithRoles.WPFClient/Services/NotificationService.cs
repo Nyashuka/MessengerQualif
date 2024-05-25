@@ -21,11 +21,14 @@ namespace MessengerWithRoles.WPFClient.Services
         private CancellationTokenSource _cancellationToken;
         private EventBus _eventBus;
         private Task _notificationReceiviengTask;
+        private Guid _clientGuid;
+        public string ClientGuid => _clientGuid.ToString();
 
         public NotificationService()
         {
             _cancellationToken = new CancellationTokenSource();
             _eventBus = ServiceLocator.Instance.GetService<EventBus>();
+            _clientGuid = Guid.NewGuid();
         }
 
         public void Start(string accessToken)
@@ -43,57 +46,57 @@ namespace MessengerWithRoles.WPFClient.Services
 
         public async Task ConnectAndReceiveAsync(string accessToken, CancellationToken cancellationToken)
         {
-            while (!cancellationToken.IsCancellationRequested)
+            try
             {
-                try
-                {
-                    _webSocket.Options.SetRequestHeader("accessToken", accessToken);
+                _webSocket.Options.SetRequestHeader("accessToken", accessToken);
+                _webSocket.Options.SetRequestHeader("clientGuid", _clientGuid.ToString());
 
+                if (!(_webSocket.State == WebSocketState.Open))
                     await _webSocket.ConnectAsync(new Uri(APIEndpoints.NotificationsWS), CancellationToken.None);
 
-                    byte[] buffer = new byte[1024];
+                byte[] buffer = new byte[1024];
 
-                    while (_webSocket.State == WebSocketState.Open && !cancellationToken.IsCancellationRequested)
-                    {
-                        WebSocketReceiveResult result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationToken);
-
-                        string receivedData = Encoding.UTF8.GetString(buffer, 0, result.Count);
-
-                        SocketResponse? response = JsonSerializer.Deserialize<SocketResponse>(receivedData);
-
-                        if (response != null)
-                        {
-                            NotifyClient_MessageReceived(response);
-                        }
-                    }
-
-                    if (_webSocket.State == WebSocketState.Open && cancellationToken.IsCancellationRequested)
-                    {
-                        await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Connection closed.", CancellationToken.None);
-                        MessageBox.Show("Disconnected from notification server.");
-                    }
-                }
-                catch (Exception e)
+                while (_webSocket.State == WebSocketState.Open && !cancellationToken.IsCancellationRequested)
                 {
-                    //if (e.Message.Contains("The websocket has already been started"))
-                    //{
-                        
-                    //}
-                    if (_webSocket.State == WebSocketState.Open)
-                    {
-                        await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Connection closed.", CancellationToken.None);
-                        MessageBox.Show("Disconnected from notification server.");
-                    }
+                    WebSocketReceiveResult result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationToken);
 
-                    //at System.Net.WebSockets.ClientWebSocketOptions.ThrowIfReadOnly() at System.Net.WebSockets.ClientWebSocketOptions.SetRequestHeader(String headerName, String headerValue) at MessengerWithRoles.WPFClient.Services.NotificationService.d__6.MoveNext() in E:\QualifWork\WPFClient\MessangerWithRoles.WPFClient\Services\NotificationService.cs:line 49
-                    if (!cancellationToken.IsCancellationRequested)
-                        MessageBox.Show("Notification service error!(reconnect after 5 seconds)\n" + e.Message);
+                    string receivedData = Encoding.UTF8.GetString(buffer, 0, result.Count);
+
+                    SocketResponse? response = JsonSerializer.Deserialize<SocketResponse>(receivedData);
+
+                    if (response != null)
+                    {
+                        NotifyClient_MessageReceived(response);
+                    }
                 }
 
+                if (_webSocket.State == WebSocketState.Open && cancellationToken.IsCancellationRequested)
+                {
+                    await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Connection closed.", CancellationToken.None);
+                    MessageBox.Show("Disconnected from notification server.");
+                }
+            }
+            catch (Exception e)
+            {
+                if (e.Message.Contains("The websocket has already been started") || _webSocket.State == WebSocketState.Open)
+                {
+                    await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Connection closed.", CancellationToken.None);
+                    MessageBox.Show("Disconnected from notification server.");
+                }
+
+                //at System.Net.WebSockets.ClientWebSocketOptions.ThrowIfReadOnly() at System.Net.WebSockets.ClientWebSocketOptions.SetRequestHeader(String headerName, String headerValue) at MessengerWithRoles.WPFClient.Services.NotificationService.d__6.MoveNext() in E:\QualifWork\WPFClient\MessangerWithRoles.WPFClient\Services\NotificationService.cs:line 49
                 if (!cancellationToken.IsCancellationRequested)
+                    MessageBox.Show("Notification service error!\n" + e.Message);
+            }
+            finally
+            {
+                if (_webSocket.State == WebSocketState.Open)
                 {
-                    await Task.Delay(5000, cancellationToken);
+                    await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Connection closed.", CancellationToken.None);
+                    MessageBox.Show("Disconnected from notification server.");
                 }
+
+                MessageBox.Show("Restart application to reconnect notification service");
             }
 
         }

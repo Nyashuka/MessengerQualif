@@ -10,15 +10,17 @@ namespace DatabaseService.Services
     public class GroupsService : IGroupsService
     {
         private readonly DatabaseContext _databaseContext;
+        private readonly IRolesService _rolesService;
 
-        public GroupsService(DatabaseContext databaseContext)
+        public GroupsService(DatabaseContext databaseContext, IRolesService rolesService)
         {
             _databaseContext = databaseContext;
+            _rolesService = rolesService;
         }
 
         public async Task<ServiceResponse<ChatDto>> GetChatById(int chatId)
         {
-            Chat chat = await _databaseContext.Chats.FirstOrDefaultAsync(x => x.Id == chatId);
+            var chat = await _databaseContext.Chats.FirstOrDefaultAsync(x => x.Id == chatId);
 
             if (chat == null)
             {
@@ -69,6 +71,27 @@ namespace DatabaseService.Services
             return new ServiceResponse<ChatDto>() { Data = chatToResponse };
         }
 
+        private GroupChatInfoDto? ValidChatInfoData(GroupChatInfoDto chatInfoDto)
+        {
+            if(chatInfoDto.Owner == null)
+            {
+                return null;
+            }
+
+            if(string.IsNullOrEmpty(chatInfoDto.Name))
+            {
+                return null;
+            }
+
+            return new GroupChatInfoDto()
+            {
+                Owner = chatInfoDto.Owner,
+                Name = chatInfoDto.Name,
+                Description = string.IsNullOrEmpty(chatInfoDto.Description) ? "" : chatInfoDto.Description,
+                AvatarUrl = string.IsNullOrEmpty(chatInfoDto.AvatarUrl) ? "" : chatInfoDto.AvatarUrl,
+            };
+        }
+
         public async Task<ServiceResponse<ChatDto>> CreateGroup(ChatDto chatDto)
         {
             var chatType = await _databaseContext.ChatTypes.FirstOrDefaultAsync(x => x.Id == chatDto.ChatTypeId);
@@ -80,6 +103,28 @@ namespace DatabaseService.Services
                     Data = null,
                     Success = false,
                     Message = $"Chat type with id={chatDto.ChatTypeId} is not exists"
+                };
+            }
+
+            if(chatDto.ChatInfo == null)
+            {
+                return new ServiceResponse<ChatDto>()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = $"Chat info cant be empty for creating group"
+                };
+            }
+
+            var validChatInfoDto = ValidChatInfoData(chatDto.ChatInfo);
+
+            if(validChatInfoDto == null)
+            {
+                return new ServiceResponse<ChatDto>()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = $"Chat info has not valid data"
                 };
             }
 
@@ -95,14 +140,16 @@ namespace DatabaseService.Services
             {
                 ChatId = newChat.Id,
                 Chat = newChat,
-                OwnerId = chatDto.ChatInfo.Owner.Id,
-                Owner = await _databaseContext.Users.FirstOrDefaultAsync(x => x.Id == chatDto.ChatInfo.Owner.Id),
-                Name = chatDto.ChatInfo.Name,
-                Description = chatDto.ChatInfo.Description,
-                AvatarUrl = chatDto.ChatInfo.AvatarUrl
+                OwnerId = validChatInfoDto.Owner.Id,
+                Owner = await _databaseContext.Users.FirstOrDefaultAsync(x => x.Id == validChatInfoDto.Owner.Id),
+                Name = validChatInfoDto.Name,
+                Description = validChatInfoDto.Description,
+                AvatarUrl = validChatInfoDto.AvatarUrl
             };
             _databaseContext.GroupChatInfos.Add(chatInfo);
             await _databaseContext.SaveChangesAsync();
+
+            var defaultRoleCreatingResponse = await _rolesService.CreateDefaultRole(newChat.Id);
 
             var responseChat = new ChatDto()
             {
@@ -173,7 +220,7 @@ namespace DatabaseService.Services
                     continue;
                 }
 
-                var groupInfo = await _databaseContext.GroupChatInfos.FirstAsync(x => x.ChatId == group.Id);
+                var groupInfo = await _databaseContext.GroupChatInfos.FirstOrDefaultAsync(x => x.ChatId == group.Id);
                 if (groupInfo.OwnerId == userId)
                 {
                     responseData.Add(GetChatDtoFromModel(group));

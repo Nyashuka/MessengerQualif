@@ -1,0 +1,8 @@
+@startuml
+class ServiceLocator {
+    + GetService() : T
+    + RegisterService(service:T) : void
+    + UnregisterService() : void
+}
+ServiceLocator o-> "Instance" ServiceLocator
+@enduml

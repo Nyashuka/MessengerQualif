@@ -29,9 +29,6 @@ namespace ChatsService.Groups.Services
                 return new ServiceResponse<Chat>() { Success = false, Message = "Can't parse data got from database service." };
             }
 
-            if (chatData.Data == null)
-                return chatData;
-
             return chatData;
         }
 

@@ -62,7 +62,9 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
                 if (!response.Success)
                 {
                     MessageBox.Show(response.Message);
+                    user.Asigned = false;
                 }
+                
             }
             else
             {
@@ -71,6 +73,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
                 if (!response.Success)
                 {
                     MessageBox.Show(response.Message);
+                    user.Asigned = true;
                 }
             }
 

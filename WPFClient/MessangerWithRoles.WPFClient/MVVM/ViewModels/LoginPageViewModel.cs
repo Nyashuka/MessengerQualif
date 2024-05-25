@@ -16,6 +16,7 @@ using MessengerWithRoles.WPFClient.Services;
 using MessengerWithRoles.WPFClient.Services.EventBusModule;
 using MessengerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
 using MessengerWithRoles.WPFClient.Services.ServiceLocatorModule;
+using System.Net.Mail;
 
 namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 {
@@ -35,12 +36,21 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             set => Set(ref _password, value);
         }
 
+        private string _errorMessage;
+        public string ErrorMessage
+        {
+            get => _errorMessage;
+            set => Set(ref _errorMessage, value);
+        }
+
         public ICommand Login { get; }
         private bool CanLoginCommandExecute(object p)
         {
-            //if (Email.Length < 2 ||
-            //    Password.Length < 3)
-            //    return false;
+            if (!MailAddress.TryCreate(Email, out var mail))
+            {
+                ErrorMessage = "Email is incorrect";
+                return false;
+            }
 
             return true;
         }

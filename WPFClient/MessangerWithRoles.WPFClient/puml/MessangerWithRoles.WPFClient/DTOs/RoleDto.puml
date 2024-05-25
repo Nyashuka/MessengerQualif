@@ -1,0 +1,6 @@
+@startuml
+class RoleDto {
+    + Name : string <<get>> <<set>>
+    + ChatId : int <<get>> <<set>>
+}
+@enduml

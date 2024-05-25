@@ -28,6 +28,13 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             set => Set(ref _messageText, value);
         }
 
+        private string _status;
+        public string Status
+        {
+            get => _status;
+            set => Set(ref _status, value);
+        }
+
         public event Action MessegesListChanged;
 
         public ICommand SendMessageCommand { get; }
@@ -65,6 +72,8 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             SendMessageCommand = new LambdaCommand(OnSendMessageExecuteCommand, CanSendMessageExecuteCommand);
 
             chat.MessegesListChanged += MessegesListChangedInvoked;
+
+            Status = "@" + chat.Parcipient.Username;
         }
     }
 }

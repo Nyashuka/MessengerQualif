@@ -47,6 +47,19 @@ namespace RolesService.Roles
             return Ok(response);
         }
 
+        [HttpDelete]
+        public async Task<ActionResult<ServiceResponse<Role>>> DeleteRole(string accessToken, int roleId)
+        {
+            var authData = await _authService.TryGetAuthenticatedUser(accessToken);
+
+            if (authData.Data == null || !authData.HasAccess)
+                return Unauthorized();
+
+            var response = await _rolesService.DeleteRole(roleId);
+
+            return Ok(response);
+        }
+
         [HttpPost("assignes")]
         public async Task<ActionResult<ServiceResponse<bool>>> AssignRole(string accessToken, UserRoleRelationDto relation)
         {

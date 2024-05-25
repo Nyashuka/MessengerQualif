@@ -1,0 +1,7 @@
+@startuml
+class CreateGroupChatDto {
+    + ChatTypeId : int <<get>> <<set>>
+    + Members : List<User>? <<get>> <<set>>
+    + ChatInfo : GroupChatInfoDto? <<get>> <<set>>
+}
+@enduml

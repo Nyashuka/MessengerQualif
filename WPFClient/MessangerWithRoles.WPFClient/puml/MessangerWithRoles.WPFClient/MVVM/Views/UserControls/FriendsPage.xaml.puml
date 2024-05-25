@@ -1,0 +1,6 @@
+@startuml
+class FriendsPage <<partial>> {
+    + FriendsPage()
+}
+UserControl <|-- FriendsPage
+@enduml

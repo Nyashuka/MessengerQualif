@@ -20,7 +20,7 @@ namespace MessagesService.Services
 
         public async Task<ServiceResponse<ChatDto>> GetChat(int chatId)
         {
-            var databaseResponse = await _httpClient.GetAsync($"{APIEndpoints.GetGroupByIdGET}?chatId={chatId}");
+            var databaseResponse = await _httpClient.GetAsync($"{APIEndpoints.GetChatByIdGET}?chatId={chatId}");
 
             var data = await databaseResponse.Content.ReadFromJsonAsync<ServiceResponse<ChatDto>>();
 

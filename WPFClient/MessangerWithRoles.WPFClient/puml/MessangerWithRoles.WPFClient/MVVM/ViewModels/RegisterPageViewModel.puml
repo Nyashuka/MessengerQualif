@@ -1,0 +1,10 @@
+@startuml
+class RegisterPageViewModel {
+    + ErrorMessage : string <<get>> <<set>>
+    + RegisterPageViewModel()
+}
+BaseViewModel <|-- RegisterPageViewModel
+RegisterPageViewModel --> "CreationAccount" CreationAccount
+RegisterPageViewModel --> "Register" ICommand
+RegisterPageViewModel --> "ChangeToLoginWindow" ICommand
+@enduml

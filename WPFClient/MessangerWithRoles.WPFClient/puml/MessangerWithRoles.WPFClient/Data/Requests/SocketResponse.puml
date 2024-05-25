@@ -1,0 +1,6 @@
+@startuml
+class SocketResponse {
+    + JsonData : string? <<get>> <<set>>
+}
+SocketResponse --> "ResponseType" SocketResponseType
+@enduml

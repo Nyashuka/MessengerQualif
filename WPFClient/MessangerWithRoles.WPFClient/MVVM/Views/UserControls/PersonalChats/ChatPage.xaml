@@ -31,7 +31,7 @@
                                 FontWeight="SemiBold"
                                 FontSize="14"
                                 Margin="10 0 0 0"/>
-                        <Label Content="Offline"
+                        <Label Content="{Binding Status}"
                                 Foreground="DarkGray"
                                 VerticalAlignment="Center"
                                 FontWeight="SemiBold"

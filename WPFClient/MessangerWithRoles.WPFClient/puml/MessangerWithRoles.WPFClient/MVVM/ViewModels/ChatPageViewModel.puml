@@ -1,0 +1,10 @@
+@startuml
+class ChatPageViewModel {
+    + MessageText : string <<get>> <<set>>
+    +  <<event>> MessegesListChanged : Action 
+    + ChatPageViewModel(chat:ChatViewModel)
+}
+BaseViewModel <|-- ChatPageViewModel
+ChatPageViewModel --> "Chat" ChatViewModel
+ChatPageViewModel --> "SendMessageCommand" ICommand
+@enduml

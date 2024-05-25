@@ -25,7 +25,7 @@ namespace DatabaseService.DataContexts
         public DbSet<UserRoleRelation> UserRoleRelations { get; set; }
         public DbSet<AccessToken> AccessTokens { get; set; }
         public DbSet<FriendRelation> FriendRelations { get; set; }
-        public DbSet<DefaultRoles> DefaultRoles { get; set; }
+        public DbSet<DefaultRole> DefaultRoles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

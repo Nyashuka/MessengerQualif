@@ -11,10 +11,12 @@ namespace DatabaseService.Services
     public class ChatMembersService : IChatMembersService
     {
         private readonly DatabaseContext _databaseContext;
+        private readonly IUserRoleRelationService _userRoleRelationService;
 
-        public ChatMembersService(DatabaseContext databaseContext)
+        public ChatMembersService(DatabaseContext databaseContext, IUserRoleRelationService userRoleRelationService)
         {
             _databaseContext = databaseContext;
+            _userRoleRelationService = userRoleRelationService;
         }
 
         public async Task<ServiceResponse<List<UserDto>>> GetChatMembersByChatId(int chatId)
@@ -82,6 +84,8 @@ namespace DatabaseService.Services
 
             _databaseContext.ChatMembers.Add(chatMember);
             await _databaseContext.SaveChangesAsync();
+
+            await _userRoleRelationService.AsignDefaultRole(chatMember.ChatId, chatMember.UserId);
 
             return new ServiceResponse<ChatMember> { Data = chatMember };
         }

@@ -11,6 +11,7 @@
 
         // chat members
         public const string CreateRolePOST = $"{DatabaseService}/api/Roles";
+        public const string DeleteRoleDELETE = $"{DatabaseService}/api/Roles";
         public const string GetAllGroupRolesGET = $"{DatabaseService}/api/Roles";
         public const string UpdateRolePATCH = $"{DatabaseService}/api/Roles";
 

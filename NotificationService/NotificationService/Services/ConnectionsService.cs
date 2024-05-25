@@ -6,27 +6,33 @@ namespace NotificationService.Services
 {
     public class ConnectionsService : IConnectionsService
     {
-        public Dictionary<int, WebSocket> Clients { get; set; } = new();
+        public Dictionary<int, Dictionary<Guid, WebSocket>> Clients { get; set; } = new();
 
-        public async Task AddClientAndStartReceiving(int userId, WebSocket client)
+        public async Task AddClientAndStartReceiving(int userId, Guid clientGuid, WebSocket client)
         {
-            if (!Clients.TryAdd(userId, client))
-                throw new Exception("Cant add client with user id=" + userId);
+            if (!Clients.ContainsKey(userId))
+            {
+                Clients[userId] = new Dictionary<Guid, WebSocket>();
+            }
 
-           await HandleWebSocket(userId, client);
+            Clients[userId][clientGuid] = client;
+
+            await HandleWebSocket(userId, clientGuid, client);
         }
 
-        public async Task RemoveClientAndCloseAsync(int userId)
+        public async Task RemoveClientAndCloseAsync(int userId, Guid clientGuid)
         {
-            Clients.Remove(userId, out var removedClient);
-
-            if (removedClient == null)
-                throw new Exception("Client with user id=" + userId + " does not exists!");
-
-
-            await removedClient.CloseAsync(WebSocketCloseStatus.NormalClosure,
-                                           "Closing WebSocket connection",
-                                           CancellationToken.None);
+            if (Clients.TryGetValue(userId, out var clients))
+            {
+                if (clients.Count > 0)
+                {
+                    var clientToRemove = Clients[userId][clientGuid];
+                    await clientToRemove.CloseAsync(WebSocketCloseStatus.NormalClosure,
+                                          "Closing WebSocket connection",
+                                          CancellationToken.None);
+                    clients.Remove(clientGuid);
+                }
+            }
         }
 
         public async Task SendMessageForUserAsync(string message, int userId)
@@ -34,15 +40,18 @@ namespace NotificationService.Services
             var buffer = Encoding.UTF8.GetBytes(message);
             var arraySegment = new ArraySegment<byte>(buffer, 0, buffer.Length);
 
-            Clients.TryGetValue(userId, out var webSocket);
+            Clients.TryGetValue(userId, out var webSockets);
 
-            if (webSocket == null)
+            if (webSockets == null)
                 return;
 
-            await webSocket.SendAsync(arraySegment, WebSocketMessageType.Text, true, CancellationToken.None);
+            foreach (var item in webSockets)
+            {
+                await item.Value.SendAsync(arraySegment, WebSocketMessageType.Text, true, CancellationToken.None);
+            }
         }
 
-        public async Task HandleWebSocket(int userId, WebSocket webSocket)
+        public async Task HandleWebSocket(int userId, Guid clientGuid, WebSocket webSocket)
         {
             var buffer = new byte[1024];
             var segment = new ArraySegment<byte>(buffer);
@@ -81,20 +90,41 @@ namespace NotificationService.Services
 
                 if (Clients.ContainsKey(userId))
                 {
-                    await RemoveClientAndCloseAsync(userId);
+                    await RemoveClientAndCloseAsync(userId, clientGuid);
                 }
             }
         }
 
-        public List<WebSocket> GetActiveConnections(List<int> dataUsers)
+        public List<WebSocket> GetActiveConnections(List<int> dataUsers, int senderId, Guid clientGuid)
         {
             List<WebSocket> activeConnections = new List<WebSocket>();
 
             foreach (int userId in dataUsers)
             {
-                if (Clients.TryGetValue(userId, out var socket) && socket.State == WebSocketState.Open)
+                if (Clients.TryGetValue(userId, out var sockets))
                 {
-                    activeConnections.Add(socket);
+                    foreach (var socket in sockets)
+                    {
+                        if (socket.Value.State == WebSocketState.Open)
+                        {
+                            activeConnections.Add(socket.Value);
+                        }
+                    }
+
+                }
+            }
+
+            if(Clients.TryGetValue(senderId, out var senderSockets))
+            {
+                if(senderSockets.Count > 1)
+                {
+                    foreach (var socket in senderSockets)
+                    {
+                        if (socket.Key != clientGuid && socket.Value.State == WebSocketState.Open)
+                        {
+                            activeConnections.Add(socket.Value);
+                        }
+                    }
                 }
             }
 

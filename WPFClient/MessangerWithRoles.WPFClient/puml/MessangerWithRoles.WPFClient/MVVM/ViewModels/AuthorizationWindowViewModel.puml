@@ -1,0 +1,7 @@
+@startuml
+class AuthorizationWindowViewModel {
+    + AuthorizationWindowViewModel()
+}
+BaseViewModel <|-- AuthorizationWindowViewModel
+AuthorizationWindowViewModel --> "CurrentWindowContent" UserControl
+@enduml

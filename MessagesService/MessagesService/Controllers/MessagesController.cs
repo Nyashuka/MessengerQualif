@@ -27,7 +27,7 @@ namespace MessagesService.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<MessageDto>>> SendMessage([FromQuery] string accessToken, ClientMessageDTO clientMessageDTO)
+        public async Task<ActionResult<ServiceResponse<MessageDto>>> SendMessage([FromQuery] string accessToken, [FromQuery] string clientGuid, ClientMessageDTO clientMessageDTO)
         {
             int senderId = await _authService.TryGetAuthenticatedUser(accessToken);
 
@@ -54,7 +54,7 @@ namespace MessagesService.Controllers
 
             //if(!await _chatService.IsUserChatMember(senderId)) return Unauthorized();
 
-            var response = await _messageService.HandleMessage(senderId, accessToken, clientMessageDTO);
+            var response = await _messageService.HandleMessage(senderId, accessToken, clientGuid, clientMessageDTO);
 
             return Ok(response);
         }

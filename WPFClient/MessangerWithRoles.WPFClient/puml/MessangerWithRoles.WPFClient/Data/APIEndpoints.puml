@@ -1,0 +1,35 @@
+@startuml
+class APIEndpoints <<static>> {
+    + {static} LocalAddress : string = "127.0.0.1"
+    + {static} LexyServer : string = "91.201.235.100"
+    + {static} IPAddress : string
+    + {static} CreateAccountPOST : string <<get>>
+    + {static} LoginPOST : string <<get>>
+    + {static} GetAllUsersGET : string <<get>>
+    + {static} GetUserGET : string <<get>>
+    + {static} AddFriendGET : string <<get>>
+    + {static} RemoveFriendGET : string <<get>>
+    + {static} GetAllFriendsGET : string <<get>>
+    + {static} CreatePersonalChatPOST : string <<get>>
+    + {static} GetPersonalChatByMembersPOST : string <<get>>
+    + {static} GetAllChatsGET : string <<get>>
+    + {static} GetChatById : string <<get>>
+    + {static} CreateGroupPOST : string <<get>>
+    + {static} GetAllGroupsGET : string <<get>>
+    + {static} GetChatMembersGET : string <<get>>
+    + {static} AddChatMemberPOST : string <<get>>
+    + {static} AddChatMemberByUsernamePOST : string <<get>>
+    + {static} DeleteChatMemberDELETE : string <<get>>
+    + {static} GetAllPermissionsGET : string <<get>>
+    + {static} CreateRolePOST : string <<get>>
+    + {static} GetAllChatRolesGET : string <<get>>
+    + {static} AssignRolePOST : string <<get>>
+    + {static} UnAssignRoleDELETE : string <<get>>
+    + {static} GetAllRoleAssignesGET : string <<get>>
+    + {static} UpdateRolePATCH : string <<get>>
+    + {static} GetChatMessagesByChatIdGET : string <<get>>
+    + {static} SendMessagePOST : string <<get>>
+    + {static} NotificationsWS : string <<get>>
+}
+APIEndpoints o-> "Ports" PortList
+@enduml

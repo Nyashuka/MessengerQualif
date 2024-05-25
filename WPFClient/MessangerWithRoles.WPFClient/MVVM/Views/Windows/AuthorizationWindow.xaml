@@ -40,7 +40,7 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <Grid>
+            <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="35px"/>
@@ -118,10 +118,94 @@
                 </Button>
             </Grid>
 
-            <ContentControl Grid.Row="1" 
+            <Grid Grid.Row="1">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Vertical" Width="250"
+                            Grid.Column="0" VerticalAlignment="Center">
+
+
+                    <TextBlock Text="Server setup"
+                                Foreground="White"
+                                FontSize="25"
+                                FontWeight="Medium"
+                                FontFamily="Montserrat"
+                                HorizontalAlignment="Center"/>
+
+
+
+                    <TextBlock Text="IP" 
+                                Foreground="DarkGray"
+                                FontSize="12"
+                                FontWeight="Medium"
+                                FontFamily="Monsterrat"
+                                Margin="0 20 0 0"/>
+
+                    <TextBox Text="{Binding Email}" 
+                             x:Name="ipTextBox"
+                            FontSize="13"
+                          FontWeight="Medium"
+                          FontFamily="Montserrat"
+                          Foreground="White"
+                          CaretBrush="LightGray"
+                          BorderBrush="DarkGray"
+                          BorderThickness="0 0 0 1"
+                          Height="22"
+                          VerticalContentAlignment="Center"
+                          Margin="0 5 0 0"
+                          Padding="1 0 0 0" 
+                          Background="Transparent" IsReadOnly="True" />
+
+
+
+
+                    <Button Content="Change" x:Name="changeSaveIp_Button"
+                             FontSize="12"
+                             FontFamily="Montserrat"
+                             Foreground="White"
+                             Cursor="Hand"
+                             BorderThickness="0"
+                             Margin="5 20 5 5"
+                             HorizontalAlignment="Center" Click="ChangeSaveIPButton_Click">
+
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="#462AD8"/>
+
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#28AEED"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Width="220" Height="35"
+                     CornerRadius="20"
+                     Background="{TemplateBinding Background}">
+                                    <ContentPresenter VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+
+                    </Button>
+                    
+
+                </StackPanel>
+
+                <ContentControl Grid.Column="2" 
                             HorizontalAlignment="Center" 
                             VerticalAlignment="Center" 
                             Content="{Binding CurrentWindowContent}" />
+            
+            </Grid>
            
         </Grid>
 

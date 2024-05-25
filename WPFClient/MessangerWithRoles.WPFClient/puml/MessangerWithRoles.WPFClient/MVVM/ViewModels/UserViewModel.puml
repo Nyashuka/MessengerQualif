@@ -1,0 +1,11 @@
+@startuml
+class UserViewModel {
+    + CanExecuteCreateOrOpenChatCommand(p:object) : bool
+    + <<async>> OnExecuteCreateOrOpenChatCommand(p:object) : void
+    + UserViewModel(user:User)
+}
+BaseViewModel <|-- UserViewModel
+UserViewModel --> "User" User
+UserViewModel --> "AddToFriend" ICommand
+UserViewModel --> "CreateOrOpenChat" ICommand
+@enduml

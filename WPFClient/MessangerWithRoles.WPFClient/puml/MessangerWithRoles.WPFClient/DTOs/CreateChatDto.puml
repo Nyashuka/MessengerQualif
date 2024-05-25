@@ -1,0 +1,6 @@
+@startuml
+class CreateChatDto {
+    + ChatTypeId : int <<get>> <<set>>
+    + Members : List<User>? <<get>> <<set>>
+}
+@enduml

@@ -1,6 +1,6 @@
 ﻿namespace DatabaseService.Models.DatabaseModels
 {
-    public class DefaultRoles
+    public class DefaultRole
     {
         public int Id { get; set; }
 

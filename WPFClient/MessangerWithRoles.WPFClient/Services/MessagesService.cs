@@ -17,11 +17,13 @@ namespace MessengerWithRoles.WPFClient.Services
         {
             _httpClient = new HttpClient();
             _authService = ServiceLocator.Instance.GetService<AuthService>();
+
         }
 
         public async Task<ServiceResponse<MessageDto>> SendMessage(MessageDto messageDto)
         {
-            var response = await _httpClient.PostAsJsonAsync($"{APIEndpoints.SendMessagePOST}?accessToken={_authService.AccessToken}", messageDto);
+            var notificationService = ServiceLocator.Instance.GetService<NotificationService>();
+            var response = await _httpClient.PostAsJsonAsync($"{APIEndpoints.SendMessagePOST}?accessToken={_authService.AccessToken}&clientGuid={notificationService.ClientGuid}", messageDto);
             var responseData = await response.Content.ReadFromJsonAsync<ServiceResponse<MessageDto>>();
 
             return responseData;

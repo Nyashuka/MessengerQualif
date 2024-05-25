@@ -8,6 +8,7 @@ using MessengerWithRoles.WPFClient.Services;
 using MessengerWithRoles.WPFClient.Services.EventBusModule;
 using MessengerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
 using MessengerWithRoles.WPFClient.Services.ServiceLocatorModule;
+using System.Net.Mail;
 
 namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 {
@@ -30,16 +31,39 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
         public ICommand Register { get; }
         private bool CanRegisterCommandExecute(object p)
         {
+            if (string.IsNullOrEmpty(CreationAccount.Email))
+            {
+                ErrorMessage = "Email can't be empty";
+                return false;
+            }
+
+            if (!MailAddress.TryCreate(CreationAccount.Email, out var mail))
+            {
+                ErrorMessage = "Email is incorrect";
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(CreationAccount.DisplayName))
+            {
+                ErrorMessage = "Display name can't be empty";
+                return false;
+            }
+
+            if (CreationAccount.Username.Length < 3)
+            {
+                ErrorMessage = "Username must be more than 2 characters";
+                return false;
+            }     
+
             bool passwordsIsSame = CreationAccount.ConfirmPassword.Equals(CreationAccount.Password);
 
             if (!passwordsIsSame)
             {
                 ErrorMessage = "Passwords must be same!";
+                return false;
             }
-            else
-            {
-                ErrorMessage = "";
-            }
+
+            ErrorMessage = "";
 
             return passwordsIsSame;
         }

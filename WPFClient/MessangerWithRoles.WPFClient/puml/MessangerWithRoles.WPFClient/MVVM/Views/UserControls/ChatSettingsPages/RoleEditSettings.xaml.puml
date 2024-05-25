@@ -1,0 +1,6 @@
+@startuml
+class RoleEditSettings <<partial>> {
+    + RoleEditSettings()
+}
+UserControl <|-- RoleEditSettings
+@enduml

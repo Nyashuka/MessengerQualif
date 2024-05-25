@@ -1,0 +1,17 @@
+@startuml
+class ChatViewModel {
+    + Id : int <<get>> <<set>>
+    + DisplayName : string <<get>>
+    + ImageSource : string <<get>>
+    + LastMessage : string <<get>>
+    +  <<event>> MessegesListChanged : Action 
+    + ChatViewModel(id:int, username:string, imageSource:string, messages:ObservableCollection<Message>, parcipient:User)
+    + AddMessage(message:MessageDto, isReceived:bool) : void
+    + UpdateMessages(messages:ObservableCollection<Message>) : void
+}
+class "ObservableCollection`1"<T> {
+}
+BaseViewModel <|-- ChatViewModel
+ChatViewModel --> "Messages<Message>" "ObservableCollection`1"
+ChatViewModel --> "Parcipient" User
+@enduml

@@ -24,7 +24,7 @@ namespace NotificationService.Controllers
         }
 
         [HttpGet("connect")]
-        public async Task Connect([FromHeader] string accessToken)
+        public async Task Connect([FromHeader] string accessToken, [FromHeader] string clientGuid)
         {
             if (!HttpContext.WebSockets.IsWebSocketRequest)
                 return;
@@ -36,11 +36,11 @@ namespace NotificationService.Controllers
 
             var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
             
-            await _connectionsService.AddClientAndStartReceiving(userId, webSocket);            
+            await _connectionsService.AddClientAndStartReceiving(userId, new Guid(clientGuid), webSocket);            
         }
 
         [HttpPost("notify")]
-        public async Task<ActionResult<ServiceResponse<bool>>> NotifyUsers([FromQuery]string accessToken, NotifyDataDto data)
+        public async Task<ActionResult<ServiceResponse<bool>>> NotifyUsers([FromQuery]string accessToken, [FromQuery] string clientGuid, NotifyDataDto data)
         {
             int userId = await _authService.TryGetAuthenticatedUser(accessToken);
 
@@ -52,7 +52,7 @@ namespace NotificationService.Controllers
                 return BadRequest();
             }
 
-            var activeConnections = _connectionsService.GetActiveConnections(data.Recipients);
+            var activeConnections = _connectionsService.GetActiveConnections(data.Recipients, userId, new Guid(clientGuid));
 
             await _messageNotifier.NotifyUsers(activeConnections, data.Message);
 

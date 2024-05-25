@@ -194,6 +194,27 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             CurrentRolePage.DataContext = this;
         }
 
+        public ICommand DeleteRoleCommand { get; }
+
+        private bool CanExecuteDeleteRoleCommand(object p) => true;
+
+        private async void OnExecuteDeleteRoleCommand(object p)
+        {
+            var roleToDelete = p as RoleWithPermissions;
+
+            var rolesService = ServiceLocator.Instance.GetService<RolesService>();
+
+            var response = await rolesService.DeleteRole(roleToDelete.Id);
+
+            if(response.Data == null || response.Success == false)
+            {
+                MessageBox.Show(response.Message);
+                return;
+            }
+
+            Group.Roles.Remove(roleToDelete);
+        }
+
         public ICommand SaveRoleEditChangesCommand { get; }
 
         private bool CanExecuteSaveRoleEditChangesCommand(object p) => true;
@@ -366,6 +387,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             CreateRoleCommand = new LambdaCommand(OnExecuteCreateRoleCommand, CanExecuteCreateRoleCommand);
             SaveRoleEditChangesCommand = new LambdaCommand(OnExecuteSaveRoleEditChangesCommand, CanExecuteSaveRoleEditChangesCommand);
             CancelEditRoleCommand = new LambdaCommand(OnExecuteCancelEditRoleCommand, CanExecuteCancelEditRoleCommand);
+            DeleteRoleCommand = new LambdaCommand(OnExecuteDeleteRoleCommand, CanExecuteDeleteRoleCommand);
         }
     }
 }

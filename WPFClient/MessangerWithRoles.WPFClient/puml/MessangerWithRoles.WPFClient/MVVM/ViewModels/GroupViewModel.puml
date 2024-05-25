@@ -1,0 +1,25 @@
+@startuml
+class GroupViewModel {
+    + Id : int <<get>>
+    + DisplayName : string <<get>> <<set>>
+    + Description : string <<get>> <<set>>
+    + LastMessage : string <<get>>
+    + ImageSource : string <<get>> <<set>>
+    + Status : string <<get>> <<set>>
+    +  <<event>> MessegesListChanged : Action 
+    + GroupViewModel(id:int, displayName:string, description:string, members:ObservableCollection<User>, messages:ObservableCollection<Message>, roles:ObservableCollection<RoleWithPermissions>)
+    + AddMessage(message:MessageDto, isReceived:bool) : void
+    + GetChatMembersStatus() : string
+    + UpdateMessages(messages:ObservableCollection<Message>) : void
+    + AddMember(user:User) : void
+    + DeleteMember(user:User) : void
+    + AddRole(role:RoleWithPermissions) : void
+    + UpdateRole(role:RoleWithPermissions) : void
+}
+class "ObservableCollection`1"<T> {
+}
+BaseViewModel <|-- GroupViewModel
+GroupViewModel --> "Members<User>" "ObservableCollection`1"
+GroupViewModel --> "Messages<Message>" "ObservableCollection`1"
+GroupViewModel --> "Roles<RoleWithPermissions>" "ObservableCollection`1"
+@enduml

@@ -28,6 +28,13 @@ namespace DatabaseService.Services
 
         public async Task<ServiceResponse<RoleWithPermissions>> CreateDefaultRole(int chatId)
         {
+            var defaultRoleIsExists = await _databaseContext.DefaultRoles.AnyAsync(x => x.ChatId == chatId);
+
+            if (defaultRoleIsExists)
+            {
+                return new ServiceResponse<RoleWithPermissions>() { Success = false, Message = "Default role for this chat already exists" };
+            }
+
             var role = new Role()
             {
                 Name = DefaultRoleName,
@@ -42,12 +49,21 @@ namespace DatabaseService.Services
                 var rolePermissionRelation = new RolePermissionRelation()
                 {
                     ChatPermissionId = permissionId,
-                    RoleId = role.Id
+                    RoleId = role.Id,
+                    IsAllowed = true
                 };
 
                 _databaseContext.RolePermissionRelations.Add(rolePermissionRelation);
             }
 
+            await _databaseContext.SaveChangesAsync();
+
+            var defaultRole = new DefaultRole()
+            {
+                ChatId = chatId,
+                RoleId = role.Id
+            };
+            _databaseContext.DefaultRoles.Add(defaultRole);
             await _databaseContext.SaveChangesAsync();
 
             var roleWithPermissions = GetRoleWithPermissions(role);
@@ -71,6 +87,13 @@ namespace DatabaseService.Services
 
         public async Task<ServiceResponse<bool>> DeleteRole(int roleId)
         {
+            var isDefaultRole = await _databaseContext.DefaultRoles.AnyAsync(x => x.RoleId == roleId);
+
+            if (isDefaultRole)
+            {
+                return new ServiceResponse<bool>() { Success = false, Message = "Default role can't be deleted!" };
+            }
+
             var role = await _databaseContext.Roles.FirstOrDefaultAsync(r => r.Id == roleId);
 
             if (role == null)
@@ -82,6 +105,11 @@ namespace DatabaseService.Services
 
             if (userRoleRelations != null && userRoleRelations.Count > 0)
                 _databaseContext.UserRoleRelations.RemoveRange(userRoleRelations);
+
+            var rolePermissionsRelations = _databaseContext.RolePermissionRelations.Where(x => x.RoleId == role.Id).ToList();
+
+            if (userRoleRelations != null && userRoleRelations.Count > 0)
+                _databaseContext.RolePermissionRelations.RemoveRange(rolePermissionsRelations);
 
             _databaseContext.Roles.Remove(role);
 
