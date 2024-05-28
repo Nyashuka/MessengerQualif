@@ -14,6 +14,8 @@ using MessengerWithRoles.WPFClient.MVVM.Views.UserControls.ChatSettingsPages;
 using System.Collections.Generic;
 using GongSolutions.Wpf.DragDrop;
 using System.Data;
+using Microsoft.Win32;
+using System.Threading.Tasks;
 
 namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 {
@@ -371,6 +373,61 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             }
         }
 
+        private string _profilePictureUrl;
+        public string ProfilePictureUrl
+        {
+            get => _profilePictureUrl;
+            set => Set(ref _profilePictureUrl, value);
+        }
+
+        private async Task UploadFileAsync(string filePath)
+        {
+            var accountService = ServiceLocator.Instance.GetService<GroupsServcie>();
+
+            var response = await accountService.UpdatePicture(Group.Id, filePath);
+
+            if (string.IsNullOrEmpty(response.Data) || !response.Success)
+            {
+                MessageBox.Show(response.Message);
+                return;
+            }
+
+            Group.ImageSource = response.Data;
+        }
+
+        public ICommand UpdateProfilePictureCommand { get; }
+        private bool CanExecuteUpdateProfilePictureCommand(object p) => true;
+        private async void OnExecuteUpdateProfilePictureCommand(object p)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image files (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png|All files (*.*)|*.*";
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                await UploadFileAsync(openFileDialog.FileName);
+            }
+        }
+
+        public ICommand UpdateProfileInfoCommand { get; }
+        private bool CanExecuteUpdateProfileInfoCommand(object p) => true;
+        private async void OnExecuteUpdateProfileInfoCommand(object p)
+        {
+            //User user = new User()
+            //{
+            //    Id = _accountService.User.Id,
+            //    DisplayName = DisplayName,
+            //    Username = Username,
+            //    AvatarURL = _accountService.User.AvatarURL,
+            //};
+
+            //var result = await _accountService.UpdateProfileInfo(user);
+
+            //if (result.Success)
+            //{
+            //    MessageBox.Show("Profile updated succesfully.");
+            //}
+        }
+
         public GroupPageViewModel(GroupViewModel group)
         {
             Group = group;
@@ -388,6 +445,11 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             SaveRoleEditChangesCommand = new LambdaCommand(OnExecuteSaveRoleEditChangesCommand, CanExecuteSaveRoleEditChangesCommand);
             CancelEditRoleCommand = new LambdaCommand(OnExecuteCancelEditRoleCommand, CanExecuteCancelEditRoleCommand);
             DeleteRoleCommand = new LambdaCommand(OnExecuteDeleteRoleCommand, CanExecuteDeleteRoleCommand);
+
+            UpdateProfilePictureCommand =
+                new LambdaCommand(OnExecuteUpdateProfilePictureCommand, CanExecuteUpdateProfilePictureCommand);
+            UpdateProfileInfoCommand =
+                new LambdaCommand(OnExecuteUpdateProfileInfoCommand, CanExecuteUpdateProfileInfoCommand);
         }
     }
 }

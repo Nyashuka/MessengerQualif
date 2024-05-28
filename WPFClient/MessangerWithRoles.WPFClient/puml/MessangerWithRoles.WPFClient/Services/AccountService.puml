@@ -1,8 +1,0 @@
-@startuml
-class AccountService {
-    + Email : string <<get>>
-    + AccountService(user:User, email:string)
-}
-IService <|-- AccountService
-AccountService --> "User" User
-@enduml

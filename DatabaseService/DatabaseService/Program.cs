@@ -36,6 +36,7 @@ namespace DatabaseService
             //
             builder.Services.AddScoped<IChatService, ChatService>();
             builder.Services.AddScoped<IGroupsService, GroupsService>();
+            builder.Services.AddScoped<IGroupsInfoService, GroupInfoService>();
             builder.Services.AddScoped<IChatMembersService, ChatMembersService>();
             //
             builder.Services.AddScoped<IMessageService, MessageService>();

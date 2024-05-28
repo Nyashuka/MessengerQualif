@@ -38,7 +38,8 @@ namespace DatabaseService.Services
                                     {
                                         Id = cm.User.Id,
                                         Username = cm.User.Username,
-                                        DisplayName = cm.User.DisplayName
+                                        DisplayName = cm.User.DisplayName,
+                                        AvatarURL = cm.User.AvatarURL
                                     })
                                     .ToList();
 
@@ -50,6 +51,7 @@ namespace DatabaseService.Services
                 Id = owner.Id,
                 DisplayName = owner.DisplayName,
                 Username = owner.Username,
+                AvatarURL = owner.AvatarURL
             };
 
             var chatInfoDto = new GroupChatInfoDto()
@@ -178,14 +180,16 @@ namespace DatabaseService.Services
                                  {
                                      Id = cm.User.Id,
                                      Username = cm.User.Username,
-                                     DisplayName = cm.User.DisplayName
+                                     DisplayName = cm.User.DisplayName,
+                                     AvatarURL = cm.User.AvatarURL
                                  })
                                  .ToList();
             var owner = _databaseContext.Users.Select(x => new UserDto()
             {
                 Id = x.Id,
                 DisplayName = x.DisplayName,
-                Username = x.Username
+                Username = x.Username,
+                AvatarURL = x.AvatarURL
             }).First(x => x.Id == groupInfo.OwnerId);
 
             members.Add(owner);

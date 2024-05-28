@@ -1,6 +1,7 @@
 
 using AccountManagementService.Services;
 using AccountManagementService.Services.Interfaces;
+using Microsoft.Extensions.FileProviders;
 
 namespace AccountManagementService
 {
@@ -16,6 +17,7 @@ namespace AccountManagementService
             builder.Services.AddScoped<IFriendsManagementService, FriendsManagementService>();
             builder.Services.AddScoped<IUsersService, UsersService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IProfileService, ProfileService>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -32,7 +34,19 @@ namespace AccountManagementService
             }
 
             app.UseAuthorization();
-
+            //app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                                Path.Combine(Directory.GetCurrentDirectory(), "uploads")),
+                RequestPath = "/uploads"
+            });
+            app.UseDirectoryBrowser(new DirectoryBrowserOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                                Path.Combine(Directory.GetCurrentDirectory(), "uploads")),
+                RequestPath = "/uploads"
+            });
 
             app.MapControllers();
 

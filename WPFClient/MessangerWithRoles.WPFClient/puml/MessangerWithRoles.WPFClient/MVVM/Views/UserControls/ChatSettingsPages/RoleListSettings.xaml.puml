@@ -1,6 +1,0 @@
-@startuml
-class RoleListSettings <<partial>> {
-    + RoleListSettings()
-}
-UserControl <|-- RoleListSettings
-@enduml

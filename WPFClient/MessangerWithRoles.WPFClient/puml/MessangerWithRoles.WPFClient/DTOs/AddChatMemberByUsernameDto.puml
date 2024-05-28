@@ -1,6 +1,0 @@
-@startuml
-class AddChatMemberByUsernameDto {
-    + ChatId : int <<get>> <<set>>
-    + Username : string <<get>> <<set>>
-}
-@enduml

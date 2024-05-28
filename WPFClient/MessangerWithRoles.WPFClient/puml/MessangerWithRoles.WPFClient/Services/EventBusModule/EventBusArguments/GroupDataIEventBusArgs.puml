@@ -1,7 +1,0 @@
-@startuml
-class GroupDataIEventBusArgs {
-    + GroupDataIEventBusArgs(group:GroupViewModel)
-}
-IEventBusArgs <|-- GroupDataIEventBusArgs
-GroupDataIEventBusArgs --> "Group" GroupViewModel
-@enduml

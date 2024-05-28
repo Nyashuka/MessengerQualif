@@ -1,7 +1,0 @@
-@startuml
-class RequestService {
-    + RequestService()
-    + <<async>> PostAsJsonAsync(endpoint:string, postData:TPostData) : Task<ServiceResponse<TReturnType>>
-}
-IService <|-- RequestService
-@enduml

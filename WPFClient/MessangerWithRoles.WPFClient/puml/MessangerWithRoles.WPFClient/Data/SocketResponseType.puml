@@ -1,5 +1,0 @@
-@startuml
-enum SocketResponseType {
-    TextMessage= 0,
-}
-@enduml

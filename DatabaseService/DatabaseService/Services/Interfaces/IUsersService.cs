@@ -11,5 +11,6 @@ namespace DatabaseService.Services.Interfaces
         Task<ServiceResponse<UserDto>> GetUserByAccountId(int accountId);
         Task<ServiceResponse<User>> CreateUser(UserDto userDto);
         Task<ServiceResponse<User>> UpdateUser(UserDto newUserData);
+        Task<ServiceResponse<string>> UpdateProfilePicture(int userId, string avatarURL);
     }
 }

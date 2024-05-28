@@ -1,6 +1,0 @@
-@startuml
-class AuthorizationWindow <<partial>> {
-    + AuthorizationWindow()
-}
-Window <|-- AuthorizationWindow
-@enduml

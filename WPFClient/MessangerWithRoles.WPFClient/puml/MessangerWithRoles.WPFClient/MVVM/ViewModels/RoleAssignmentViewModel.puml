@@ -1,7 +1,0 @@
-@startuml
-class RoleAssignmentViewModel {
-    + Asigned : bool <<get>> <<set>>
-}
-BaseViewModel <|-- RoleAssignmentViewModel
-RoleAssignmentViewModel --> "User" User
-@enduml

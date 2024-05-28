@@ -1,7 +1,0 @@
-@startuml
-class ChatPage <<partial>> {
-    + ChatPage(chatPageViewModel:ChatPageViewModel)
-    + ScrollIntoLastMessage() : void
-}
-UserControl <|-- ChatPage
-@enduml

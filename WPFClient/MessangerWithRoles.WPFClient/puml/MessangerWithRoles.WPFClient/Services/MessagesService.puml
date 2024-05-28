@@ -1,7 +1,0 @@
-@startuml
-class MessagesService {
-    + MessagesService()
-    + <<async>> SendMessage(messageDto:MessageDto) : Task<ServiceResponse<MessageDto>>
-}
-IService <|-- MessagesService
-@enduml

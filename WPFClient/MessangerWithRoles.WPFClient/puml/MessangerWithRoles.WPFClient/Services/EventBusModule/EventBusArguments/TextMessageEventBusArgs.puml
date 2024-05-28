@@ -1,7 +1,0 @@
-@startuml
-class TextMessageEventBusArgs {
-    + TextMessageEventBusArgs(message:MessageDto)
-}
-IEventBusArgs <|-- TextMessageEventBusArgs
-TextMessageEventBusArgs --> "Message" MessageDto
-@enduml

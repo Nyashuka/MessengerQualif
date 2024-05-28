@@ -24,8 +24,9 @@ namespace DatabaseService.Services
 
             if (alreadyFriend)
             {
-                response.Data = true;
-                response.Message = $"This user with account id={friend.FriendUserId} is already friend";
+                response.Data = false;
+                response.Success = false;
+                response.Message = $"This user with is already friend";
                 return response;
             }
 
@@ -47,7 +48,8 @@ namespace DatabaseService.Services
                                                           {
                                                               Id = x.Friend.Id,
                                                               Username = x.Friend.Username,
-                                                              DisplayName = x.Friend.DisplayName
+                                                              DisplayName = x.Friend.DisplayName,
+                                                              AvatarURL = x.Friend.AvatarURL,
                                                           })
                                                           .ToList();
 

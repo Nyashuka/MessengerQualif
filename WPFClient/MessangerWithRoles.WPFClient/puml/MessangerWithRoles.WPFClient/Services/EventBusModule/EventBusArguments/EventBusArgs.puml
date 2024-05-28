@@ -1,5 +1,0 @@
-@startuml
-class EventBusArgs {
-}
-IEventBusArgs <|-- EventBusArgs
-@enduml

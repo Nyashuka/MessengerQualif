@@ -134,16 +134,6 @@ namespace DatabaseService.Migrations
                         },
                         new
                         {
-                            Id = 2,
-                            Name = "Send photos"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Send video"
-                        },
-                        new
-                        {
                             Id = 10,
                             Name = "Add members"
                         },
@@ -154,18 +144,8 @@ namespace DatabaseService.Migrations
                         },
                         new
                         {
-                            Id = 12,
-                            Name = "Ban members"
-                        },
-                        new
-                        {
                             Id = 50,
                             Name = "Change chat info"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Name = "Create roles"
                         },
                         new
                         {
@@ -176,11 +156,6 @@ namespace DatabaseService.Migrations
                         {
                             Id = 15,
                             Name = "Edit roles"
-                        },
-                        new
-                        {
-                            Id = 16,
-                            Name = "Delete roles"
                         },
                         new
                         {
@@ -215,7 +190,7 @@ namespace DatabaseService.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DatabaseService.Models.DatabaseModels.DefaultRoles", b =>
+            modelBuilder.Entity("DatabaseService.Models.DatabaseModels.DefaultRole", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -270,14 +245,12 @@ namespace DatabaseService.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AvatarUrl")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("ChatId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
@@ -392,6 +365,9 @@ namespace DatabaseService.Migrations
                     b.Property<int>("AccountId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("AvatarURL")
+                        .HasColumnType("text");
+
                     b.Property<string>("DisplayName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -471,7 +447,7 @@ namespace DatabaseService.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("DatabaseService.Models.DatabaseModels.DefaultRoles", b =>
+            modelBuilder.Entity("DatabaseService.Models.DatabaseModels.DefaultRole", b =>
                 {
                     b.HasOne("DatabaseService.Models.DatabaseModels.Chat", "Chat")
                         .WithMany()

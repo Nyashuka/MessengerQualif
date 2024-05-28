@@ -41,16 +41,16 @@ namespace DatabaseService.DataContexts
                    Id = Convert.ToInt32(PermissionEnum.SendTextMessages),
                    Name = "Send text messages",
                },
-               new ChatPermission()
-               {
-                   Id = Convert.ToInt32(PermissionEnum.SendPhotos),
-                   Name = "Send photos"
-               },
-               new ChatPermission()
-               {
-                   Id = Convert.ToInt32(PermissionEnum.SendVideos),
-                   Name = "Send video"
-               },
+               //new ChatPermission()
+               //{
+               //    Id = Convert.ToInt32(PermissionEnum.SendPhotos),
+               //    Name = "Send photos"
+               //},
+               //new ChatPermission()
+               //{
+               //    Id = Convert.ToInt32(PermissionEnum.SendVideos),
+               //    Name = "Send video"
+               //},
                new ChatPermission()
                {
                    Id = Convert.ToInt32(PermissionEnum.AddMembers),
@@ -61,21 +61,21 @@ namespace DatabaseService.DataContexts
                    Id = Convert.ToInt32(PermissionEnum.DeleteMembers),
                    Name = "Delete members"
                },
-               new ChatPermission()
-               {
-                   Id = Convert.ToInt32(PermissionEnum.BanMembers),
-                   Name = "Ban members"
-               },
+               //new ChatPermission()
+               //{
+               //    Id = Convert.ToInt32(PermissionEnum.BanMembers),
+               //    Name = "Ban members"
+               //},
                new ChatPermission()
                {
                    Id = Convert.ToInt32(PermissionEnum.ChangeChatInfo),
                    Name = "Change chat info"
                },
-               new ChatPermission()
-               {
-                   Id = Convert.ToInt32(PermissionEnum.CreateRoles),
-                   Name = "Create roles"
-               },
+               //new ChatPermission()
+               //{
+               //    Id = Convert.ToInt32(PermissionEnum.CreateRoles),
+               //    Name = "Create roles"
+               //},
                new ChatPermission()
                {
                    Id = Convert.ToInt32(PermissionEnum.GiveRoles),
@@ -86,11 +86,11 @@ namespace DatabaseService.DataContexts
                    Id = Convert.ToInt32(PermissionEnum.EditRoles),
                    Name = "Edit roles"
                },
-               new ChatPermission()
-               {
-                   Id = Convert.ToInt32(PermissionEnum.DeleteRoles),
-                   Name = "Delete roles"
-               },
+               //new ChatPermission()
+               //{
+               //    Id = Convert.ToInt32(PermissionEnum.DeleteRoles),
+               //    Name = "Delete roles"
+               //},
                new ChatPermission()
                {
                    Id = Convert.ToInt32(PermissionEnum.Administrator),

@@ -8,6 +8,8 @@
         public const string CreateGroupPOST = $"{DatabaseService}/api/Groups";
         public const string GetAllGroupsByUserIdGET = $"{DatabaseService}/api/Groups";
         public const string GetGroupByIdGET = $"{DatabaseService}/api/Groups/group-by-id";
+        public const string UpdateGroupInfoPATCH= $"{DatabaseService}/api/GroupInfo";
+        public const string UpdateGroupPictureGET = $"{DatabaseService}/api/GroupInfo/picture";
         // [chats]
         public const string CreatePersonalChat_POST = $"{DatabaseService}/api/Chats/create-personal";
         public const string GetAllPersonalChats_GET = $"{DatabaseService}/api/Chats/get-personal";
@@ -27,5 +29,6 @@
         public const string RolesService = "http://127.0.0.1:5296";
         public const string CanDeleteMemberPOST = $"{RolesService}/api/ActionAccess/can-delete-member";
         public const string CanAddMemberPOST = $"{RolesService}/api/ActionAccess/can-add-member";
+        public const string CanChangeChatInfoPOST = $"{RolesService}/api/ActionAccess/can-change-chat-info";
     }
 }

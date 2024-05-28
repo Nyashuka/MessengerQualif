@@ -29,7 +29,7 @@
                     <StackPanel Orientation="Horizontal" Margin="20 0 0 0">
                         <Ellipse Width="55" Height="55">
                             <Ellipse.Fill>
-                                <ImageBrush ImageSource="https://i.pinimg.com/originals/e7/da/8d/e7da8d8b6a269d073efa11108041928d.jpg"
+                                <ImageBrush ImageSource="{Binding Group.ImageSource}"
              RenderOptions.BitmapScalingMode="Fant"/>
                             </Ellipse.Fill>
                         </Ellipse>

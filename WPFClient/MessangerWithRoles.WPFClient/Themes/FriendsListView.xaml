@@ -33,7 +33,7 @@
                             <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="10 0 0 0">
                                 <Ellipse Width="55" Height="55">
                                     <Ellipse.Fill>
-                                        <ImageBrush ImageSource="{Binding ImageSource}"
+                                        <ImageBrush ImageSource="{Binding User.AvatarURL}"
                                                     RenderOptions.BitmapScalingMode="Fant"/>
                                     </Ellipse.Fill>
                                 </Ellipse>
@@ -49,8 +49,8 @@
 
                             </StackPanel>
 
-                            <Button Grid.Column="1" Height="40px" Width="40px" Command="{Binding AddToFriend}" 
-                                    Content="+"
+                            <Button Grid.Column="1" Height="40px" Width="40px" Command="{Binding DeleteFriend}" 
+                                    Content="-"
                                     FontSize="18"
                                     HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                                 <Button.Style>

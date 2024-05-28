@@ -26,7 +26,7 @@ namespace DatabaseService.Controllers
         }
 
         [HttpGet("get-friends")]
-        public async Task<ActionResult<ServiceResponse<bool>>> GetFriends(int userId)
+        public async Task<ActionResult<ServiceResponse<List<UserDto>>>> GetFriends(int userId)
         {
             var response = await _friendsService.GetFriends(userId);
 

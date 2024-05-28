@@ -1,7 +1,0 @@
-@startuml
-abstract class Command {
-    + {abstract} CanExecute(parameter:object?) : bool
-    + {abstract} Execute(parameter:object?) : void
-}
-ICommand <|-- Command
-@enduml

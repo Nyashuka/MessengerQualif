@@ -88,10 +88,7 @@ namespace NotificationService.Services
                     await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing WebSocket connection", CancellationToken.None);
                 }
 
-                if (Clients.ContainsKey(userId))
-                {
-                    await RemoveClientAndCloseAsync(userId, clientGuid);
-                }
+                await RemoveClientAndCloseAsync(userId, clientGuid);
             }
         }
 
@@ -110,7 +107,6 @@ namespace NotificationService.Services
                             activeConnections.Add(socket.Value);
                         }
                     }
-
                 }
             }
 

@@ -72,7 +72,7 @@ namespace MessengerWithRoles.WPFClient.Services
 
                 if (_webSocket.State == WebSocketState.Open && cancellationToken.IsCancellationRequested)
                 {
-                    await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Connection closed.", CancellationToken.None);
+                    await StopReceiving();
                     MessageBox.Show("Disconnected from notification server.");
                 }
             }
@@ -80,13 +80,16 @@ namespace MessengerWithRoles.WPFClient.Services
             {
                 if (e.Message.Contains("The websocket has already been started") || _webSocket.State == WebSocketState.Open)
                 {
-                    await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Connection closed.", CancellationToken.None);
+                    await StopReceiving();
                     MessageBox.Show("Disconnected from notification server.");
                 }
 
                 //at System.Net.WebSockets.ClientWebSocketOptions.ThrowIfReadOnly() at System.Net.WebSockets.ClientWebSocketOptions.SetRequestHeader(String headerName, String headerValue) at MessengerWithRoles.WPFClient.Services.NotificationService.d__6.MoveNext() in E:\QualifWork\WPFClient\MessangerWithRoles.WPFClient\Services\NotificationService.cs:line 49
                 if (!cancellationToken.IsCancellationRequested)
                     MessageBox.Show("Notification service error!\n" + e.Message);
+
+                if(!e.Message.Contains("The operation was canceled"))
+                    MessageBox.Show("Restart application to reconnect notification service");
             }
             finally
             {
@@ -96,7 +99,7 @@ namespace MessengerWithRoles.WPFClient.Services
                     MessageBox.Show("Disconnected from notification server.");
                 }
 
-                MessageBox.Show("Restart application to reconnect notification service");
+                
             }
 
         }

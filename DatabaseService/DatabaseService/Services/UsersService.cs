@@ -29,7 +29,8 @@ namespace DatabaseService.Services
                 {
                     DisplayName = user.DisplayName,
                     Id = user.Id,
-                    Username = user.Username
+                    Username = user.Username,
+                    AvatarURL = user.AvatarURL,
                 }).ToList()
             };
 
@@ -51,8 +52,25 @@ namespace DatabaseService.Services
 
             return new ServiceResponse<UserDto>
             {
-                Data = new UserDto() { DisplayName = user.DisplayName, Username = user.Username, Id = user.Id },
+                Data = new UserDto()
+                {
+                    DisplayName = user.DisplayName,
+                    Username = user.Username,
+                    Id = user.Id,
+                    AvatarURL = user.AvatarURL
+                },
             };
+        }
+
+        public async Task<ServiceResponse<string>> UpdateProfilePicture(int userId, string avatarURL)
+        {
+            var user = await _databaseContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
+
+            user.AvatarURL = avatarURL;
+
+            await _databaseContext.SaveChangesAsync();
+
+            return new ServiceResponse<string>() { Data = avatarURL };
         }
 
         public async Task<ServiceResponse<UserDto>> GetUserByAccountId(int accountId)
@@ -70,7 +88,13 @@ namespace DatabaseService.Services
 
             return new ServiceResponse<UserDto>
             {
-                Data = new UserDto() { DisplayName = user.DisplayName, Username = user.Username, Id = user.Id },
+                Data = new UserDto()
+                {
+                    DisplayName = user.DisplayName,
+                    Username = user.Username,
+                    Id = user.Id,
+                    AvatarURL = user.AvatarURL,
+                },
             };
         }
 
@@ -78,16 +102,24 @@ namespace DatabaseService.Services
         {
             var user = await _databaseContext.Users.FirstOrDefaultAsync(x => x.Id == newUserData.Id);
 
-            if (user == null) 
+            if (user == null)
             {
-                return new ServiceResponse<User> { Success = false, Message = "User to update not found" };
+                return new ServiceResponse<User>
+                {
+                    Success = false,
+                    Message = "User to update not found"
+                };
             }
 
-            if(await _databaseContext.Users
-                .AnyAsync(x => x.Username.ToLower().Equals(newUserData.Username.ToLower()) && 
+            if (await _databaseContext.Users
+                .AnyAsync(x => x.Username.ToLower().Equals(newUserData.Username.ToLower()) &&
                 x.Id != newUserData.Id))
             {
-                return new ServiceResponse<User> { Success = false, Message = "Username already taken" };
+                return new ServiceResponse<User>
+                {
+                    Success = false,
+                    Message = "Username already taken"
+                };
             }
 
             user.Username = newUserData.Username;

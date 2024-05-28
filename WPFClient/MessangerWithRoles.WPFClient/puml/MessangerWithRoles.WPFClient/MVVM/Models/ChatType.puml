@@ -1,6 +1,0 @@
-@startuml
-class ChatType {
-    + Name : string <<get>> <<set>>
-}
-ChatType --> "Type" ChatTypeEnum
-@enduml

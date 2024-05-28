@@ -39,6 +39,8 @@ namespace MessengerWithRoles.WPFClient.Data
         public static string AddFriendGET { get => $"http://{IPAddress}:{Ports.AccountManagement}/api/FriendsManagement/add-friend"; }
         public static string RemoveFriendGET { get => $"http://{IPAddress}:{Ports.AccountManagement}/api/FriendsManagement/remove-friend"; }
         public static string GetAllFriendsGET { get => $"http://{IPAddress}:{Ports.AccountManagement}/api/FriendsManagement"; }
+        public static string UpdateProfilePicturePOST { get => $"http://{IPAddress}:{Ports.AccountManagement}/api/Profile/picture"; }
+        public static string UpdateProfileInfoPOST { get => $"http://{IPAddress}:{Ports.AccountManagement}/api/Profile"; }
 
         // chats
         public static string CreatePersonalChatPOST { get => $"http://{IPAddress}:{Ports.Chats}/api/PersonalChats/create-personal"; }
@@ -47,6 +49,8 @@ namespace MessengerWithRoles.WPFClient.Data
         public static string GetChatById { get => $"http://{IPAddress}:{Ports.Chats}/api/Chats/get-by-id"; }
         public static string CreateGroupPOST { get => $"http://{IPAddress}:{Ports.Chats}/api/Groups"; }
         public static string GetAllGroupsGET { get => $"http://{IPAddress}:{Ports.Chats}/api/Groups"; }
+        public static string UpdateGroupChatInfoPOST { get => $"http://{IPAddress}:{Ports.Chats}/api/GroupsInfo"; }
+        public static string UpdateGroupChatPicture { get => $"http://{IPAddress}:{Ports.Chats}/api/GroupsInfo/picture"; }
 
         // Chat members
         public static string GetChatMembersGET { get => $"http://{IPAddress}:{Ports.Chats}/api/ChatMembers"; }
@@ -72,6 +76,11 @@ namespace MessengerWithRoles.WPFClient.Data
 
         // notification service
         public static string NotificationsWS { get => $"ws://{IPAddress}:{Ports.Notification}/api/Notification/connect"; }
-        
+
+        // Profile uploads
+        public static string ProfileServer { get => $"http://{IPAddress}:{Ports.AccountManagement}"; }
+        public static string ChatsServer { get => $"http://{IPAddress}:{Ports.Chats}"; }
+
+
     }
 }

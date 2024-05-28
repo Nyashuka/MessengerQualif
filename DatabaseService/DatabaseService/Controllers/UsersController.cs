@@ -49,5 +49,12 @@ namespace DatabaseService.Controllers
             return Ok(response);
         }
 
+        [HttpGet("picture")]
+        public async Task<ActionResult<ServiceResponse<string>>> UpdateProfilePicture(int userId, string avatarURL)
+        {
+            var response = await _userService.UpdateProfilePicture(userId, avatarURL);
+
+            return Ok(response);
+        }
     }
 }

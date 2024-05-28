@@ -68,7 +68,8 @@ namespace DatabaseService.Services
                                            {
                                                Id = x.User.Id,
                                                DisplayName = x.User.DisplayName,
-                                               Username = x.User.Username
+                                               Username = x.User.Username,
+                                               AvatarURL = x.User.AvatarURL,
                                            }).ToList();
 
             return new ServiceResponse<List<UserDto>>() { Data = assignes };

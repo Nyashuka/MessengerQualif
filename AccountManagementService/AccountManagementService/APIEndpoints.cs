@@ -13,6 +13,8 @@ namespace AccountManagementService
         public const string GetOtherUsersForUserGET = $"{DatabaseServiceIP}/api/Users";
         public const string GetUsersGET = $"{DatabaseServiceIP}/api/Users";
         public const string GetUserDataGET = $"{DatabaseServiceIP}/api/Users/get-user";
+        public const string UpdateProfilePicturePUT = $"{DatabaseServiceIP}/api/Users/picture";
+        public const string UpdateProfilePATCH = $"{DatabaseServiceIP}/api/Users";
         
 
         // Auth service

@@ -44,5 +44,13 @@ namespace RolesService.ActionAccess
 
             return Ok(new ServiceResponse<bool> { Data = result });
         }
+
+        [HttpPost("can-change-chat-info")]
+        public async Task<ActionResult<ServiceResponse<bool>>> CanSendTextMessage(ChangeGroupInfoChatActionData data)
+        {
+            var result = await _actionAccessService.HasAccess(new ChangeGroupInfoChatAction(_roleService, data), data.ChatId, data.RequesterId);
+
+            return Ok(new ServiceResponse<bool> { Data = result });
+        }
     }
 }

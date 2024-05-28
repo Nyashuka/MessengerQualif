@@ -39,6 +39,7 @@ namespace DatabaseService.Services
                     Id = user.Id,
                     Username = user.Username,
                     DisplayName = user.DisplayName,
+                    AvatarURL = user.AvatarURL,
                 });
             }
             // just analog
@@ -60,6 +61,7 @@ namespace DatabaseService.Services
                     Id = owner.Id,
                     DisplayName = owner.DisplayName,
                     Username = owner.Username,
+                    AvatarURL = owner.AvatarURL,
                 });
             }
 

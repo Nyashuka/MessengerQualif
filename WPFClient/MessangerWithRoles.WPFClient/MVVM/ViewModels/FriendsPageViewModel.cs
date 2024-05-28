@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Xml.Serialization;
 using MessengerWithRoles.WPFClient.Data;
 using MessengerWithRoles.WPFClient.Data.Requests;
 using MessengerWithRoles.WPFClient.MVVM.Infrastracture.Commands;
@@ -35,7 +37,73 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
         private bool CanLoadUsersCommandExecute(object p) => true;
         private async void OnLoadUsersCommandExecute(object p)
         {
-            Users = (await GetOtherUsersFromServer()).Select(user => new UserViewModel(user)).ToList();
+            var users = await GetOtherUsersFromServer();
+            Users = new List<UserViewModel>();
+
+            foreach (var user in users)
+            { 
+                var userViewModel = new UserViewModel(user);
+                userViewModel.AddToFriendUserEvent += OnAddUserToFried;
+                Users.Add(userViewModel);
+            }
+        }
+
+        private async void OnAddUserToFried(User user)
+        {
+            var authService = ServiceLocator.Instance.GetService<AuthService>();
+
+            HttpClient httpClient = new HttpClient();
+
+            var response = await httpClient.GetAsync($"{APIEndpoints.AddFriendGET}?accessToken={authService.AccessToken}&friendUserId={user.Id}");
+            var data = await response.Content.ReadFromJsonAsync<ServiceResponse<bool>>();
+
+            if (data == null)
+            {
+                MessageBox.Show("Cant pars data");
+                return;
+            }
+
+            if (!data.Success)
+            {
+                MessageBox.Show(data.Message);
+                return;
+            }
+
+            var friends = Friends;
+            friends.Add(Users.First(x => x.User.Id == user.Id));
+            Friends = null;
+            Friends = friends;
+            MessageBox.Show("Added to friends " + user.DisplayName);
+        }
+
+        private async void OnDeleteFriend(User user)
+        {
+            var authService = ServiceLocator.Instance.GetService<AuthService>();
+
+            HttpClient httpClient = new HttpClient();
+
+            var response = await httpClient
+                .GetAsync($"{APIEndpoints.RemoveFriendGET}?accessToken={authService.AccessToken}&friendUserId={user.Id}");
+            var data = await response.Content.ReadFromJsonAsync<ServiceResponse<bool>>();
+
+            if (data == null)
+            {
+                MessageBox.Show("Cant pars data");
+                return;
+            }
+
+            if (!data.Success)
+            {
+                MessageBox.Show(data.Message);
+                return;
+            }
+
+            MessageBox.Show("Deleted friends " + user.DisplayName);
+
+            var friends = Friends;
+            friends.Remove(Friends.First(x => x.User.Id == user.Id));
+            Friends = null;
+            Friends = friends;
         }
 
         private List<UserViewModel> _friends;
@@ -49,7 +117,17 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
         private bool CanLoadFriendsCommandExecute(object p) => true;
         private async void OnLoadFriendsCommandExecute(object p)
         {
-            Friends = (await GetAllFriendsFromServer()).Select(user => new UserViewModel(user)).ToList();
+            var users = await GetAllFriendsFromServer();
+            var friends = new List<UserViewModel>();
+
+            foreach (var user in users)
+            {
+                var userViewModel = new UserViewModel(user);
+                userViewModel.DeleteFriendEvent += OnDeleteFriend;
+                friends.Add(userViewModel);
+            }
+
+            Friends = friends;
         }
 
         public ICommand AddFriend { get; }
@@ -88,8 +166,6 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             LoadUsers = new LambdaCommand(OnLoadUsersCommandExecute, CanLoadUsersCommandExecute);
             LoadFriends = new LambdaCommand(OnLoadFriendsCommandExecute, CanLoadFriendsCommandExecute);
             AddFriend = new LambdaCommand(OnAddFriendCommandExecute, CanAddFriendCommandExecute);
-
-            LoadFriends.Execute(this);
         }
     }
 }

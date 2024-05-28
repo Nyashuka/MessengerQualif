@@ -1,7 +1,0 @@
-@startuml
-class UserControlEventBusArgs {
-    + UserControlEventBusArgs(userControl:UserControl)
-}
-IEventBusArgs <|-- UserControlEventBusArgs
-UserControlEventBusArgs --> "UserControl" UserControl
-@enduml

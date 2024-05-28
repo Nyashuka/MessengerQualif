@@ -14,11 +14,12 @@ namespace MessengerWithRoles.WPFClient.MVVM.Models
         public bool IsReceived { get; private set; }
         public DateTime Time { get; private set; }
 
-        public Message(string sender, string text, bool isReceived)
+        public Message(string sender, string imageSource, string text, bool isReceived)
         {
             Sender = sender;
             Text = text;
             IsReceived = isReceived;
+            ImageSource = imageSource;
         }
     }
 }

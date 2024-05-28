@@ -61,40 +61,42 @@
                                  BorderBrush="#2B3252" BorderThickness="0 0 0 3">
                             <StackPanel  Orientation="Horizontal"
                                 Background="#0B0B11">
-                                <Button Command="{Binding OpenAccountSettingsCommand}">
-                                    <Button.Style>
-                                        <Style TargetType="Button">
-                                            <Setter Property="Background" Value="#1B1A22"/>
-                                            <Setter Property="Foreground" Value="White"/>
-                                            <Setter Property="Template">
-                                                <Setter.Value>
-                                                    <ControlTemplate TargetType="{x:Type Button}">
-                                                        <Ellipse Width="50" Height="50" Margin="10 0 0 0">
-                                                            <Ellipse.Fill>
-                                                                <ImageBrush ImageSource=" https://www.aidemos.info/wp-content/uploads/2023/05/Cute_girl_avatar_Graphic_illustration_abstract_memphis_9bf1da51-5143-47ea-a89c-554ff19f9d65-771x1024.webp"
+                                <Border Width="50" Height="50" Background="Wheat"
+                                    CornerRadius="50" Margin="3" >
+                                    <Button Command="{Binding OpenAccountSettingsCommand}">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Background" Value="#1B1A22"/>
+                                                <Setter Property="Foreground" Value="White"/>
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="{x:Type Button}">
+                                                            <Ellipse Width="50" Height="50" Margin="0 0 0 0">
+                                                                <Ellipse.Fill>
+                                                                    <ImageBrush ImageSource="{Binding UserProfile.AvatarURL}"
                                                                  RenderOptions.BitmapScalingMode="Fant"/>
-                                                            </Ellipse.Fill>
-                                                        </Ellipse>
+                                                                </Ellipse.Fill>
+                                                            </Ellipse>
 
-                                                    </ControlTemplate>
-                                                </Setter.Value>
-                                            </Setter>
-                                            <Style.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="Cursor" Value="Hand" />
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Button.Style>
-                                </Button>
-
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Cursor" Value="Hand" />
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+                                </Border>
                                 <StackPanel Orientation="Vertical"
                                      VerticalAlignment="Center">
-                                                        <Label Content="{Binding CurrentDisplayName}"
+                                        <Label Content="{Binding UserProfile.DisplayName}"
                                     Foreground="White"
                                     FontWeight="SemiBold"
                                     FontSize="15"/>
-                                                        <Label Content="{Binding CurrentUsername}"
+                                    <Label Content="{Binding UserProfile.Username, Converter={StaticResource UsernameConverter}}"
                                     Foreground="Gray"
                                     FontWeight="Medium"
                                     FontSize="12"/>

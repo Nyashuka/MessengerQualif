@@ -18,7 +18,7 @@
                 <TextBlock Text="Role name" Foreground="White"
      TextAlignment="Center" VerticalAlignment="Center"/>
                 <TextBox Text="{Binding RoleNameToCreate}" Width="150" Margin="5"/>
-                <Button Command="{Binding CreateRoleCommand}" Content="Crete role" Margin="5"/>
+                <Button Command="{Binding CreateRoleCommand}" Content="Create role" Margin="5"/>
             </StackPanel>
             <TabControl Grid.Row="1">
                 <TabItem Header="Roles list">

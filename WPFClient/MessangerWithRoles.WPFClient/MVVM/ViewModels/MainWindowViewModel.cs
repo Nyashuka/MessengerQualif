@@ -120,8 +120,8 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
                 ObservableCollection<Message> chatMessages = await chatsService.GetChatMessages(chatDto.Id);
 
                 User parcipient = chatDto.Members.FirstOrDefault(m => m.Id != authService.User.Id);
-                Chats.Add(new ChatViewModel(chatDto.Id, chatDto.Members.First(u => u.Id != authService.User.Id).DisplayName,
-                    "https://i.pinimg.com/originals/e7/da/8d/e7da8d8b6a269d073efa11108041928d.jpg",
+                Chats.Add(new ChatViewModel(chatDto.Id, parcipient.DisplayName,
+                    parcipient.AvatarURL,
                     chatMessages, parcipient));
             }
         }
@@ -239,8 +239,10 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 
             if (chat == null)
             {
-                var newChat = new GroupViewModel(chatFromDB.Data.Id, chatFromDB.Data.ChatInfo.Name,
-                    chatFromDB.Data.ChatInfo.Description, 
+                var newChat = new GroupViewModel(chatFromDB.Data.Id, 
+                    chatFromDB.Data.ChatInfo.Name,
+                    chatFromDB.Data.ChatInfo.Description,
+                    chatFromDB.Data.ChatInfo.AvatarUrl,
                     new ObservableCollection<User>(chatFromDB.Data.Members), messages, chat.Roles);
 
                 System.Windows.Application.Current.Dispatcher.Invoke(delegate
@@ -280,13 +282,17 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 
             var roles = await rolesService.GetChatRoles(group.Id);
 
-            GroupViewModel groupViewModel = new GroupViewModel(group.Id, group.ChatInfo.Name,
+            GroupViewModel groupViewModel = new GroupViewModel(group.Id, 
+                group.ChatInfo.Name,
                 group.ChatInfo.Description,
+                group.ChatInfo.AvatarUrl,
                 new ObservableCollection<User>() { group.ChatInfo.Owner },
                 new ObservableCollection<Message>(),
                 new ObservableCollection<RoleWithPermissions>(roles.Data));
 
             Groups.Add(groupViewModel);
+
+            OpenGroupWindow(groupViewModel);
         }
 
         public ICommand OpenGroupListCommand { get; }
@@ -332,6 +338,9 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             CurrentUsername = '@' + authService.User.Username;
         }
 
+        private AccountService _accountService;
+        public UserProfileViewModel UserProfile { get => _accountService.UserProfile; }
+
         public MainWindowViewModel()
         {
 
@@ -341,6 +350,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             CreateGroupChatDto = new CreateGroupChatDto();
 
             EventBus eventBus = ServiceLocator.Instance.GetService<EventBus>();
+            _accountService = ServiceLocator.Instance.GetService<AccountService>();
 
             eventBus.Subscribe<ChatDataIEventBusArgs>(EventBusDefinitions.OpenChat, OpenChat);
             eventBus.Subscribe<ChatDataIEventBusArgs>(EventBusDefinitions.OpenGroup, OpenGroup);

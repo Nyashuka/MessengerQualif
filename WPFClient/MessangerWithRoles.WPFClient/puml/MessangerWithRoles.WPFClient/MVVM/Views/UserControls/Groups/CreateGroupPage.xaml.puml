@@ -1,6 +1,0 @@
-@startuml
-class CreateGroupPage <<partial>> {
-    + CreateGroupPage()
-}
-UserControl <|-- CreateGroupPage
-@enduml

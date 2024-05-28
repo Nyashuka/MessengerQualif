@@ -8,6 +8,39 @@
              d:DesignHeight="450" d:DesignWidth="800" FontSize="20">
     <Grid>
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Vertical">
+            <Border Width="99" Height="99" Background="Wheat"
+                    CornerRadius="50" Margin="3" >
+                <Button Command="{Binding UpdateProfilePictureCommand}" HorizontalAlignment="Center"
+            HorizontalContentAlignment="Center"
+            >        
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="Gray"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Ellipse Width="100" Height="100">
+                                            <Ellipse.Fill>
+                                                <ImageBrush ImageSource="{Binding ProfilePictureUrl}"
+                     RenderOptions.BitmapScalingMode="Fant"
+                                            />
+                                            </Ellipse.Fill>
+                                        </Ellipse>
+
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Cursor" Value="Hand" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Border>
+
             <StackPanel Orientation="Vertical">
                 <TextBlock Text="Display name" Foreground="white"/>
                 <TextBox Text="{Binding DisplayName}" />
@@ -20,7 +53,7 @@
                 <TextBlock Text="Email" Foreground="white"/>
                 <TextBox Text="{Binding Email}" IsReadOnly="True"/>
             </StackPanel>
-            <Button Content="Save" Margin="5"/>
+            <Button Command="{Binding UpdateProfileInfoCommand}" Content="Save" Margin="5"/>
             <Button Content="Logout" Foreground="Red" Margin="5" Click="Button_Click"/>
 
         </StackPanel> 

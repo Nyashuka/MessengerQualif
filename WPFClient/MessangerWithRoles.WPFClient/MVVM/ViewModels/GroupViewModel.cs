@@ -1,4 +1,5 @@
-﻿using MessengerWithRoles.WPFClient.DTOs;
+﻿using MessengerWithRoles.WPFClient.Data;
+using MessengerWithRoles.WPFClient.DTOs;
 using MessengerWithRoles.WPFClient.MVVM.Models;
 using MessengerWithRoles.WPFClient.MVVM.ViewModels.Base;
 using System;
@@ -52,7 +53,12 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             set => Set(ref _roles, value);
         }
 
-        public string ImageSource { get; set; }
+        private string _imageSource;
+        public string ImageSource
+        {
+            get => _imageSource;
+            set => Set(ref _imageSource, value);
+        }
 
         private string _status;
         public string Status
@@ -64,6 +70,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
         public event Action MessegesListChanged;
 
         public GroupViewModel(int id, string displayName, string description,
+                              string imageSource, 
                               ObservableCollection<User> members,
                               ObservableCollection<Message> messages,
                               ObservableCollection<RoleWithPermissions> roles)
@@ -82,12 +89,12 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             if (messages != null && messages.Count > 0)
                 LastMessage = messages.Last().Text;
 
-            ImageSource = "https://i.pinimg.com/originals/e7/da/8d/e7da8d8b6a269d073efa11108041928d.jpg";
+            _imageSource = $"{APIEndpoints.ChatsServer}/{imageSource}?timestamp={DateTime.Now.Ticks}";
         }
 
         public void AddMessage(MessageDto message, bool isReceived)
         {
-            Message newMessage = new Message(message.Sender.DisplayName, message.Data, isReceived);
+            Message newMessage = new Message(message.Sender.DisplayName, message.Sender.AvatarURL, message.Data, isReceived);
             System.Windows.Application.Current.Dispatcher.Invoke(delegate
             {
                 Messages.Add(newMessage);

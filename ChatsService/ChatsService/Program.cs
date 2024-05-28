@@ -5,6 +5,7 @@ using ChatsService.ChatMembers.Services;
 using ChatsService.Chats.Services;
 using ChatsService.Groups.Services;
 using ChatsService.PersonalChats.Services;
+using Microsoft.Extensions.FileProviders;
 
 namespace ChatsService
 {
@@ -27,6 +28,7 @@ namespace ChatsService
             builder.Services.AddScoped<IChatsService, Chats.Services.ChatsService>();
             builder.Services.AddScoped<IPersonalChatsService, PersonalChatsService>();
             builder.Services.AddScoped<IGroupsService, GroupsService>();
+            builder.Services.AddScoped<IGroupsInfoService, GroupsInfoService>();
             builder.Services.AddScoped<IChatMembersService, ChatMembersServices>();
             builder.Services.AddScoped<IActionAccessService, ActionAccessService>();
 
@@ -43,6 +45,20 @@ namespace ChatsService
 
             app.UseAuthorization();
 
+            var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
+            if (!Directory.Exists(uploadsPath))
+                Directory.CreateDirectory(uploadsPath);
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(uploadsPath),
+                RequestPath = "/uploads"
+            });
+            app.UseDirectoryBrowser(new DirectoryBrowserOptions
+            {
+                FileProvider = new PhysicalFileProvider(uploadsPath),
+                RequestPath = "/uploads"
+            });
 
             app.MapControllers();
 

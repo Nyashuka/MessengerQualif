@@ -23,20 +23,9 @@ namespace AccountManagementService.Services
 
             var response = await _httpClient.PostAsJsonAsync(APIEndpoints.AddFriendPOST, friendRelation);
 
-            if (!response.IsSuccessStatusCode)
-            {
-                return new ServiceResponse<bool>()
-                {
-                    Data = false,
-                    Success = false,
-                    Message = response.ReasonPhrase
-                };
-            }
+            var data = await response.Content.ReadFromJsonAsync<ServiceResponse<bool>>();
 
-            return new ServiceResponse<bool>()
-            {
-                Data = true,
-            };
+            return data;
         }
 
         public async Task<ServiceResponse<List<User>>> GetFriends(int userId)

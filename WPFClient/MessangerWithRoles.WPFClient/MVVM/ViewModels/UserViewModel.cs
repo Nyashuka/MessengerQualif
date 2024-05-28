@@ -23,32 +23,27 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
     public class UserViewModel : BaseViewModel
     {
         private User _user;
-        public User User { get => _user; set => Set(ref _user, value); }
+        public User User 
+        {
+            get => _user; 
+            set => Set(ref _user, value); 
+        }
+
+        public event Action<User> AddToFriendUserEvent;
+        public event Action<User> DeleteFriendEvent;
 
         public ICommand AddToFriend { get; }
         private bool CanAddToFriendCommandExecute(object p) => true;
         private async void OnAddToFriendCommandExecute(object p)
         {
-            var authService = ServiceLocator.Instance.GetService<AuthService>();
+            AddToFriendUserEvent?.Invoke(User);
+        }
 
-            HttpClient httpClient = new HttpClient();
-
-            var response = await httpClient.GetAsync($"{APIEndpoints.AddFriendGET}?accessToken={authService.AccessToken}&friendUserId={User.Id}");
-            var data = await response.Content.ReadFromJsonAsync<ServiceResponse<bool>>();
-
-            if (data == null)
-            {
-                MessageBox.Show("Cant pars data");
-                return;
-            }
-
-            if (!data.Success)
-            {
-                MessageBox.Show(data.Message);
-                return;
-            }
-
-            MessageBox.Show("Added to friends " + User.DisplayName);
+        public ICommand DeleteFriend { get; }
+        private bool CanDeleteFriendExecute(object p) => true;
+        private async void OnDeleteFriendExecute(object p)
+        {
+            DeleteFriendEvent?.Invoke(User);
         }
 
 
@@ -69,9 +64,9 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
         private ChatViewModel ChatDtoToChat(Chat chatDto, int userId)
         {
             AuthService authService = ServiceLocator.Instance.GetService<AuthService>();
-
-            return new ChatViewModel(chatDto.Id, chatDto.Members.First(u => u.Id != userId).DisplayName,
-                 "https://i.pinimg.com/originals/e7/da/8d/e7da8d8b6a269d073efa11108041928d.jpg",
+            var parcipient = chatDto.Members.First(u => u.Id != userId);
+            return new ChatViewModel(chatDto.Id, parcipient.DisplayName,
+                 parcipient.AvatarURL,
                  new ObservableCollection<Message>(), chatDto.Members.FirstOrDefault(m => m.Id != authService.User.Id));
         }
 
@@ -80,6 +75,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             User = user;
 
             AddToFriend = new LambdaCommand(OnAddToFriendCommandExecute, CanAddToFriendCommandExecute);
+            DeleteFriend = new LambdaCommand(OnDeleteFriendExecute, CanDeleteFriendExecute);
             CreateOrOpenChat = new LambdaCommand(OnExecuteCreateOrOpenChatCommand, CanExecuteCreateOrOpenChatCommand);
         }
     }

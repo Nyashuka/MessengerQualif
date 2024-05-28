@@ -1,6 +1,0 @@
-@startuml
-enum ChatTypeEnum {
-    personal= 0,
-    group= 1,
-}
-@enduml

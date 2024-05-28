@@ -1,8 +1,0 @@
-@startuml
-class RolePermissionSettingsViewModel {
-    + Id : int <<get>> <<set>>
-    + Name : string <<get>> <<set>>
-    + IsAllowed : bool <<get>> <<set>>
-}
-BaseViewModel <|-- RolePermissionSettingsViewModel
-@enduml

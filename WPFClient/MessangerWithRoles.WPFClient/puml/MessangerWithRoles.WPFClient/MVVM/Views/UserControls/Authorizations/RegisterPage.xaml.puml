@@ -1,6 +1,0 @@
-@startuml
-class RegisterPage <<partial>> {
-    + RegisterPage()
-}
-UserControl <|-- RegisterPage
-@enduml

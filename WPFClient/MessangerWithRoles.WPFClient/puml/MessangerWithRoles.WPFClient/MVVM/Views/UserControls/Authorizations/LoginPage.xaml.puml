@@ -1,6 +1,0 @@
-@startuml
-class LoginPage <<partial>> {
-    + LoginPage()
-}
-UserControl <|-- LoginPage
-@enduml

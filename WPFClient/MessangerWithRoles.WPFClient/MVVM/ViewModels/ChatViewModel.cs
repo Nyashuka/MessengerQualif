@@ -13,11 +13,27 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
     {
         //private ChatDto _chatDto;
         public int Id { get; set; }
-        public string DisplayName { get; private set; }
-        public string ImageSource { get; private set; }
+
+        private string _displayName;
+        public string DisplayName
+        {
+            get => _displayName;
+            private set => Set(ref _displayName, value);
+        }
+
+        private string _imageSource;
+        public string ImageSource
+        {
+            get => _imageSource;
+            private set => Set(ref _imageSource, value);
+        }
 
         private string _lastMessage;
-        public string LastMessage { get => _lastMessage; private set => Set(ref _lastMessage, value); }
+        public string LastMessage
+        {
+            get => _lastMessage;
+            private set => Set(ref _lastMessage, value);
+        }
 
         private ObservableCollection<Message> _messages;
         public ObservableCollection<Message> Messages
@@ -25,11 +41,13 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             get => _messages;
             set => Set(ref _messages, value);
         }
+
         public User Parcipient { get; private set; }
 
         public event Action MessegesListChanged;
 
-        public ChatViewModel(int id, string username, string imageSource, ObservableCollection<Message> messages, User parcipient)
+        public ChatViewModel(int id, string username,
+            string imageSource, ObservableCollection<Message> messages, User parcipient)
         {
             Id = id;
             Messages = messages;
@@ -43,7 +61,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 
         public void AddMessage(MessageDto message, bool isReceived)
         {
-            Message newMessage = new Message(DisplayName, message.Data, isReceived);
+            Message newMessage = new Message(DisplayName, message.Sender.AvatarURL, message.Data, isReceived);
             System.Windows.Application.Current.Dispatcher.Invoke(delegate // <--- HERE
             {
                 Messages.Add(newMessage);

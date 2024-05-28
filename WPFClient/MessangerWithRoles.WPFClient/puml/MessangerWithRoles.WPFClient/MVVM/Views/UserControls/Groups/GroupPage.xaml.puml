@@ -1,7 +1,0 @@
-@startuml
-class GroupPage <<partial>> {
-    + GroupPage(groupViewModel:GroupPageViewModel)
-    + ScrollIntoLastMessage() : void
-}
-UserControl <|-- GroupPage
-@enduml

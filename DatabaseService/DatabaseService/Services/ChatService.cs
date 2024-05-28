@@ -39,6 +39,7 @@ namespace DatabaseService.Services
                         Id = user.Id,
                         Username = user.Username,
                         DisplayName = user.DisplayName,
+                        AvatarURL = user.AvatarURL,
                     });
                 }
 
@@ -207,7 +208,8 @@ namespace DatabaseService.Services
                 {
                     Id = owner.Id,
                     DisplayName = owner.DisplayName,
-                    Username = owner.Username
+                    Username = owner.Username,
+                    AvatarURL = owner.AvatarURL,
                 },
                 Name = groupChatInfo.Name,
                 Description = groupChatInfo.Description,
