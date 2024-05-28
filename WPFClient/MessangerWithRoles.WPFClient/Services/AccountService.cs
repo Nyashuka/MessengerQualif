@@ -52,8 +52,7 @@ namespace MessengerWithRoles.WPFClient.Services
 
                     UserProfile.AvatarURL = $"{APIEndpoints.ProfileServer}/{responseData.Data}?timestamp={DateTime.Now.Ticks}";
 
-                    return new ServiceResponse<string>() { Data = UserProfile.AvatarURL };
-                    
+                    return new ServiceResponse<string>() { Data = UserProfile.AvatarURL };  
                 }
                 else
                 {

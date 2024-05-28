@@ -61,7 +61,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 
         public void AddMessage(MessageDto message, bool isReceived)
         {
-            Message newMessage = new Message(DisplayName, message.Sender.AvatarURL, message.Data, isReceived);
+            Message newMessage = new Message(message.Id, DisplayName, message.Sender.AvatarURL, message.Data, isReceived);
             System.Windows.Application.Current.Dispatcher.Invoke(delegate // <--- HERE
             {
                 Messages.Add(newMessage);

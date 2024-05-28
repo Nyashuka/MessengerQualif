@@ -27,6 +27,9 @@ namespace MessagesService.ActionAccess.Services
 
             var data = await databaseResponse.Content.ReadFromJsonAsync<ServiceResponse<ChatDto>>();
 
+            if (data.Data.ChatTypeId == 0)
+                return false;
+
             if (data.Data.ChatInfo.Owner.Id == userId)
                 return true;
 

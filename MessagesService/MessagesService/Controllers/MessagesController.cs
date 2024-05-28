@@ -6,6 +6,7 @@ using MessagesService.Models.Requests;
 using MessagesService.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MessagesService.Controllers
 {
@@ -26,6 +27,20 @@ namespace MessagesService.Controllers
             _actionAccessService = actionAccessService;
         }
 
+        [HttpGet]
+        public async Task<ActionResult<ServiceResponse<List<MessageDto>>>> GetChatMessagesByChatId([FromQuery] string accessToken, int chatId)
+        {
+            int senderId = await _authService.TryGetAuthenticatedUser(accessToken);
+
+            if (senderId == -1) return Unauthorized();
+
+            //if(!await _chatService.IsUserChatMember(senderId)) return Unauthorized();
+
+            var messagesResponse = await _messageService.GetAllChatMessages(chatId);
+
+            return Ok(messagesResponse);
+        }
+
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<MessageDto>>> SendMessage([FromQuery] string accessToken, [FromQuery] string clientGuid, ClientMessageDTO clientMessageDTO)
         {
@@ -33,7 +48,7 @@ namespace MessagesService.Controllers
 
             if (senderId == -1) return Unauthorized();
 
-            var chat = await _chatService.GetChat(clientMessageDTO.ChatId);
+            var chat = await _chatService.GetChatById(clientMessageDTO.ChatId);
             
             if(chat.Data.ChatTypeId == 1)
             {
@@ -54,21 +69,19 @@ namespace MessagesService.Controllers
 
             //if(!await _chatService.IsUserChatMember(senderId)) return Unauthorized();
 
-            var response = await _messageService.HandleMessage(senderId, accessToken, clientGuid, clientMessageDTO);
+            var response = await _messageService.SendMessage(senderId, accessToken, clientGuid, clientMessageDTO);
 
             return Ok(response);
         }
 
-        [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<MessageDto>>>> GetChatMessagesByChatId([FromQuery] string accessToken, int chatId)
+        [HttpDelete]
+        public async Task<ActionResult<ServiceResponse<bool>>> DeleteChatMessage([FromQuery] string accessToken, [FromQuery] string clientGuid, int messageId)
         {
             int senderId = await _authService.TryGetAuthenticatedUser(accessToken);
 
             if (senderId == -1) return Unauthorized();
 
-            //if(!await _chatService.IsUserChatMember(senderId)) return Unauthorized();
-
-            var messagesResponse = await _messageService.GetAllChatMessages(chatId);
+            var messagesResponse = await _messageService.DeleteMessage(senderId, accessToken, clientGuid, messageId);
 
             return Ok(messagesResponse);
         }

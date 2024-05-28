@@ -54,9 +54,30 @@ namespace NotificationService.Controllers
 
             var activeConnections = _connectionsService.GetActiveConnections(data.Recipients, userId, new Guid(clientGuid));
 
-            await _messageNotifier.NotifyUsers(activeConnections, data.Message);
+            await _messageNotifier.NotifySendMessage(activeConnections, data.Message);
 
-            return Ok(true);
+            return Ok(new ServiceResponse<bool>() { Data = true });
+        }
+
+        [HttpPost("notify-delete-message")]
+        public async Task<ActionResult<ServiceResponse<bool>>> NotifyDeleteMessage([FromQuery] string accessToken, [FromQuery] string clientGuid, NotifyDeleteMessageDto data)
+        {
+            int userId = await _authService.TryGetAuthenticatedUser(accessToken);
+
+            if (userId == -1)
+                return Unauthorized();
+
+            var activeConnections = _connectionsService.GetActiveConnections(data.Recipients, userId, new Guid(clientGuid));
+
+            var deletedMessageData = new DeletedMessageDto()
+            {
+                ChatId = data.ChatId,
+                MessageId = data.MessageId,
+            };
+
+            await _messageNotifier.NotifyDeletedMessage(activeConnections, deletedMessageData);
+
+            return Ok(new ServiceResponse<bool>() { Data = true });
         }
     }
 }

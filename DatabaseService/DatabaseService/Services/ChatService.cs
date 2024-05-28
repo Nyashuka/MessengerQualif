@@ -216,5 +216,42 @@ namespace DatabaseService.Services
                 AvatarUrl = groupChatInfo.AvatarUrl,
             };
         }
+
+        public async Task<ServiceResponse<ChatDto>> GetChatByMessageId(int messageId)
+        {
+            var message = await _databaseContext.Messages.FirstOrDefaultAsync(x => x.Id == messageId);
+
+            if (message == null)
+            {
+                return new ServiceResponse<ChatDto>()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Chat or message does not exists"
+                };
+            }
+
+            var chat = await _databaseContext.Chats.FirstOrDefaultAsync(x => x.Id == message.ChatId);
+
+            if (chat == null)
+            {
+                return new ServiceResponse<ChatDto>()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Chat does not exists"
+                };
+            }
+
+            var chatToResponse = new ChatDto()
+            {
+                Id = chat.Id,
+                ChatTypeId = chat.ChatTypeId,
+                Members = (await _chatMembersService.GetChatMembersByChatId(chat.Id)).Data,
+                ChatInfo = chat.ChatTypeId == Convert.ToInt32(ChatTypeEnum.group) ? await GetChatInfoDto(chat.Id) : null
+            };
+
+            return new ServiceResponse<ChatDto>() { Data = chatToResponse };
+        }
     }
 }

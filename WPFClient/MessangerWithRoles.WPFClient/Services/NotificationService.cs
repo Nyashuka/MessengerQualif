@@ -63,11 +63,18 @@ namespace MessengerWithRoles.WPFClient.Services
                     string receivedData = Encoding.UTF8.GetString(buffer, 0, result.Count);
 
                     SocketResponse? response = JsonSerializer.Deserialize<SocketResponse>(receivedData);
-
-                    if (response != null)
+                    try
                     {
-                        NotifyClient_MessageReceived(response);
+                        if (response != null)
+                        {
+                            NotifyClient_MessageReceived(response);
+                        }
                     }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show("Can't notify:\n" + e.Message);
+                    }
+                    
                 }
 
                 if (_webSocket.State == WebSocketState.Open && cancellationToken.IsCancellationRequested)
@@ -90,6 +97,8 @@ namespace MessengerWithRoles.WPFClient.Services
 
                 if(!e.Message.Contains("The operation was canceled"))
                     MessageBox.Show("Restart application to reconnect notification service");
+
+                MessageBox.Show("Notification service error:\n" + e.Message);
             }
             finally
             {
@@ -98,8 +107,6 @@ namespace MessengerWithRoles.WPFClient.Services
                     await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Connection closed.", CancellationToken.None);
                     MessageBox.Show("Disconnected from notification server.");
                 }
-
-                
             }
 
         }
@@ -113,6 +120,14 @@ namespace MessengerWithRoles.WPFClient.Services
                 ServiceLocator.Instance.GetService<EventBus>().Raise(EventBusDefinitions.TextMessageReceived,
                     new TextMessageEventBusArgs(message));
             }
+            else if (response.ResponseType == SocketResponseType.DeletedMessage)
+            {
+                DeletedMessageDto message = JsonSerializer.Deserialize<DeletedMessageDto>(response.JsonData);
+
+                ServiceLocator.Instance.GetService<EventBus>().Raise(EventBusDefinitions.MessageDeleted,
+                    new MessageDeletedEventBusArgs(message.MessageId, message.ChatId));
+            }
+
         }
 
         public async Task StopReceiving()

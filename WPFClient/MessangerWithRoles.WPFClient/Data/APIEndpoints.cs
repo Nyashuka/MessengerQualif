@@ -73,6 +73,7 @@ namespace MessengerWithRoles.WPFClient.Data
         // messages service
         public static string GetChatMessagesByChatIdGET { get => $"http://{IPAddress}:{Ports.Messages}/api/Messages"; }
         public static string SendMessagePOST { get => $"http://{IPAddress}:{Ports.Messages}/api/Messages"; }
+        public static string DeleteMessagePOST { get => $"http://{IPAddress}:{Ports.Messages}/api/Messages"; }
 
         // notification service
         public static string NotificationsWS { get => $"ws://{IPAddress}:{Ports.Notification}/api/Notification/connect"; }

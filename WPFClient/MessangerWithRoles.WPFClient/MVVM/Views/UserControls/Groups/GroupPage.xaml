@@ -58,11 +58,23 @@
             </Border>
 
             <ListView Grid.Row="1" x:Name="messagesListView" Loaded="messagesListView_Loaded"
+                      MouseRightButtonUp="MyListView_MouseRightButtonUp"
               ItemsSource="{Binding Group.Messages}" 
                ItemContainerStyle="{StaticResource MessageItem}"
                Background="Transparent" BorderThickness="0"
                VerticalAlignment="Bottom"
-               />
+               >
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <ListView.ContextMenu>
+                    <ContextMenu Name="contextMenu">
+                        <MenuItem Header="Delete" Click="DeleteMenuItem_Click"/>
+                    </ContextMenu>
+                </ListView.ContextMenu>
+            </ListView>
 
             <Grid Grid.Row="2">
                 <Border CornerRadius="8"

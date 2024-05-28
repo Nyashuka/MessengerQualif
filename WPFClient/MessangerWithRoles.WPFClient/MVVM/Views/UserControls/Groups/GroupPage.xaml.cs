@@ -1,4 +1,5 @@
-﻿using MessengerWithRoles.WPFClient.MVVM.ViewModels;
+﻿using MessengerWithRoles.WPFClient.MVVM.Models;
+using MessengerWithRoles.WPFClient.MVVM.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -42,8 +43,30 @@ namespace MessengerWithRoles.WPFClient.MVVM.Views.UserControls
 
         public void ScrollIntoLastMessage()
         {
-            if (messagesListView.Items != null && messagesListView.Items.Count > 0)
-                messagesListView.ScrollIntoView(messagesListView.Items[messagesListView.Items.Count - 1]);
+            System.Windows.Application.Current.Dispatcher.Invoke(delegate
+            {
+                if (messagesListView.Items != null && messagesListView.Items.Count > 0)
+                    messagesListView.ScrollIntoView(messagesListView.Items[messagesListView.Items.Count - 1]);
+            });
+        }
+
+        private void MyListView_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var item = (sender as ListView)?.SelectedItem;
+            if (item != null)
+            {
+                messagesListView.ContextMenu.DataContext = item;
+                messagesListView.ContextMenu.IsOpen = true;
+            }
+        }
+
+        private async void DeleteMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var item = messagesListView.ContextMenu.DataContext as Message;
+            if (item != null)
+            {
+                 await ((GroupPageViewModel)DataContext).RemoveMessage(item);
+            }
         }
 
         private void messagesListView_Loaded(object sender, RoutedEventArgs e)

@@ -2,6 +2,9 @@
 using MessengerWithRoles.WPFClient.DTOs;
 using MessengerWithRoles.WPFClient.MVVM.Models;
 using MessengerWithRoles.WPFClient.MVVM.ViewModels.Base;
+using MessengerWithRoles.WPFClient.Services.EventBusModule;
+using MessengerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
+using MessengerWithRoles.WPFClient.Services.ServiceLocatorModule;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -70,7 +73,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
         public event Action MessegesListChanged;
 
         public GroupViewModel(int id, string displayName, string description,
-                              string imageSource, 
+                              string imageSource,
                               ObservableCollection<User> members,
                               ObservableCollection<Message> messages,
                               ObservableCollection<RoleWithPermissions> roles)
@@ -86,15 +89,26 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 
             _status = GetChatMembersStatus();
 
-            if (messages != null && messages.Count > 0)
-                LastMessage = messages.Last().Text;
+            UpdateLastMessage();
 
             _imageSource = $"{APIEndpoints.ChatsServer}/{imageSource}?timestamp={DateTime.Now.Ticks}";
+            
+            var eventBus = ServiceLocator.Instance.GetService<EventBus>();
+            eventBus.Subscribe<MessageDeletedEventBusArgs>(EventBusDefinitions.MessageDeleted, OnMessageDeleted);
+        }
+        private void OnMessageDeleted(IEventBusArgs e)
+        {
+            var deleteMessage = e as MessageDeletedEventBusArgs;
+
+            if(deleteMessage.ChatId == Id)
+            {
+                DeleteMessageById(deleteMessage.MessageId);
+            }
         }
 
         public void AddMessage(MessageDto message, bool isReceived)
         {
-            Message newMessage = new Message(message.Sender.DisplayName, message.Sender.AvatarURL, message.Data, isReceived);
+            Message newMessage = new Message(message.Id, message.Sender.DisplayName, message.Sender.AvatarURL, message.Data, isReceived);
             System.Windows.Application.Current.Dispatcher.Invoke(delegate
             {
                 Messages.Add(newMessage);
@@ -103,13 +117,46 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             MessegesListChanged?.Invoke();
         }
 
+        public void DeleteMessage(Message message)
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke(delegate
+            {
+                Messages.Remove(message);
+                UpdateLastMessage();
+            });
+            MessegesListChanged?.Invoke();
+        }
+
+        public void DeleteMessageById(int messageId)
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke(delegate
+            {
+                Message? message = Messages.FirstOrDefault(x => x.Id == messageId);
+                if(message != null)
+                {
+                    Messages.Remove(message);
+                    UpdateLastMessage();
+                }
+            });
+            MessegesListChanged?.Invoke();
+        }
+
+        private void UpdateLastMessage()
+        {
+            if (Messages != null && Messages.Count > 0)
+            {
+                var lastMessage = Messages.Last();
+                LastMessage = lastMessage.Text == null ? "" : lastMessage.Text;
+            }
+        }
+
         public string GetChatMembersStatus()
             => Members.Count() > 1 ? Members.Count() + " Members" : Members.Count() + " Member";
 
         public void UpdateMessages(ObservableCollection<Message> messages)
         {
             Messages = messages;
-            LastMessage = messages.Last().Text;
+            UpdateLastMessage();
             MessegesListChanged?.Invoke();
         }
 

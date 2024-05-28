@@ -6,6 +6,7 @@ namespace MessagesService.Services.Interfaces
     public interface IChatService
     {
         Task<bool> IsUserChatMember(int userId);
-        Task<ServiceResponse<ChatDto>> GetChat(int chatId);
+        Task<ServiceResponse<ChatDto>> GetChatById(int chatId);
+        Task<ServiceResponse<ChatDto>> GetChatByMessageId(int messageId);
     }
 }

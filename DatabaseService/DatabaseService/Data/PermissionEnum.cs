@@ -6,6 +6,7 @@
         SendPhotos = 2,
         SendVideos = 3,
         SendFiles = 4,
+        DeleteMessages = 9,
         AddMembers = 10,
         DeleteMembers = 11,
         BanMembers = 12,

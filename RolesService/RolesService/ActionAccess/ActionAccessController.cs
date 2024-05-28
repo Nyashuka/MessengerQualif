@@ -52,5 +52,13 @@ namespace RolesService.ActionAccess
 
             return Ok(new ServiceResponse<bool> { Data = result });
         }
+
+        [HttpPost("can-delete-messages")]
+        public async Task<ActionResult<ServiceResponse<bool>>> CanDeleteMessages(DeleteMessageChatActionData data)
+        {
+            var result = await _actionAccessService.HasAccess(new DeleteMessageChatAction(_roleService, data), data.ChatId, data.RequesterId);
+
+            return Ok(new ServiceResponse<bool> { Data = result });
+        }
     }
 }

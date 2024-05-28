@@ -111,7 +111,7 @@ namespace MessengerWithRoles.WPFClient.Services
             ObservableCollection<Message> chatMessages = new ObservableCollection<Message>();
             foreach (var currentMessage in messagesResponseData.Data)
             {
-                chatMessages.Add(new Message(currentMessage.Sender.DisplayName, 
+                chatMessages.Add(new Message(currentMessage.Id, currentMessage.Sender.DisplayName, 
                     currentMessage.Sender.AvatarURL,
                     currentMessage.Data, _authService.User.Id != currentMessage.Sender.Id));
             }

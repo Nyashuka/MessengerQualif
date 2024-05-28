@@ -12,5 +12,6 @@ namespace DatabaseService.Services.Interfaces
         Task<ServiceResponse<ChatDto>> CreatePersonalChatIfNotExists(ChatDto chatDTO);
         Task<ServiceResponse<bool>> DeleteChat(int id);
         Task<ServiceResponse<ChatDto>> GetChatById(int chatId);
+        Task<ServiceResponse<ChatDto>> GetChatByMessageId(int messageId);
     }
 }

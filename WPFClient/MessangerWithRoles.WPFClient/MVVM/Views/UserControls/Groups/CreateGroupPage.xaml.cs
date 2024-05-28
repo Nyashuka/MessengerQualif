@@ -24,5 +24,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.Views.UserControls
         {
             InitializeComponent();
         }
+
+       
     }
 }

@@ -16,6 +16,8 @@ using GongSolutions.Wpf.DragDrop;
 using System.Data;
 using Microsoft.Win32;
 using System.Threading.Tasks;
+using MessengerWithRoles.WPFClient.Services.EventBusModule;
+using MessengerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
 
 namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 {
@@ -428,6 +430,21 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             //}
         }
 
+        public async Task RemoveMessage(Message item)
+        {
+            var messagesService = ServiceLocator.Instance.GetService<MessagesService>();
+            var response = await messagesService.DeleteMessage(item.Id);
+
+            if(!response.Success)
+            {
+                MessageBox.Show(response.Message);
+                return;
+            }
+
+            Group.DeleteMessage(item);
+        }
+
+
         public GroupPageViewModel(GroupViewModel group)
         {
             Group = group;
@@ -451,5 +468,6 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             UpdateProfileInfoCommand =
                 new LambdaCommand(OnExecuteUpdateProfileInfoCommand, CanExecuteUpdateProfileInfoCommand);
         }
+        
     }
 }

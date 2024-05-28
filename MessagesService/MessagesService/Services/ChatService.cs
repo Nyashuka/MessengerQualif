@@ -18,9 +18,18 @@ namespace MessagesService.Services
             throw new NotImplementedException();
         }
 
-        public async Task<ServiceResponse<ChatDto>> GetChat(int chatId)
+        public async Task<ServiceResponse<ChatDto>> GetChatById(int chatId)
         {
             var databaseResponse = await _httpClient.GetAsync($"{APIEndpoints.GetChatByIdGET}?chatId={chatId}");
+
+            var data = await databaseResponse.Content.ReadFromJsonAsync<ServiceResponse<ChatDto>>();
+
+            return data;
+        }
+
+        public async Task<ServiceResponse<ChatDto>> GetChatByMessageId(int messageId)
+        {
+            var databaseResponse = await _httpClient.GetAsync($"{APIEndpoints.GetChatByMessageIdGET}?messageId={messageId}");
 
             var data = await databaseResponse.Content.ReadFromJsonAsync<ServiceResponse<ChatDto>>();
 

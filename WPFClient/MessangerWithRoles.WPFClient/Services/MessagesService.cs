@@ -28,5 +28,14 @@ namespace MessengerWithRoles.WPFClient.Services
 
             return responseData;
         }
+
+        public async Task<ServiceResponse<bool>> DeleteMessage(int messageId)
+        {
+            var notificationService = ServiceLocator.Instance.GetService<NotificationService>();
+            var response = await _httpClient.DeleteAsync($"{APIEndpoints.SendMessagePOST}?accessToken={_authService.AccessToken}&clientGuid={notificationService.ClientGuid}&messageId={messageId}");
+            var responseData = await response.Content.ReadFromJsonAsync<ServiceResponse<bool>>();
+
+            return responseData;
+        }
     }
 }

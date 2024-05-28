@@ -9,5 +9,6 @@
         public const string OpenGroup = "OpenGroup";
         public const string ChatCreated = "ChatCreated";
         public const string TextMessageReceived = "TextMessageReceived";
+        public const string MessageDeleted = "MessageDeleted";
     }
 }

@@ -53,6 +53,11 @@ namespace DatabaseService.DataContexts
                //},
                new ChatPermission()
                {
+                   Id = Convert.ToInt32(PermissionEnum.DeleteMessages),
+                   Name = "Delete messages"
+               },
+               new ChatPermission()
+               {
                    Id = Convert.ToInt32(PermissionEnum.AddMembers),
                    Name = "Add members"
                },

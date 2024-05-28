@@ -15,8 +15,8 @@ namespace MessagesService
             builder.Services.AddScoped(sp => new HttpClient { });
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IChatService, ChatService>();
-            builder.Services.AddScoped<IMessageService, MessageService>();
             builder.Services.AddScoped<IActionAccessService, ActionAccessService>();
+            builder.Services.AddScoped<IMessageService, MessageService>();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
