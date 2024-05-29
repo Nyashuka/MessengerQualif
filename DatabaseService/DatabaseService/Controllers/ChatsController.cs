@@ -32,6 +32,14 @@ namespace DatabaseService.Controllers
             return Ok(response);
         }
 
+        [HttpGet("get-chat-by-role-id")]
+        public async Task<ActionResult<ServiceResponse<ChatDto>>> GetChatByRoleId(int roleId)
+        {
+            var response = await _chatService.GetChatByRoleId(roleId);
+
+            return Ok(response);
+        }
+
         [HttpGet("get-personal")]
         public async Task<ActionResult<ServiceResponse<List<ChatDto>>>> GetAllPersonalChats(int userId)
         {

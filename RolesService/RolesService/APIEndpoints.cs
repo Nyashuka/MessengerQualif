@@ -23,7 +23,8 @@
         public const string UnAssignRoleDELETE = $"{DatabaseService}/api/UserRoleRelations";
         public const string GetAllRoleAssignersGET = $"{DatabaseService}/api/UserRoleRelations";
         public const string GetAllUserPermissionsGET = $"{DatabaseService}/api/Roles/permissions";
-        
+
+        public const string GetChatByRoleIdGET = $"{DatabaseService}/api/Chats/get-chat-by-role-id";
         // Auth service
         public const string AuthorizationServiceIP = "http://127.0.0.1:5292";
         public const string IsUserAuthenticatedGET = $"{AuthorizationServiceIP}/api/Auth/is-user-authenticated";

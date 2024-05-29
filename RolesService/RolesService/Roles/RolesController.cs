@@ -47,18 +47,18 @@ namespace RolesService.Roles
             if (authData.Data == null || !authData.HasAccess)
                 return Unauthorized();
 
-            //if(!await _actionAccessService.HasAccess<CanManageRolesChatAction>(
-            //    new CanManageRolesChatAction(new CanManageRolesChatActionData()),
-            //    roleDto.ChatId,
-            //    authData.Data.UserId))
-            //{
-            //    new ServiceResponse<Role>()
-            //    {
-            //        Data = null,
-            //        Success = false,
-            //        Message = "You dont have access to manage roles"
-            //    };
-            //}
+            if (!await _actionAccessService.HasAccess<CanManageRolesChatAction>(
+                new CanManageRolesChatAction(new CanManageRolesChatActionData()),
+                roleDto.ChatId,
+                authData.Data.UserId))
+            {
+                return Ok(new ServiceResponse<Role>()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "You dont have access to manage roles"
+                });
+            }
 
             var response = await _rolesService.CreateRole(roleDto);
 
@@ -73,6 +73,21 @@ namespace RolesService.Roles
             if (authData.Data == null || !authData.HasAccess)
                 return Unauthorized();
 
+            var chat = await _rolesService.GetChatByRoleId(roleId);
+
+            if (!await _actionAccessService.HasAccess<CanManageRolesChatAction>(
+               new CanManageRolesChatAction(new CanManageRolesChatActionData()),
+               chat.Data.Id,
+               authData.Data.UserId))
+            {
+                return Ok(new ServiceResponse<Role>()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "You dont have access to manage roles"
+                });
+            }
+
             var response = await _rolesService.DeleteRole(roleId);
 
             return Ok(response);
@@ -85,6 +100,21 @@ namespace RolesService.Roles
 
             if (authData.Data == null || !authData.HasAccess)
                 return Unauthorized();
+
+            var chat = await _rolesService.GetChatByRoleId(relation.RoleId);
+
+            if (!await _actionAccessService.HasAccess<CanManageRolesChatAction>(
+               new CanManageRolesChatAction(new CanManageRolesChatActionData()),
+               chat.Data.Id,
+               authData.Data.UserId))
+            {
+                return Ok(new ServiceResponse<bool>()
+                {
+                    Data = false,
+                    Success = false,
+                    Message = "You dont have access to manage roles"
+                });
+            }
 
             var response = await _rolesService.AssignRole(relation);
 
@@ -99,6 +129,21 @@ namespace RolesService.Roles
             if (authData.Data == null || !authData.HasAccess)
                 return Unauthorized();
 
+            var chat = await _rolesService.GetChatByRoleId(role.Id);
+
+            if (!await _actionAccessService.HasAccess<CanManageRolesChatAction>(
+               new CanManageRolesChatAction(new CanManageRolesChatActionData()),
+               chat.Data.Id,
+               authData.Data.UserId))
+            {
+                return Ok(new ServiceResponse<RoleWithPermissions>()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "You dont have access to manage roles"
+                });
+            }
+
             var response = await _rolesService.UpdateRole(role);
 
             return Ok(response);
@@ -112,6 +157,21 @@ namespace RolesService.Roles
             if (authData.Data == null || !authData.HasAccess)
                 return Unauthorized();
 
+            var chat = await _rolesService.GetChatByRoleId(roleId);
+
+            if (!await _actionAccessService.HasAccess<CanManageRolesChatAction>(
+               new CanManageRolesChatAction(new CanManageRolesChatActionData()),
+               chat.Data.Id,
+               authData.Data.UserId))
+            {
+                return Ok(new ServiceResponse<bool>()
+                {
+                    Data = false,
+                    Success = false,
+                    Message = "You dont have access to manage roles"
+                });
+            }
+
             var response = await _rolesService.UnAssingRole(roleId, userId);
 
             return Ok(response);
@@ -124,6 +184,21 @@ namespace RolesService.Roles
 
             if (authData.Data == null || !authData.HasAccess)
                 return Unauthorized();
+
+            var chat = await _rolesService.GetChatByRoleId(roleId);
+
+            if (!await _actionAccessService.HasAccess<CanManageRolesChatAction>(
+               new CanManageRolesChatAction(new CanManageRolesChatActionData()),
+               chat.Data.Id,
+               authData.Data.UserId))
+            {
+                return Ok(new ServiceResponse<Role>()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "You dont have access to manage roles"
+                });
+            }
 
             var response = await _rolesService.GetAllAssingners(roleId);
 

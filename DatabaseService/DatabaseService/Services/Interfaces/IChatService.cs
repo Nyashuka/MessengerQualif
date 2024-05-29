@@ -13,5 +13,6 @@ namespace DatabaseService.Services.Interfaces
         Task<ServiceResponse<bool>> DeleteChat(int id);
         Task<ServiceResponse<ChatDto>> GetChatById(int chatId);
         Task<ServiceResponse<ChatDto>> GetChatByMessageId(int messageId);
+        Task<ServiceResponse<ChatDto>> GetChatByRoleId(int roleId);
     }
 }

@@ -253,5 +253,42 @@ namespace DatabaseService.Services
 
             return new ServiceResponse<ChatDto>() { Data = chatToResponse };
         }
+
+        public async Task<ServiceResponse<ChatDto>> GetChatByRoleId(int roleId)
+        {
+            var role = await _databaseContext.Roles.FirstOrDefaultAsync(x => x.Id == roleId);
+
+            if (role == null)
+            {
+                return new ServiceResponse<ChatDto>()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Chat or message does not exists"
+                };
+            }
+
+            var chat = await _databaseContext.Chats.FirstOrDefaultAsync(x => x.Id == role.ChatId);
+
+            if (chat == null)
+            {
+                return new ServiceResponse<ChatDto>()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "Chat does not exists"
+                };
+            }
+
+            var chatToResponse = new ChatDto()
+            {
+                Id = chat.Id,
+                ChatTypeId = chat.ChatTypeId,
+                Members = (await _chatMembersService.GetChatMembersByChatId(chat.Id)).Data,
+                ChatInfo = chat.ChatTypeId == Convert.ToInt32(ChatTypeEnum.group) ? await GetChatInfoDto(chat.Id) : null
+            };
+
+            return new ServiceResponse<ChatDto>() { Data = chatToResponse };
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using RolesService.Models;
+﻿using RolesService.Chat.Dto;
+using RolesService.Models;
 using RolesService.Permissions.Models;
 using RolesService.Roles.Dto;
 using RolesService.Roles.Models;
@@ -84,6 +85,15 @@ namespace RolesService.Roles.Services
             var databaseResponse = await _httpClient.DeleteAsync($"{APIEndpoints.DeleteRoleDELETE}?roleId={roleId}");
 
             var data = await databaseResponse.Content.ReadFromJsonAsync<ServiceResponse<bool>>();
+
+            return data;
+        }
+
+        public async Task<ServiceResponse<ChatDto>> GetChatByRoleId(int roleId)
+        {
+            var databaseResponse = await _httpClient.GetAsync($"{APIEndpoints.GetChatByRoleIdGET}?roleId={roleId}");
+
+            var data = await databaseResponse.Content.ReadFromJsonAsync<ServiceResponse<ChatDto>>();
 
             return data;
         }

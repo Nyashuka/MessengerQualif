@@ -1,4 +1,5 @@
-﻿using RolesService.Models;
+﻿using RolesService.Chat.Dto;
+using RolesService.Models;
 using RolesService.Permissions.Models;
 using RolesService.Roles.Dto;
 using RolesService.Roles.Models;
@@ -16,5 +17,6 @@ namespace RolesService.Roles.Services
         Task<ServiceResponse<bool>> UnAssingRole(int roleId, int userId);
         Task<ServiceResponse<List<User>>> GetAllAssingners(int roleId);
         Task<ServiceResponse<List<Permission>>> GetAllUserPermissions(int chatId, int userId);
+        Task<ServiceResponse<ChatDto>> GetChatByRoleId(int roleId);
     }
 }

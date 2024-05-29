@@ -172,7 +172,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
                 ChatId = Group.Id
             });
 
-            if (response.Data == null)
+            if (response.Data == null || !response.Success)
             {
                 MessageBox.Show("Error with creating role:\n" + response.Message);
                 return;
@@ -262,7 +262,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 
             var response = await rolesService.UpdateRole(updatedRole);
 
-            if (response.Data == null)
+            if (response.Data == null || !response.Success)
             {
                 MessageBox.Show("Error saving role:\n" + response.Message);
             }

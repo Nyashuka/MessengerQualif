@@ -93,12 +93,12 @@ namespace MessengerWithRoles.WPFClient.Services.ServiceLocatorModule
             return data;
         }
 
-        public async Task<ServiceResponse<bool>> DeleteRole(int roleId)
+        public async Task<ServiceResponse<Role>> DeleteRole(int roleId)
         {
             var authService = ServiceLocator.Instance.GetService<AuthService>();
             var response = await _httpClient.DeleteAsync($"{APIEndpoints.DeleteRoleDELETE}?accessToken={authService.AccessToken}&roleId={roleId}");
 
-            var data = await response.Content.ReadFromJsonAsync<ServiceResponse<bool>>();
+            var data = await response.Content.ReadFromJsonAsync<ServiceResponse<Role>>();
 
             return data;
         }
