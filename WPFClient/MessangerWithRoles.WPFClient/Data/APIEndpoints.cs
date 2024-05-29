@@ -24,7 +24,7 @@ namespace MessengerWithRoles.WPFClient.Data
 
         public static string LocalAddress = "127.0.0.1";
 
-        public static string LexyServer = "91.201.235.100";
+        public static string Server = "91.201.235.100";
 
         public static string IPAddress = LocalAddress; 
         public static PortList Ports = DefaultPorts;

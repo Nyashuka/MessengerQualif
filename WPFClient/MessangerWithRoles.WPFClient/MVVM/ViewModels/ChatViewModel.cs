@@ -6,6 +6,13 @@ using System.Windows.Input;
 using MessengerWithRoles.WPFClient.DTOs;
 using MessengerWithRoles.WPFClient.MVVM.Models;
 using MessengerWithRoles.WPFClient.MVVM.ViewModels.Base;
+using MessengerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
+using MessengerWithRoles.WPFClient.Services.EventBusModule;
+using MessengerWithRoles.WPFClient.Services.ServiceLocatorModule;
+using MessengerWithRoles.WPFClient.Services;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 {
@@ -57,7 +64,54 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 
             if (messages.Count > 0)
                 LastMessage = messages.Last().Text;
+
+            var eventBus = ServiceLocator.Instance.GetService<EventBus>();
+            eventBus.Subscribe<MessageDeletedEventBusArgs>(EventBusDefinitions.MessageDeleted, OnMessageDeleted);
         }
+
+        public void DeleteMessage(Message message)
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke(delegate
+            {
+                Messages.Remove(message);
+                UpdateLastMessage();
+            });
+            MessegesListChanged?.Invoke();
+        }
+
+        private void OnMessageDeleted(IEventBusArgs e)
+        {
+            var deleteMessage = e as MessageDeletedEventBusArgs;
+
+            if (deleteMessage.ChatId == Id)
+            {
+                DeleteMessageById(deleteMessage.MessageId);
+            }
+        }
+
+        public void DeleteMessageById(int messageId)
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke(delegate
+            {
+                Message? message = Messages.FirstOrDefault(x => x.Id == messageId);
+                if (message != null)
+                {
+                    Messages.Remove(message);
+                    UpdateLastMessage();
+                }
+            });
+            MessegesListChanged?.Invoke();
+        }
+
+        private void UpdateLastMessage()
+        {
+            if (Messages != null && Messages.Count > 0)
+            {
+                var lastMessage = Messages.Last();
+                LastMessage = string.IsNullOrEmpty(lastMessage.Text) ? "" : lastMessage.Text;
+            }
+        }
+
 
         public void AddMessage(MessageDto message, bool isReceived)
         {

@@ -125,6 +125,32 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 
         }
 
+        public ICommand SaveInfoChangesCommand { get; }
+        private bool CanExecuteSaveInfoChangesCommand(object p) => true;
+
+        private async void OnExecuteSaveInfoChangesCommand(object p)
+        {
+            var newGroupInfo = new GroupChatInfoDto()
+            {
+                ChatId = Group.Id,
+                Name = SettingsDisplayName,
+                Description = SettingsDescription,
+                AvatarUrl = Group.ImageSource,
+            };
+
+            var groupService = ServiceLocator.Instance.GetService<GroupsServcie>();
+            var response = await groupService.UpdateInfo(newGroupInfo);
+
+            if (response.Data == null || response.Success == false) 
+            {
+                MessageBox.Show(response.Message);
+                return;
+            }
+
+            Group.UpdateInfo(response.Data);
+        }
+
+
         private string _roleNameToCreate;
         public string RoleNameToCreate
         {
@@ -467,6 +493,8 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
                 new LambdaCommand(OnExecuteUpdateProfilePictureCommand, CanExecuteUpdateProfilePictureCommand);
             UpdateProfileInfoCommand =
                 new LambdaCommand(OnExecuteUpdateProfileInfoCommand, CanExecuteUpdateProfileInfoCommand);
+            SaveInfoChangesCommand = 
+                new LambdaCommand(OnExecuteSaveInfoChangesCommand, CanExecuteSaveInfoChangesCommand);
         }
         
     }

@@ -62,8 +62,9 @@
               ItemsSource="{Binding Group.Messages}" 
                ItemContainerStyle="{StaticResource MessageItem}"
                Background="Transparent" BorderThickness="0"
-               VerticalAlignment="Bottom"
-               >
+               VirtualizingPanel.ScrollUnit="Pixel"
+               VerticalAlignment="Bottom">
+                
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding}" />

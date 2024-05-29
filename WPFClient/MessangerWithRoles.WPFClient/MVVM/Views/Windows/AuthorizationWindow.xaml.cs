@@ -73,5 +73,17 @@ namespace MessengerWithRoles.WPFClient.MVVM.Views.Windows
                 _isChangingIpState = true;
             }
         }
+
+        private void LocalIP_Click(object sender, RoutedEventArgs e)
+        {
+            APIEndpoints.IPAddress = APIEndpoints.LocalAddress;
+            ipTextBox.Text = APIEndpoints.IPAddress;
+        }
+
+        private void ServerIP_Click(object sender, RoutedEventArgs e)
+        {
+            APIEndpoints.IPAddress = APIEndpoints.Server;
+            ipTextBox.Text = APIEndpoints.IPAddress;
+        }
     }
 }

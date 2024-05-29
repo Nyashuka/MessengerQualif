@@ -32,5 +32,7 @@ namespace ChatsService.Chats
 
             return Ok(response);
         }
+
+        
     }
 }

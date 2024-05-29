@@ -18,7 +18,7 @@
                                 </Ellipse>
 
                                 <Border Background="{TemplateBinding Background}"
-                                        Height="70"
+                                        MinHeight="70"
                                         CornerRadius="15 15 15 0"
                                         Margin="12 4 12 4"
                                         HorizontalAlignment="Left">
@@ -29,8 +29,11 @@
                                             <Label Content="{Binding Sender}" 
                                        Foreground="Yellow" 
                                        FontSize="14"/>
-                                            <Label Content="{Binding Text}" 
+                                            <TextBox Text="{Binding Text, Mode=OneWay}" MaxWidth="400px"
+                                                 IsReadOnly="True" TextWrapping="Wrap"
                                        Foreground="White" 
+                                       Background="Transparent" BorderThickness="0"
+
                                        FontSize="14" />
                                         </StackPanel>
                                     </StackPanel>
@@ -48,7 +51,7 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="ListViewItem">
                             <Border Background="{TemplateBinding Background}"
-                            Height="70"
+                            MinHeight="70"
                             CornerRadius="15 15 0 15"
                             Margin="4 4 12 4"
                                     HorizontalAlignment="Right">
@@ -57,8 +60,9 @@
                                             VerticalAlignment="Center">
 
                                     <StackPanel>
-                                        <Label Content="{Binding Text}" 
-                                       Foreground="White" 
+                                        <TextBox Text="{Binding Text, Mode=OneWay}" MaxWidth="400px"
+                                                 IsReadOnly="True" TextWrapping="Wrap"
+                                       Foreground="White" Background="Transparent" BorderThickness="0"
                                        FontSize="14" />
                                     </StackPanel>
                                 </StackPanel>

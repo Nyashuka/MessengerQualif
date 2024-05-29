@@ -162,42 +162,106 @@
 
 
 
+                    <StackPanel Orientation="Vertical">
+                        <Button Content="Change" x:Name="changeSaveIp_Button"
+         FontSize="12"
+         FontFamily="Montserrat"
+         Foreground="White"
+         Cursor="Hand"
+         BorderThickness="0"
+         Margin="5 20 5 5"
+         HorizontalAlignment="Center" Click="ChangeSaveIPButton_Click">
 
-                    <Button Content="Change" x:Name="changeSaveIp_Button"
-                             FontSize="12"
-                             FontFamily="Montserrat"
-                             Foreground="White"
-                             Cursor="Hand"
-                             BorderThickness="0"
-                             Margin="5 20 5 5"
-                             HorizontalAlignment="Center" Click="ChangeSaveIPButton_Click">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background" Value="#462AD8"/>
 
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="Background" Value="#462AD8"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#28AEED"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
 
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="#28AEED"/>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Width="220" Height="35"
+ CornerRadius="20"
+ Background="{TemplateBinding Background}">
+                                        <ContentPresenter VerticalAlignment="Center"
+               HorizontalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
 
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <Border Width="220" Height="35"
-                     CornerRadius="20"
-                     Background="{TemplateBinding Background}">
-                                    <ContentPresenter VerticalAlignment="Center"
-                                   HorizontalAlignment="Center"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Button.Template>
+                        </Button>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Button Click="LocalIP_Click"
+                        Content="Local" 
+                        Foreground="White" 
+                        FontFamily="Montserrat"
+                        FontSize="12"
+                        FontWeight="Medium"
+                        BorderThickness="0"
+                        Margin="8 0 0 0"
 
-                    </Button>
-                    
+>
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Background" Value="Transparent"/>
 
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="Transparent"/>
+                                                <Setter Property="Cursor" Value="Hand"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}">
+                                            <ContentPresenter VerticalAlignment="Center"
+             HorizontalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                            <Button Click="ServerIP_Click"
+                        Content="Server" 
+                        Foreground="White" 
+                        FontFamily="Montserrat"
+                        FontSize="12"
+                        FontWeight="Medium"
+                        BorderThickness="0"
+                        Margin="8 0 0 0"
+
+>
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Background" Value="Transparent"/>
+
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="Transparent"/>
+                                                <Setter Property="Cursor" Value="Hand"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}">
+                                            <ContentPresenter VerticalAlignment="Center"
+             HorizontalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </StackPanel>
+                       
+                    </StackPanel>
                 </StackPanel>
 
                 <ContentControl Grid.Column="2" 

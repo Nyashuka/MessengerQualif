@@ -2,6 +2,7 @@
 using ChatsService.ActionAccess.Data;
 using ChatsService.ActionAccess.Services;
 using ChatsService.Authorization;
+using ChatsService.Groups.Dto;
 using ChatsService.Groups.Services;
 using ChatsService.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,35 @@ namespace ChatsService.Groups
             _groupsInfoService = groupsInfoService;
             _authService = authService;
             _actionAccessService = actionAccessService;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<ServiceResponse<GroupChatInfoDto>>> UpdateInfo([FromQuery] string accessToken, GroupChatInfoDto groupChatInfoDto)
+        {
+            var authenticatedUser = await _authService.TryGetAuthenticatedUser(accessToken);
+
+            if (!authenticatedUser.HasAccess || authenticatedUser.Data == null)
+                return Unauthorized();
+
+            var chatActionData = new ChangeGroupInfoChatActionData()
+            {
+                ChatId = groupChatInfoDto.ChatId,
+                RequesterId = authenticatedUser.Data.UserId,
+            };
+            var chatAction = new ChangeGroupInfoChatAction(chatActionData);
+
+            if (!await _actionAccessService.HasAccess(chatAction, groupChatInfoDto.ChatId, authenticatedUser.Data.UserId))
+            {
+                return Ok(new ServiceResponse<string>()
+                {
+                    Success = false,
+                    Message = "You don't have access to change chat info"
+                });
+            }
+
+            var response = await _groupsInfoService.UpdateGroupInfo(groupChatInfoDto);
+
+            return Ok(response);
         }
 
         [HttpPost("picture")]

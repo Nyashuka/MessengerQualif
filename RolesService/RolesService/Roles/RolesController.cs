@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RolesService.ActionAccess.Actions;
+using RolesService.ActionAccess.Data;
+using RolesService.ActionAccess.Services;
 using RolesService.Authorization;
 using RolesService.Models;
 using RolesService.Roles.Dto;
@@ -14,11 +17,13 @@ namespace RolesService.Roles
     {
         private readonly IRolesService _rolesService;
         private readonly IAuthService _authService;
+        private readonly IActionAccessService _actionAccessService;
 
-        public RolesController(IRolesService rolesService, IAuthService authService)
+        public RolesController(IRolesService rolesService, IAuthService authService, IActionAccessService actionAccessService)
         {
             _rolesService = rolesService;
             _authService = authService;
+            _actionAccessService = actionAccessService;
         }
 
         [HttpGet]
@@ -41,6 +46,19 @@ namespace RolesService.Roles
 
             if (authData.Data == null || !authData.HasAccess)
                 return Unauthorized();
+
+            //if(!await _actionAccessService.HasAccess<CanManageRolesChatAction>(
+            //    new CanManageRolesChatAction(new CanManageRolesChatActionData()),
+            //    roleDto.ChatId,
+            //    authData.Data.UserId))
+            //{
+            //    new ServiceResponse<Role>()
+            //    {
+            //        Data = null,
+            //        Success = false,
+            //        Message = "You dont have access to manage roles"
+            //    };
+            //}
 
             var response = await _rolesService.CreateRole(roleDto);
 
@@ -74,7 +92,7 @@ namespace RolesService.Roles
         }
 
         [HttpPut]
-        public async Task<ActionResult<ServiceResponse<bool>>> UpdateRole(string accessToken, RoleWithPermissions role)
+        public async Task<ActionResult<ServiceResponse<RoleWithPermissions>>> UpdateRole(string accessToken, RoleWithPermissions role)
         {
             var authData = await _authService.TryGetAuthenticatedUser(accessToken);
 

@@ -11,6 +11,7 @@ using MessengerWithRoles.WPFClient.Data;
 using MessengerWithRoles.WPFClient.Data.Requests;
 using MessengerWithRoles.WPFClient.DTOs;
 using MessengerWithRoles.WPFClient.MVVM.Infrastracture.Commands;
+using MessengerWithRoles.WPFClient.MVVM.Models;
 using MessengerWithRoles.WPFClient.MVVM.ViewModels.Base;
 using MessengerWithRoles.WPFClient.Services;
 using MessengerWithRoles.WPFClient.Services.ServiceLocatorModule;
@@ -60,9 +61,25 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             MessageText = "";
         }
 
+        
+
         private void MessegesListChangedInvoked()
         {
             MessegesListChanged?.Invoke();
+        }
+
+        public async Task RemoveMessage(Message item)
+        {
+            var messagesService = ServiceLocator.Instance.GetService<MessagesService>();
+            var response = await messagesService.DeleteMessage(item.Id);
+
+            if (!response.Success)
+            {
+                MessageBox.Show(response.Message);
+                return;
+            }
+
+            Chat.DeleteMessage(item);
         }
 
         public ChatPageViewModel(ChatViewModel chat)

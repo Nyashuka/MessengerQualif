@@ -92,7 +92,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             UpdateLastMessage();
 
             _imageSource = $"{APIEndpoints.ChatsServer}/{imageSource}?timestamp={DateTime.Now.Ticks}";
-            
+
             var eventBus = ServiceLocator.Instance.GetService<EventBus>();
             eventBus.Subscribe<MessageDeletedEventBusArgs>(EventBusDefinitions.MessageDeleted, OnMessageDeleted);
         }
@@ -100,7 +100,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
         {
             var deleteMessage = e as MessageDeletedEventBusArgs;
 
-            if(deleteMessage.ChatId == Id)
+            if (deleteMessage.ChatId == Id)
             {
                 DeleteMessageById(deleteMessage.MessageId);
             }
@@ -132,7 +132,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             System.Windows.Application.Current.Dispatcher.Invoke(delegate
             {
                 Message? message = Messages.FirstOrDefault(x => x.Id == messageId);
-                if(message != null)
+                if (message != null)
                 {
                     Messages.Remove(message);
                     UpdateLastMessage();
@@ -175,6 +175,15 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
         public void AddRole(RoleWithPermissions role)
         {
             Roles.Add(role);
+        }
+
+        public void UpdateInfo(GroupChatInfoDto groupChatInfoDto)
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke(delegate
+            {
+                DisplayName = groupChatInfoDto.Name;
+                Description = groupChatInfoDto.Description;
+            });
         }
 
         public void UpdateRole(RoleWithPermissions role)

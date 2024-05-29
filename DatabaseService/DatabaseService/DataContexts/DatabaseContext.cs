@@ -81,16 +81,16 @@ namespace DatabaseService.DataContexts
                //    Id = Convert.ToInt32(PermissionEnum.CreateRoles),
                //    Name = "Create roles"
                //},
-               new ChatPermission()
-               {
-                   Id = Convert.ToInt32(PermissionEnum.GiveRoles),
-                   Name = "Give roles"
-               },
-               new ChatPermission()
-               {
-                   Id = Convert.ToInt32(PermissionEnum.EditRoles),
-                   Name = "Edit roles"
-               },
+               //new ChatPermission()
+               //{
+               //    Id = Convert.ToInt32(PermissionEnum.GiveRoles),
+               //    Name = "Give roles"
+               //},
+               //new ChatPermission()
+               //{
+               //    Id = Convert.ToInt32(PermissionEnum.EditRoles),
+               //    Name = "Edit roles"
+               //},
                //new ChatPermission()
                //{
                //    Id = Convert.ToInt32(PermissionEnum.DeleteRoles),

@@ -152,5 +152,13 @@ namespace MessengerWithRoles.WPFClient.Services
 
             }
         }
+
+        public async Task<ServiceResponse<GroupChatInfoDto>> UpdateInfo(GroupChatInfoDto groupChatInfoDto)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"{APIEndpoints.UpdateGroupChatInfoPOST}?accessToken={_authService.AccessToken}", groupChatInfoDto);
+            var data = await response.Content.ReadFromJsonAsync<ServiceResponse<GroupChatInfoDto>>();
+
+            return data;
+        }
     }
 }

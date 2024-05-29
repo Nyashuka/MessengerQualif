@@ -52,12 +52,24 @@ namespace MessengerWithRoles.WPFClient.MVVM.Views.UserControls
 
         private void MyListView_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            var item = (sender as ListView)?.SelectedItem;
+            var listView = sender as ListView;
+            var item = GetAncestorOfType<ListViewItem>((DependencyObject)e.OriginalSource);
+
             if (item != null)
             {
-                messagesListView.ContextMenu.DataContext = item;
-                messagesListView.ContextMenu.IsOpen = true;
+                listView.SelectedItem = item.Content;
+                listView.ContextMenu.DataContext = item.Content;
+                listView.ContextMenu.IsOpen = true;
             }
+        }
+
+        private T GetAncestorOfType<T>(DependencyObject current) where T : DependencyObject
+        {
+            while (current != null && !(current is T))
+            {
+                current = VisualTreeHelper.GetParent(current);
+            }
+            return current as T;
         }
 
         private async void DeleteMenuItem_Click(object sender, RoutedEventArgs e)
@@ -65,7 +77,8 @@ namespace MessengerWithRoles.WPFClient.MVVM.Views.UserControls
             var item = messagesListView.ContextMenu.DataContext as Message;
             if (item != null)
             {
-                 await ((GroupPageViewModel)DataContext).RemoveMessage(item);
+                await ((GroupPageViewModel)DataContext).RemoveMessage(item);
+                messagesListView.ContextMenu.DataContext = null;
             }
         }
 
