@@ -37,7 +37,13 @@ namespace MessagesService.Controllers
 
             var response = await _messageService.GetMessageById(messageId);
 
-            if (!await _chatService.IsUserChatMember(response.Data.ChatId, senderId)) return Unauthorized();
+            if (!await _chatService.IsUserChatMember(response.Data.ChatId, senderId))
+                return new ServiceResponse<MessageDto>()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "You don't have access to this chat"
+                };
 
             return response;
         }
@@ -49,7 +55,13 @@ namespace MessagesService.Controllers
 
             if (senderId == -1) return Unauthorized();
 
-            if(!await _chatService.IsUserChatMember(chatId, senderId)) return Unauthorized();
+            if (!await _chatService.IsUserChatMember(chatId, senderId))
+                return new ServiceResponse<List<MessageDto>>()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "You don't have access to this chat"
+                };
 
             var messagesResponse = await _messageService.GetAllChatMessages(chatId);
 
@@ -82,7 +94,13 @@ namespace MessagesService.Controllers
                 }
             }
 
-            //if(!await _chatService.IsUserChatMember(senderId)) return Unauthorized();
+            if (!await _chatService.IsUserChatMember(chat.Data.Id, senderId))
+                return new ServiceResponse<MessageDto>()
+                {
+                    Data = null,
+                    Success = false,
+                    Message = "You don't have access to this chat"
+                };
 
             var response = await _messageService.SendMessage(senderId, accessToken, clientGuid, clientMessageDTO);
 

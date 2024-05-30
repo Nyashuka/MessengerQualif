@@ -120,6 +120,8 @@ namespace DatabaseService.Services
                 };
             }
 
+            await ClearAllUserRoles(chatId, userId);
+
             var chatMember = _databaseContext.ChatMembers
                             .FirstOrDefault(x => x.ChatId == chatId &&
                                                  x.UserId == userId);
@@ -137,8 +139,6 @@ namespace DatabaseService.Services
             _databaseContext.ChatMembers.Remove(chatMember);
             await _databaseContext.SaveChangesAsync();
 
-            await ClearAllUserRoles(chatId, userId);
-
             return new ServiceResponse<bool> { Data = true };
         }
 
@@ -148,7 +148,9 @@ namespace DatabaseService.Services
 
             foreach (var chatRole in chatRoles)
             {
-                var userRole = await _databaseContext.UserRoleRelations.FirstOrDefaultAsync(x => x.Id == chatRole.Id && x.UserId == userId);
+                var userRole = await _databaseContext.UserRoleRelations
+                    .FirstOrDefaultAsync(x => x.RoleId == chatRole.Id && x.UserId == userId);
+
                 if (userRole != null) _databaseContext.UserRoleRelations.Remove(userRole);
             }
 

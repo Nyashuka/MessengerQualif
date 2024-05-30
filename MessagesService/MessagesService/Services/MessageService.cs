@@ -82,12 +82,16 @@ namespace MessagesService.Services
 
         public async Task<ServiceResponse<bool>> DeleteMessage(int senderId, string accessToken, string clientGuid, int messageId)
         {
+
             var chat = await _chatService.GetChatByMessageId(messageId);
 
-            if(chat == null || chat.Data == null)
+            if (!await _chatService.IsUserChatMember(chat.Data.Id, senderId))
+                return new ServiceResponse<bool>() { Data = false, Success = false, Message = "You dont have access to this chat" };
+
+            if (chat == null || chat.Data == null)
             {
                 throw new Exception("Chat with this message not exists.");
-            }    
+            }
 
             var messageToDelete = await GetMessageById(messageId);
 
@@ -97,7 +101,7 @@ namespace MessagesService.Services
             {
                 deletedSuccess = await DeleteMessageFromDb(messageToDelete.Data.Id);
             }
-            else if(!IsPersonalChat(chat.Data))
+            else if (!IsPersonalChat(chat.Data))
             {
                 if (await HasAccessToDeleteMessage(messageId, chat.Data.Id, senderId))
                 {
@@ -114,7 +118,7 @@ namespace MessagesService.Services
                 }
             }
 
-            if(deletedSuccess)
+            if (deletedSuccess)
             {
                 await SendNotifyDeleteMessage(senderId, accessToken, clientGuid, chat.Data.Id, messageId);
                 return new ServiceResponse<bool>() { Data = true };
