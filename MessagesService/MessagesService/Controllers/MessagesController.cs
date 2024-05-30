@@ -27,6 +27,21 @@ namespace MessagesService.Controllers
             _actionAccessService = actionAccessService;
         }
 
+
+        [HttpGet("get-by-id")]
+        public async Task<ActionResult<ServiceResponse<MessageDto>>> GetMessageById(string accessToken, int messageId)
+        {
+            int senderId = await _authService.TryGetAuthenticatedUser(accessToken);
+
+            if (senderId == -1) return Unauthorized();
+
+            var response = await _messageService.GetMessageById(messageId);
+
+            if (!await _chatService.IsUserChatMember(response.Data.ChatId, senderId)) return Unauthorized();
+
+            return response;
+        }
+
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<List<MessageDto>>>> GetChatMessagesByChatId([FromQuery] string accessToken, int chatId)
         {
@@ -34,7 +49,7 @@ namespace MessagesService.Controllers
 
             if (senderId == -1) return Unauthorized();
 
-            //if(!await _chatService.IsUserChatMember(senderId)) return Unauthorized();
+            if(!await _chatService.IsUserChatMember(chatId, senderId)) return Unauthorized();
 
             var messagesResponse = await _messageService.GetAllChatMessages(chatId);
 
@@ -49,15 +64,15 @@ namespace MessagesService.Controllers
             if (senderId == -1) return Unauthorized();
 
             var chat = await _chatService.GetChatById(clientMessageDTO.ChatId);
-            
-            if(chat.Data.ChatTypeId == 1)
+
+            if (chat.Data.ChatTypeId == 1)
             {
                 var data = new SendMessageChatActionData()
                 {
                     RequesterId = senderId,
                     ChatId = clientMessageDTO.ChatId,
                 };
-                if(!await _actionAccessService.HasAccess(new SendTextMessageChatAction(data), clientMessageDTO.ChatId, senderId))
+                if (!await _actionAccessService.HasAccess(new SendTextMessageChatAction(data), clientMessageDTO.ChatId, senderId))
                 {
                     return Ok(new ServiceResponse<MessageDto>()
                     {

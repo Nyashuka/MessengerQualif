@@ -97,8 +97,8 @@ namespace DatabaseService.Services
             var username = chatMemberDto.Username.Trim().ToLower();
 
             var userToAdd = await _databaseContext.Users.FirstOrDefaultAsync(x => x.Username.Equals(username));
-            
-            if (userToAdd == null) 
+
+            if (userToAdd == null)
             {
                 return new ServiceResponse<ChatMember>() { Success = false, Message = "This username is not exists" };
             }
@@ -110,7 +110,7 @@ namespace DatabaseService.Services
         {
             var chatInfo = await _databaseContext.GroupChatInfos.FirstOrDefaultAsync(x => x.ChatId == chatId);
 
-            if(chatInfo != null && chatInfo.OwnerId == userId)
+            if (chatInfo != null && chatInfo.OwnerId == userId)
             {
                 return new ServiceResponse<bool>()
                 {
@@ -118,7 +118,7 @@ namespace DatabaseService.Services
                     Success = false,
                     Message = $"Ahah, nice try, but Owner can not be deleted from chat! :D"
                 };
-            }    
+            }
 
             var chatMember = _databaseContext.ChatMembers
                             .FirstOrDefault(x => x.ChatId == chatId &&
@@ -137,9 +137,22 @@ namespace DatabaseService.Services
             _databaseContext.ChatMembers.Remove(chatMember);
             await _databaseContext.SaveChangesAsync();
 
+            await ClearAllUserRoles(chatId, userId);
+
             return new ServiceResponse<bool> { Data = true };
         }
 
-        
+        private async Task ClearAllUserRoles(int chatId, int userId)
+        {
+            var chatRoles = _databaseContext.Roles.Where(x => x.ChatId == chatId).ToList();
+
+            foreach (var chatRole in chatRoles)
+            {
+                var userRole = await _databaseContext.UserRoleRelations.FirstOrDefaultAsync(x => x.Id == chatRole.Id && x.UserId == userId);
+                if (userRole != null) _databaseContext.UserRoleRelations.Remove(userRole);
+            }
+
+            await _databaseContext.SaveChangesAsync();
+        }
     }
 }

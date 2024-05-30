@@ -26,7 +26,7 @@ namespace MessengerWithRoles.WPFClient.Data
 
         public static string Server = "91.201.235.100";
 
-        public static string IPAddress = LocalAddress; 
+        public static string IPAddress = Server; 
         public static PortList Ports = DefaultPorts;
 
         // auth service
@@ -73,6 +73,7 @@ namespace MessengerWithRoles.WPFClient.Data
         // messages service
         public static string GetChatMessagesByChatIdGET { get => $"http://{IPAddress}:{Ports.Messages}/api/Messages"; }
         public static string SendMessagePOST { get => $"http://{IPAddress}:{Ports.Messages}/api/Messages"; }
+        public static string GetMessageByIdGET { get => $"http://{IPAddress}:{Ports.Messages}/api/Messages/get-by-id"; }
         public static string DeleteMessagePOST { get => $"http://{IPAddress}:{Ports.Messages}/api/Messages"; }
 
         // notification service

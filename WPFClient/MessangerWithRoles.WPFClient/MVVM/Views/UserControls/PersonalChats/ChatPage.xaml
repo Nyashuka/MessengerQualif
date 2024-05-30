@@ -83,10 +83,10 @@
 
                     <StackPanel Grid.Column="1" 
                     Orientation="Horizontal" Height="50px" VerticalAlignment="Stretch">
-                        <Button Content="&#128193;" Width="25px" FontSize="15" Height="30"
+                        <!--<Button Content="&#128193;" Width="25px" FontSize="15" Height="30"
                     Background="Transparent" Foreground="White" 
                     BorderThickness="0"
-                    Style="{StaticResource MessageBoxButton}"/>
+                    Style="{StaticResource MessageBoxButton}"/>-->
 
                         <Button Command="{Binding SendMessageCommand}"
                                 Content="&gt;" Width="25px" FontSize="25" Height="30" 

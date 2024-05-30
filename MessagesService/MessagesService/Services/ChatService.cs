@@ -13,9 +13,16 @@ namespace MessagesService.Services
             _httpClient = httpClient;
         }
 
-        public async Task<bool> IsUserChatMember(int userId)
+        public async Task<bool> IsUserChatMember(int chatId, int userId)
         {
-            throw new NotImplementedException();
+            var chat = await GetChatById(chatId);
+
+            if (chat.Data.Members.Any(x => x.Id == userId))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public async Task<ServiceResponse<ChatDto>> GetChatById(int chatId)

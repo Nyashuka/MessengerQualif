@@ -37,5 +37,14 @@ namespace MessengerWithRoles.WPFClient.Services
 
             return responseData;
         }
+
+        public async Task<ServiceResponse<MessageDto>> GetMessageById(int messageId)
+        {
+            var notificationService = ServiceLocator.Instance.GetService<NotificationService>();
+            var response = await _httpClient.GetAsync($"{APIEndpoints.GetMessageByIdGET}?accessToken={_authService.AccessToken}&messageId={messageId}");
+            var responseData = await response.Content.ReadFromJsonAsync<ServiceResponse<MessageDto>>();
+
+            return responseData;
+        }
     }
 }

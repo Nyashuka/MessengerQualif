@@ -253,7 +253,7 @@
                         </Border>
                        
 
-                        <ListView Grid.Row="2" ItemsSource="{Binding Chats}"
+                        <ListView Grid.Row="2" ItemsSource="{Binding PersonalChats}"
                                   Visibility="{Binding ChatListVisibility}"
                                   SelectionChanged="Chat_Selected"
                                    HorizontalAlignment="Stretch"
