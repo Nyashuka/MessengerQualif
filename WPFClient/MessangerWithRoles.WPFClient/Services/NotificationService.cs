@@ -15,7 +15,7 @@ using MessengerWithRoles.WPFClient.Services.ServiceLocatorModule;
 
 namespace MessengerWithRoles.WPFClient.Services
 {
-    public class NotificationService : IService
+    public class NotificationService : IService, IDisposable
     {
         private ClientWebSocket _webSocket;
         private CancellationTokenSource _cancellationToken;
@@ -146,6 +146,11 @@ namespace MessengerWithRoles.WPFClient.Services
             {
                 MessageBox.Show("Error while closing the WebSocket connection: " + ex.Message);
             }
+        }
+
+        public void Dispose()
+        {
+            StopReceiving().Wait();
         }
     }
 }

@@ -17,6 +17,8 @@ using MessengerWithRoles.WPFClient.Services.EventBusModule;
 using MessengerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
 using MessengerWithRoles.WPFClient.Services.ServiceLocatorModule;
 using System.Net.Mail;
+using System.Security;
+using MessengerWithRoles.WPFClient.Common;
 
 namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 {
@@ -29,8 +31,8 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             set => Set(ref _email, value);
         }
 
-        private string _password;
-        public string Password
+        private SecureString _password;
+        public SecureString Password
         {
             get => _password;
             set => Set(ref _password, value);
@@ -59,7 +61,7 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
         {
             var authService = ServiceLocator.Instance.GetService<AuthService>();
 
-            await authService.Login(Email, Password);
+            await authService.Login(Email, Password.ToPlainString());
         }
 
         public ICommand ChangeToRegisterWindow { get; }
@@ -78,13 +80,13 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
         public LoginPageViewModel()
         {
             _email = string.Empty;
-            _password = string.Empty;
+            _password = "123321".ToSecureString();
 
             ChangeToRegisterWindow = new LambdaCommand(OnChangeToRegisterWindowCommandExecute, CanChangeToRegisterWindowCommandExecute);
             Login = new LambdaCommand(OnLoginCommandExecute, CanLoginCommandExecute);
 
             Email = "user@gmail.com";
-            Password = "123321";
+            Password = "123321".ToSecureString();
         }
     }
 }

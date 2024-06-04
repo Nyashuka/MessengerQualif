@@ -67,17 +67,26 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Image files (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png|All files (*.*)|*.*";
+            string fileName = "";
 
             if (openFileDialog.ShowDialog() == true)
             {
-                await UploadFileAsync(openFileDialog.FileName);
+                fileName = openFileDialog.FileName;
             }
+
+            if (string.IsNullOrEmpty(fileName))
+            {
+                MessageBox.Show("File can't be empty!");
+                return;
+            }
+
+            await UploadFileAsync(fileName);
         }
 
         public ICommand UpdateProfileInfoCommand { get; }
         private bool CanExecuteUpdateProfileInfoCommand(object p) => true;
         private async void OnExecuteUpdateProfileInfoCommand(object p)
-        { 
+        {
             User user = new User()
             {
                 Id = _accountService.User.Id,
@@ -87,8 +96,8 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             };
 
             var result = await _accountService.UpdateProfileInfo(user);
-            
-            if(result.Success) 
+
+            if (result.Success)
             {
                 MessageBox.Show("Profile updated succesfully.");
             }

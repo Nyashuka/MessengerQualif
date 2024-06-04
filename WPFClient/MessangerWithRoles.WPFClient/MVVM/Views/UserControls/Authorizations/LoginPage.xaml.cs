@@ -15,6 +15,10 @@ namespace MessengerWithRoles.WPFClient.MVVM.Views.UserControls
             DataContext = new LoginPageViewModel();
         }
 
-
+        private void PasswordBox_PasswordChanged(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (this.DataContext != null)
+            { ((LoginPageViewModel)this.DataContext).Password = ((PasswordBox)sender).SecurePassword; }
+        }
     }
 }

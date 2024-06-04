@@ -9,6 +9,9 @@ using MessengerWithRoles.WPFClient.Services.EventBusModule;
 using MessengerWithRoles.WPFClient.Services.EventBusModule.EventBusArguments;
 using MessengerWithRoles.WPFClient.Services.ServiceLocatorModule;
 using System.Net.Mail;
+using System.Security;
+using MessengerWithRoles.WPFClient.Common;
+using System.Windows;
 
 namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
 {
@@ -19,6 +22,18 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
         {
             get => _creationAccount;
             set => Set(ref _creationAccount, value);
+        }
+
+        private SecureString _password;
+        public SecureString Password
+        {
+            get => _password; set => Set(ref _password, value);
+        }
+
+        private SecureString _confirmPassword;
+        public SecureString ConfirmPassword
+        {
+            get => _confirmPassword; set => Set(ref _confirmPassword, value);
         }
 
         private string _errorMessage;
@@ -53,9 +68,9 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             {
                 ErrorMessage = "Username must be more than 2 characters";
                 return false;
-            }     
+            }
 
-            bool passwordsIsSame = CreationAccount.ConfirmPassword.Equals(CreationAccount.Password);
+            bool passwordsIsSame = Password.IsEqualTo(ConfirmPassword);
 
             if (!passwordsIsSame)
             {
@@ -72,7 +87,14 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
         {
             var authService = ServiceLocator.Instance.GetService<AuthService>();
 
+            CreationAccount.Password = Password.ToPlainString();
+            
             bool result = await authService.Register(CreationAccount);
+
+            if(!result)
+            {
+                MessageBox.Show("Register Error");
+            }
         }
 
         public ICommand ChangeToLoginWindow { get; }
@@ -88,10 +110,13 @@ namespace MessengerWithRoles.WPFClient.MVVM.ViewModels
             eventBus.Raise(EventBusDefinitions.NeedToChangeWindowContent, new UserControlEventBusArgs(new LoginPage()));
         }
 
-        public RegisterPageViewModel() 
+        public RegisterPageViewModel()
         {
             _creationAccount = new CreationAccount();
             _errorMessage = string.Empty;
+
+            _password = new SecureString();
+            _confirmPassword = new SecureString();
 
             Register = new LambdaCommand(OnRegisterCommandExecute, CanRegisterCommandExecute);
             ChangeToLoginWindow = new LambdaCommand(OnChangeToLoginWindowCommandExecute, CanChangeToLoginWindowCommandExecute);
