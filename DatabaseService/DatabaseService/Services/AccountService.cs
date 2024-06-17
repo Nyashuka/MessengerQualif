@@ -87,67 +87,12 @@ namespace DatabaseService.Services
             };
         }
 
-        public async Task<ServiceResponse<AccessToken>> GetAccessToken(int accountId)
-        {
-            AccessToken? token = await _databaseContext.AccessTokens.FirstOrDefaultAsync(x => x.AccountId == accountId);
-
-            if (token == null)
-            {
-                return new ServiceResponse<AccessToken>() { Data = null, Success = false, Message = "Token does not exists!" };
-            }
-
-            return new ServiceResponse<AccessToken>() { Data = token };
-        }
-
-        public async Task<ServiceResponse<bool>> SaveAccessToken(AccessTokenDTO accessTokenDTO)
-        {
-            bool exists = await _databaseContext.AccessTokens.AnyAsync(x => x.AccountId == accessTokenDTO.AccountId);
-
-            if (exists)
-                return new ServiceResponse<bool>() { Data = true };
-
-            AccessToken token = new AccessToken()
-            {
-                AccountId = accessTokenDTO.AccountId,
-                Token = accessTokenDTO.Token,
-            };
-
-            _databaseContext.AccessTokens.Add(token);
-            await _databaseContext.SaveChangesAsync();
-
-            return new ServiceResponse<bool>() { Data = true };
-        }
-
         private bool IsTokensSame(string token1, string token2)
         {
             string token1Substring = token1.Substring(0, token1.IndexOf('.'));
             string token2Substring = token2.Substring(0, token2.IndexOf('.'));
 
             return token1Substring.Equals(token2Substring);
-        }
-
-        public async Task<ServiceResponse<UserDataByAccessTokenDTO>> GetAccountByAccessToken(string accessToken)
-        {
-            //List<AccessToken> accessTokens = _databaseContext.AccessTokens.ToList();
-            //var accessTokenData = accessTokens.FirstOrDefault(x => IsTokensSame(accessToken, x.Token));
-            var accessTokenData = _databaseContext.AccessTokens.FirstOrDefault(x => accessToken.Equals(x.Token));
-
-            if(accessTokenData == null)
-            {
-                return new ServiceResponse<UserDataByAccessTokenDTO>()
-                {
-                    Data = null,
-                    Success = false,
-                    Message = "Token is not exists!"
-                };
-            }
-
-            var user = await _databaseContext.Users.FirstOrDefaultAsync(x => x.AccountId == accessTokenData.AccountId);
-
-            return new ServiceResponse<UserDataByAccessTokenDTO>
-            {
-                Data = new UserDataByAccessTokenDTO() { AccountId = user.AccountId, UserId = user.Id }
-            };
         }
     }
 }

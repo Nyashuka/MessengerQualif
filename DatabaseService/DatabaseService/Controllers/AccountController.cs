@@ -50,38 +50,5 @@ namespace DatabaseService.Controllers
 
             return Ok(account);
         }
-
-        [HttpPost("save-token")]
-        public async Task<ActionResult<ServiceResponse<bool>>> SaveToken(AccessTokenDTO accessToken)
-        {
-            var savingResponse = await _accountService.SaveAccessToken(accessToken);
-
-            if (savingResponse.Success == false)
-                return BadRequest(savingResponse);
-
-            return Ok(savingResponse);
-        }
-
-        [HttpGet("get-token")]
-        public async Task<ActionResult<ServiceResponse<AccessToken>>> GetToken(int accountId)
-        {
-            var token = await _accountService.GetAccessToken(accountId);
-
-            if (token.Success == false)
-                return BadRequest(token);
-
-            return Ok(token);
-        }
-
-        [HttpGet("get-user-by-token")]
-        public async Task<ActionResult<ServiceResponse<UserDataByAccessTokenDTO>>> GetUserByAccessToken(string accessToken)
-        {
-            var response = await _accountService.GetAccountByAccessToken(accessToken);
-
-            if(!response.Success)
-                return BadRequest(response);
-
-            return Ok(response);
-        }
     }
 }

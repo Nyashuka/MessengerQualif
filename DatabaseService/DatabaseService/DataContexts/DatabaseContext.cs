@@ -23,7 +23,6 @@ namespace DatabaseService.DataContexts
         public DbSet<ChatPermission> ChatPermissions { get; set; }
         public DbSet<RolePermissionRelation> RolePermissionRelations { get; set; }
         public DbSet<UserRoleRelation> UserRoleRelations { get; set; }
-        public DbSet<AccessToken> AccessTokens { get; set; }
         public DbSet<FriendRelation> FriendRelations { get; set; }
         public DbSet<DefaultRole> DefaultRoles { get; set; }
 
